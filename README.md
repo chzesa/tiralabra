@@ -7,3 +7,4 @@
 ## Weekly reports
 
 [Week1](https://github.com/chzesa/tiralabra/blob/master/reports/week1.md)
+[Week2](https://github.com/chzesa/tiralabra/blob/master/reports/week2.md)
