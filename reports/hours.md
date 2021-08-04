@@ -8,3 +8,5 @@
 27.7.|2h|design
 29.7.|5h|design
 30.7.|10h|implementation, writing reports, writing tests
+03.8.|1h|priority queue implementation
+04.8.|1h|tree implementation
