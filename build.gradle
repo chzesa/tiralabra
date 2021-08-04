@@ -16,4 +16,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-mainClassName = 'App'
+mainClassName = 'app.App'
