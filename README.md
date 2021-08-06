@@ -1,4 +1,6 @@
-# Algorithms project coursework
+# Voronoi Diagram Generator
+
+This project is for a University of Helsinki algorithms project course.
 
 https://user-images.githubusercontent.com/20567958/128546079-4a901962-7d96-4273-9c77-33578d12420a.mp4
 

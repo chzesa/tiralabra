@@ -14,3 +14,4 @@
 05.8.|6h|visualization, debugging
 06.8.|2h|=
 06.8.|1h|Docs etc.
+06.8.|2h|Debugging, docs
