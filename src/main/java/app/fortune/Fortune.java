@@ -214,6 +214,9 @@ class Arc implements ISortable
 	 */
 	Vector circleEvent()
 	{
+		if (left == null || right == null)
+			return null;
+
 		Vector point = Ray.intersect(left.ray, right.ray);
 		if (point == null)
 			return null;
