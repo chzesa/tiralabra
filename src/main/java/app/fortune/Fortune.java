@@ -258,7 +258,7 @@ class Utils
 		return new Vector(
 			a2 * b3 - a3 * b2,
 			a3 * b1 - a1 * b3
-		);
+		).normalize();
 	}
 
 	/**
