@@ -56,7 +56,8 @@ public class App
 		if (window == 0)
 			throw new RuntimeException("GLFW Window creation failed");
 
-		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+		glfwSetKeyCallback(window, (window, key, scancode, action, mods) ->
+		{
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
 				glfwSetWindowShouldClose(window, true);
 			if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
@@ -83,13 +84,15 @@ public class App
 				numSites = 10;
 		});
 
-		glfwSetCursorPosCallback(window, (window, x, y) -> {
+		glfwSetCursorPosCallback(window, (window, x, y) ->
+		{
 			cursorX = x;
 			cursorY = y;
 			cursorMoved = true;
 		});
 
-		glfwSetWindowSizeCallback(window, (window, width, height) -> {
+		glfwSetWindowSizeCallback(window, (window, width, height) ->
+		{
 			windowX = width;
 			windowY = height;
 			viewportChanged = true;
@@ -170,11 +173,11 @@ public class App
 	{
 		double delta = 2.0 / windowX;
 		float[] coords = new float[
-			4* ((int)Math.ceil(Math.abs(xMax - xMin) / delta) + 1)
+			4 * ((int) Math.ceil(Math.abs(xMax - xMin) / delta) + 1)
 		];
 		int i = 0;
 
-		while(xMin < xMax)
+		while (xMin < xMax)
 		{
 			double x1, x2, y1, y2;
 			x1 = xMin;
@@ -182,11 +185,11 @@ public class App
 			y1 = Utils.parabolaY(focus, directrix, x1);
 			y2 = Utils.parabolaY(focus, directrix, x2);
 
-			coords[i * 4 + 0] = (float)x1;
-			coords[i * 4 + 1] = (float)y1;
+			coords[i * 4 + 0] = (float) x1;
+			coords[i * 4 + 1] = (float) y1;
 
-			coords[i * 4 + 2] = (float)x2;
-			coords[i * 4 + 3] = (float)y2;
+			coords[i * 4 + 2] = (float) x2;
+			coords[i * 4 + 3] = (float) y2;
 
 			xMin += delta;
 			i++;
@@ -200,11 +203,11 @@ public class App
 		Random rand = new Random();
 		sites = new ArrayList<>();
 		int count = numSites;
-		while(count > 0)
+		while (count > 0)
 		{
 			sites.add(new Vector(
-				rand.nextDouble() / 3.0 + 1.0/3.0,
-				rand.nextDouble() / 3.0 + 1.0/3.0
+				rand.nextDouble() / 3.0 + 1.0 / 3.0,
+				rand.nextDouble() / 3.0 + 1.0 / 3.0
 			));
 			count--;
 		}
@@ -213,8 +216,8 @@ public class App
 		coords = new float[numSites * 2];
 		for (Vector site : sites)
 		{
-			coords[i * 2] = (float)site.x;
-			coords[i * 2 + 1] = (float)site.y;
+			coords[i * 2] = (float) site.x;
+			coords[i * 2 + 1] = (float) site.y;
 			i++;
 		}
 	}
@@ -229,7 +232,7 @@ public class App
 		for (Event e : fortune.queue)
 		{
 			if (!e.isSiteEvent())
-				drawPoints(new float[] {(float)e.point().x, (float)e.point().y});
+				drawPoints(new float[] {(float) e.point().x, (float) e.point().y});
 		}
 	}
 
@@ -237,14 +240,14 @@ public class App
 	{
 		for (ISortable sort : fortune.beach)
 		{
-			Arc arc = (Arc)sort;
+			Arc arc = (Arc) sort;
 			double xMin = arc.primary(fortune.sweepLine());
 
 			if (xMin == Double.NEGATIVE_INFINITY)
 				xMin = 0;
 
 			double xMax = 1.0;
-			Arc next = (Arc)fortune.beach.higher(sort);
+			Arc next = (Arc) fortune.beach.higher(sort);
 			if (next != null)
 			{
 				xMax = next.primary(fortune.sweepLine());
@@ -274,8 +277,8 @@ public class App
 	{
 		for (ISortable sort : fortune.beach)
 		{
-			Arc arc = (Arc)sort;
-			float xMin = (float)arc.primary(fortune.sweepLine());
+			Arc arc = (Arc) sort;
+			float xMin = (float) arc.primary(fortune.sweepLine());
 
 			if (xMin == Double.NEGATIVE_INFINITY)
 				xMin = 0;
@@ -288,17 +291,17 @@ public class App
 	{
 		for (ISortable sort : fortune.beach)
 		{
-			Arc arc = (Arc)sort;
+			Arc arc = (Arc) sort;
 			if (arc.left == null)
 				continue;
 
 			Vector origin = arc.left.ray.origin;
 			Vector direction = arc.left.ray.direction.normalize();
 			float x1, x2, y1, y2;
-			x1 = (float)origin.x;
-			x2 = x1 + (float)direction.x * 100;
-			y1 = (float)origin.y;
-			y2 = y1 + (float)direction.y * 100;
+			x1 = (float) origin.x;
+			x2 = x1 + (float) direction.x * 100;
+			y1 = (float) origin.y;
+			y2 = y1 + (float) direction.y * 100;
 
 			drawLines(new float[]{x1, y1, x2, y2});
 		}
@@ -316,11 +319,11 @@ public class App
 			Vector a = edge.a;
 			Vector b = edge.b;
 			print(a + " to " + b);
-			edges[i * 4 + 0] = (float)a.x;
-			edges[i * 4 + 1] = (float)a.y;
+			edges[i * 4 + 0] = (float) a.x;
+			edges[i * 4 + 1] = (float) a.y;
 
-			edges[i * 4 + 2] = (float)b.x;
-			edges[i * 4 + 3] = (float)b.y;
+			edges[i * 4 + 2] = (float) b.x;
+			edges[i * 4 + 3] = (float) b.y;
 			i++;
 		}
 
@@ -331,12 +334,12 @@ public class App
 		{
 			Vector a = edge.a;
 			Vector b = edge.b;
-			rays[i * 4 + 0] = (float)a.x;
-			rays[i * 4 + 1] = (float)a.y;
+			rays[i * 4 + 0] = (float) a.x;
+			rays[i * 4 + 1] = (float) a.y;
 
 			b = b.normalize().scale(100).add(a);
-			rays[i * 4 + 2] = (float)b.x;
-			rays[i * 4 + 3] = (float)b.y;
+			rays[i * 4 + 2] = (float) b.x;
+			rays[i * 4 + 3] = (float) b.y;
 			i++;
 		}
 
@@ -345,8 +348,8 @@ public class App
 		for (Fortune.Edge edge : result.rays)
 		{
 			Vector a = edge.a;
-			rayOrigins[i * 2 + 0] = (float)a.x;
-			rayOrigins[i * 2 + 1] = (float)a.y;
+			rayOrigins[i * 2 + 0] = (float) a.x;
+			rayOrigins[i * 2 + 1] = (float) a.y;
 		}
 
 		return result;
@@ -380,13 +383,14 @@ public class App
 
 				cursorPos = h;
 
-				try {
+				try
+				{
 					fortune.processTo(cursorPos);
 					processResult();
 					fortune.beach.forEach(sort ->
 					{
-						Arc arc = (Arc)sort;
-						Arc next = (Arc)fortune.beach.higher(arc);
+						Arc arc = (Arc) sort;
+						Arc next = (Arc) fortune.beach.higher(arc);
 						if (next != null)
 							print("[" + arc.primary(fortune.sweepLine())
 								+ ", "
@@ -397,7 +401,8 @@ public class App
 								+ ", Infinity]: " + arc.site);
 					});
 					print("Beachline size: " + fortune.beach.size());
-				} catch(Exception e)
+				}
+				catch (Exception e)
 				{
 					print(e.toString());
 				}
@@ -406,7 +411,7 @@ public class App
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			setColor(0.0f, 0.0f, 0.0f, 1.0f);
-			drawLines(new float[] {0.0f, (float)cursorPos, 1.0f, (float)cursorPos});
+			drawLines(new float[] {0.0f, (float) cursorPos, 1.0f, (float) cursorPos});
 
 			setColor(1.0f, 0.0f, 0.0f, 1.0f);
 			drawBeachline();

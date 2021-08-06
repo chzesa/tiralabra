@@ -96,7 +96,7 @@ public class VectorTest
 	{
 		Vector a = new Vector(3, 0);
 		a = a.normalize();
-		Vector b = new Vector(1.0/2, 0);
+		Vector b = new Vector(1.0 / 2, 0);
 		b = b.normalize();
 
 		Vector c = new Vector(-5, 0);

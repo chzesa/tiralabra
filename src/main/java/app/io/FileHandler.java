@@ -4,15 +4,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class FileHandler {
-	public static String readToString(String path) {
+public class FileHandler
+{
+	public static String readToString(String path)
+	{
 		byte[] bytes;
-		try {
+		try
+		{
 			Path p = Paths.get(path);
 			bytes = Files.readAllBytes(p);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			return "";
-		} catch (SecurityException e) {
+		}
+		catch (SecurityException e)
+		{
 			return "";
 		}
 

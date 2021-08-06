@@ -10,3 +10,7 @@
 30.7.|10h|implementation, writing reports, writing tests
 03.8.|1h|priority queue implementation
 04.8.|1h|tree implementation
+=|2h|add lwjgl / visualization tools
+05.8.|6h|visualization, debugging
+06.8.|2h|=
+06.8.|1h|Docs etc.

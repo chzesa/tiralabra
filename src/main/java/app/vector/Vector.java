@@ -51,7 +51,7 @@ public class Vector
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		Vector other = (Vector)o;
+		Vector other = (Vector) o;
 		return Math.abs(x - other.x) < PRECISION
 			&& Math.abs(y - other.y) < PRECISION;
 	}

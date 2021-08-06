@@ -102,7 +102,7 @@ public class Tree<T>
 		Node current = root;
 		int comparison = 0;
 
-		while(current != null)
+		while (current != null)
 		{
 			previous = current;
 			comparison = cmp.compare(item, current.value());
@@ -128,7 +128,7 @@ public class Tree<T>
 		Node result = null;
 		Node current = root;
 
-		while(current != null)
+		while (current != null)
 		{
 			int comparison = cmp.compare(item, current.value());
 
@@ -149,7 +149,7 @@ public class Tree<T>
 		Node result = null;
 		Node current = root;
 
-		while(current != null)
+		while (current != null)
 		{
 			int comparison = cmp.compare(item, current.value());
 
@@ -169,7 +169,7 @@ public class Tree<T>
 	{
 		Node current = root;
 
-		while(current != null)
+		while (current != null)
 		{
 			int comparison = cmp.compare(item, current.value());
 

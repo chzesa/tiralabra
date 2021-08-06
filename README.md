@@ -7,4 +7,11 @@
 ## Weekly reports
 
 [Week1](https://github.com/chzesa/tiralabra/blob/master/reports/week1.md)
+
 [Week2](https://github.com/chzesa/tiralabra/blob/master/reports/week2.md)
+
+## Keybindings
+
+* Numeric keys: Set the number of points from 1 to 10
+* Space: generate a new set of sites
+* Esc: close

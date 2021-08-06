@@ -24,7 +24,7 @@ class QueueCompare implements Comparator<Event>
 			if (!a.isSiteEvent() && b.isSiteEvent())
 				return 1;
 
-			if(a.site().equals(b.site()))
+			if (a.site().equals(b.site()))
 			{
 				return 0;
 			}
@@ -35,7 +35,7 @@ class QueueCompare implements Comparator<Event>
 			return 1;
 		}
 
-		if(a.point().y > b.point().y)
+		if (a.point().y > b.point().y)
 			return -1;
 
 		return 1;
@@ -178,7 +178,7 @@ public class Fortune
 
 		// Set the site x-coordinate at positive infinity in case the event point is at the
 		// exact point of the left edge of the arc it's on.
-		Arc arc = (Arc)beach.floor(new PointQuery(site.x, Double.POSITIVE_INFINITY));
+		Arc arc = (Arc) beach.floor(new PointQuery(site.x, Double.POSITIVE_INFINITY));
 
 		// if the arc defines a circle event it's a false alarm. Remove event from qeueue
 		removeEvent(arc);
@@ -209,9 +209,9 @@ public class Fortune
 		Vector site = e.site();
 
 		// Find and remove the arc being removed and its adjacent arcs
-		Arc arc = (Arc)beach.floor(new PointQuery(point.x, site.x));
-		Arc larc = (Arc)beach.lower(arc);
-		Arc rarc = (Arc)beach.higher(arc);
+		Arc arc = (Arc) beach.floor(new PointQuery(point.x, site.x));
+		Arc larc = (Arc) beach.lower(arc);
+		Arc rarc = (Arc) beach.higher(arc);
 
 		beach.remove(arc);
 		beach.remove(larc);
@@ -249,11 +249,11 @@ public class Fortune
 	 */
 	public boolean process()
 	{
-		if(!queue.isEmpty())
+		if (!queue.isEmpty())
 		{
 			Event e = queue.pollFirst();
 			beachCmp.sweepline = e.point().y;
-			if(e.isSiteEvent())
+			if (e.isSiteEvent())
 			{
 				System.out.println("Site event " + e.point());
 				siteEvent(e);
@@ -270,7 +270,7 @@ public class Fortune
 
 	public Result processTo(double y)
 	{
-		while(!queue.isEmpty())
+		while (!queue.isEmpty())
 		{
 			if (queue.first().point().y < y)
 				break;
@@ -287,7 +287,7 @@ public class Fortune
 	 */
 	public Result processAll()
 	{
-		while(process());
+		while (process());
 		return result();
 	}
 
@@ -324,7 +324,7 @@ public class Fortune
 
 		for (ISortable is : beach)
 		{
-			Arc arc = (Arc)is;
+			Arc arc = (Arc) is;
 			if (arc.left == null)
 				continue;
 

@@ -15,7 +15,7 @@ class Parabola
 
 		double d = (2.0f * (focus.y - directrix));
 		x2 = 1.0f / d;
-		x = (-2.0f * focus.x ) / d;
+		x = (-2.0f * focus.x) / d;
 		c = focus.x * focus.x / d + (1.0f / 2.0f) * (focus.y + directrix);
 	}
 }
@@ -70,13 +70,15 @@ public class Utils
 		if (p1.degenerate && p2.degenerate)
 		{
 			return new Vector[] {};
-		} else if (p1.degenerate)
+		}
+		else if (p1.degenerate)
 		{
 			return new Vector[]
 			{
 				new Vector(focusA.x, parabolaY(focusB, directrix, focusA.x))
 			};
-		} else if (p2.degenerate)
+		}
+		else if (p2.degenerate)
 		{
 			return new Vector[]
 			{

@@ -24,17 +24,17 @@ public class PriorityQueue<T>
 
 		Node left()
 		{
-			return (Node)pq.items[index * 2];
+			return (Node) pq.items[index * 2];
 		}
 
 		Node right()
 		{
-			return (Node)pq.items[index * 2 + 1];
+			return (Node) pq.items[index * 2 + 1];
 		}
 
 		Node ancestor()
 		{
-			return (Node)pq.items[(index - index % 2) / 2];
+			return (Node) pq.items[(index - index % 2) / 2];
 		}
 
 		public T value()
@@ -74,12 +74,12 @@ public class PriorityQueue<T>
 		if (used == 0)
 			return null;
 
-		return delete((Node)items[1]);
+		return delete((Node) items[1]);
 	}
 
 	public T delete(Node node)
 	{
-		Node last = (Node)items[used];
+		Node last = (Node) items[used];
 
 		swap(node, last);
 		items[used] = null;
@@ -108,7 +108,7 @@ public class PriorityQueue<T>
 	 */
 	void fix(Node node)
 	{
-		while(node.ancestor() != null)
+		while (node.ancestor() != null)
 		{
 			if (cmp.compare(node.ancestor().value(), node.value()) <= 0)
 				break;
@@ -116,7 +116,7 @@ public class PriorityQueue<T>
 			swap(node, node.ancestor());
 		}
 
-		while(node.left() != null)
+		while (node.left() != null)
 		{
 			Node compare;
 			if (node.right() != null)
