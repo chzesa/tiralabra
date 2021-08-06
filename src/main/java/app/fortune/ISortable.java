@@ -2,6 +2,7 @@ package app.fortune;
 
 public interface ISortable
 {
-	public double primary(double y);
-	public double secondary();
+	public double leftX(double y);
+	public double rightX(double y);
+	public double siteX();
 }

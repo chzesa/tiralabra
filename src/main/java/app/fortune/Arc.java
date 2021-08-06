@@ -22,31 +22,23 @@ public class Arc implements ISortable
 		this.site = site;
 	}
 
-	public double primary(double y)
+	public double leftX(double y)
 	{
 		if (left == null)
 			return Double.NEGATIVE_INFINITY;
 
-		Vector[] intersections = Utils.parabolaIntersection(left.siteA, left.siteB, y);
-
-		if (intersections.length == 0)
-			return site.x;
-
-		if (intersections.length == 1)
-			return intersections[0].x;
-
-		Vector end;
-
-		// Determine which intersection the boundary ray intersects
-		Vector delta = intersections[0].sub(left.ray.origin).normalize();
-
-		if (delta.equals(left.ray.direction.normalize()))
-			return intersections[0].x;
-		else
-			return intersections[1].x;
+		return left.end(y).x;
 	}
 
-	public double secondary()
+	public double rightX(double y)
+	{
+		if (right == null)
+			return Double.POSITIVE_INFINITY;
+
+		return right.end(y).x;
+	}
+
+	public double siteX()
 	{
 		return site.x;
 	}

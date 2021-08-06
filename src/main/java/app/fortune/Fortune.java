@@ -53,15 +53,28 @@ class BeachlineCompare implements Comparator<ISortable>
 		if (a == b)
 			return 0;
 
-		double aP = a.primary(sweepline);
-		double bP = b.primary(sweepline);
+		double aP = a.leftX(sweepline);
+		double bP = b.leftX(sweepline);
 
 		if (Math.abs(aP - bP) < Vector.PRECISION)
+		// if (aP == bP)
 		{
-			double aS = a.secondary();
-			double bS = b.secondary();
+			double aS = a.rightX(sweepline);
+			double bS = b.rightX(sweepline);
 			if (Math.abs(aS - bS) < Vector.PRECISION)
-				return 0;
+			// if (aS == bS)
+			{
+				double aT = a.siteX();
+				double bT = b.siteX();
+
+				if (Math.abs(aT - bT) < Vector.PRECISION)
+				// if (aT == bT)
+					return 0;
+
+				if (aT < bT)
+					return -1;
+				return 1;
+			}
 
 			if (aS < bS)
 				return -1;
@@ -86,12 +99,17 @@ class PointQuery implements ISortable
 		this.x2 = x2;
 	}
 
-	public double primary(double y)
+	public double leftX(double y)
 	{
 		return x1;
 	}
 
-	public double secondary()
+	public double rightX(double y)
+	{
+		return x1;
+	}
+
+	public double siteX()
 	{
 		return x2;
 	}
