@@ -223,8 +223,17 @@ public class Fortune
 		removeEvent(rarc);
 
 		// rebuild the left and right arcs surrounding the removed arc
+		Vector direction = arc.left.ray.direction.normalize()
+			.add(arc.right.ray.direction.normalize())
+			.normalize();
+
+		Vector bisector = Utils.bisector(larc.site, rarc.site);
+
+		if (Vector.dot(direction, bisector) < 0)
+			bisector = bisector.neg();
+
 		Boundary middle = new Boundary(
-			new Ray(circlePoint, Utils.bisector(larc.site, rarc.site)),
+			new Ray(circlePoint, bisector),
 			larc.site,
 			rarc.site
 		);
