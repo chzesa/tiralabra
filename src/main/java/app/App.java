@@ -26,10 +26,11 @@ public class App
 	double cursorY = 0;
 	boolean cursorMoved = true;
 
-	int numSites = 3;
+	int numSites = 8;
 	ArrayList<Vector> sites;
 	Fortune fortune;
 	boolean regenerate = true;
+	boolean auto = true;
 	float[] edges;
 	float[] rays;
 	float[] coords;
@@ -61,7 +62,12 @@ public class App
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
 				glfwSetWindowShouldClose(window, true);
 			if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+			{
+				cursorMoved = true;
 				regenerate = true;
+			}
+			if (key == GLFW_KEY_A && action == GLFW_RELEASE)
+				auto = !auto;
 			if (key == GLFW_KEY_1 && action == GLFW_RELEASE)
 				numSites = 1;
 			if (key == GLFW_KEY_2 && action == GLFW_RELEASE)
@@ -86,6 +92,7 @@ public class App
 
 		glfwSetCursorPosCallback(window, (window, x, y) ->
 		{
+			if (auto) return;
 			cursorX = x;
 			cursorY = y;
 			cursorMoved = true;
@@ -206,8 +213,8 @@ public class App
 		while (count > 0)
 		{
 			sites.add(new Vector(
-				rand.nextDouble() / 3.0 + 1.0 / 3.0,
-				rand.nextDouble() / 3.0 + 1.0 / 3.0
+				rand.nextDouble() * 0.9f + 0.05f,
+				rand.nextDouble() * 0.9f + 0.05f
 			));
 			count--;
 		}
@@ -374,6 +381,12 @@ public class App
 				fortune = new Fortune(sites);
 			}
 
+			if (auto)
+			{
+				cursorMoved = true;
+				cursorY += 2.0f;
+			}
+
 			if (cursorMoved)
 			{
 				cursorMoved = false;
@@ -408,6 +421,12 @@ public class App
 				}
 			}
 
+			if (auto && cursorY > windowY)
+			{
+				regenerate = true;
+				cursorY = -2.0f;
+			}
+
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			setColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -416,8 +435,8 @@ public class App
 			setColor(1.0f, 0.0f, 0.0f, 1.0f);
 			drawBeachline();
 
-			setColor(1.0f, 0.0f, 0.0f, 0.2f);
-			drawAllParabolas();
+			// setColor(1.0f, 0.0f, 0.0f, 0.2f);
+			// drawAllParabolas();
 
 			// setColor(0.0f, 0.0f, 0.0f, 0.1f);
 			// drawBeachlineVerticals();
@@ -433,7 +452,7 @@ public class App
 
 			setColor(0.0f, 0.0f, 0.0f, 0.3f);
 			drawLines(rays);
-			drawPoints(rayOrigins);
+			// drawPoints(rayOrigins);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
