@@ -12,8 +12,10 @@
 
 [Week3](https://github.com/chzesa/tiralabra/blob/master/reports/week3.md)
 
-## Keybindings
+## Program
 
-* Numeric keys: Set the number of points from 1 to 10
+Run with `gradle run`
+
+* Numeric keys: Set the number of sites from 1 to 10
 * Space: generate a new set of sites
 * Esc: close
