@@ -59,7 +59,7 @@ public class Vector
 	@Override
 	public String toString()
 	{
-		return "(" + x + ", " + y + ")";
+		return "(" + String.format("%.3f", x) + ", " + String.format("%.3f", y) + ")";
 	}
 
 	public static double dot(Vector a, Vector b)
