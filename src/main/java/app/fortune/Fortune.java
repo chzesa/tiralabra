@@ -495,12 +495,35 @@ public class Fortune
 		return result();
 	}
 
+	public Vector peek()
+	{
+		if (!queue.isEmpty())
+			return queue.first().point();
+		return null;
+	}
+
+	public double sweepLine()
+	{
+		return beachCmp.sweepline;
+	}
+
+	public void setSweepline(double y)
+	{
+		if (queue.isEmpty() ||
+			(y < beachCmp.sweepline && y > queue.first().point().y))
+			beachCmp.sweepline = y;
+	}
+
 	/**
 	 * Query the result of the algorithm.
 	 * @return the current state of the generated diagram.
 	 */
 	public Result result()
 	{
+		ArrayList<Edge> resEdges = new ArrayList<>();
+		for (Edge edge : edges)
+			resEdges.add(edge);
+
 		ArrayList<Edge> infEdges = new ArrayList<>();
 
 		for (ISortable is : beach)
@@ -512,6 +535,6 @@ public class Fortune
 			infEdges.add(new Edge(arc.left.ray.origin, arc.left.ray.direction));
 		}
 
-		return new Result(edges, infEdges);
+		return new Result(resEdges, infEdges);
 	}
 }
