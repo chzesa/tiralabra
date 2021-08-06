@@ -162,7 +162,7 @@ public class Fortune
 		Vector isect = new Vector(site.x, Utils.parabolaY(arc.site, site.y, site.x));
 		Ray left = new Ray(isect, Utils.bisector(arc.site, site));
 		Ray right = new Ray(isect, Utils.bisector(site, arc.site));
-		return new Boundary[] { new Boundary(left, arc.site, site), new Boundary(right, arc.site, site) };
+		return new Boundary[] { new Boundary(left, arc.site, site), new Boundary(right, site, arc.site) };
 	}
 	
 	void siteEvent(Event event)
