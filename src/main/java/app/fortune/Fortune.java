@@ -6,41 +6,6 @@ import java.util.List;
 import java.util.Comparator;
 import java.util.TreeSet;
 
-class Event
-{
-	private final Vector pt;
-	private final Vector s;
-
-	Event(Vector site)
-	{
-		this.pt = null;
-		this.s = site;
-	}
-
-	Event(Vector point, Vector site)
-	{
-		this.pt = point;
-		this.s = site;
-	}
-
-	boolean isSiteEvent()
-	{
-		return pt == null;
-	}
-
-	Vector site()
-	{
-		return s;
-	}
-
-	Vector point()
-	{
-		if (isSiteEvent())
-			return s;
-		return pt;
-	}
-}
-
 /**
  * Site events are sorted top to bottom, left to right.
  * If two events have an equal point, if only one of them is a site event, the site event is sorted
@@ -77,26 +42,6 @@ class QueueCompare implements Comparator<Event>
 	}
 }
 
-class Boundary
-{
-	final Ray ray;
-	final Vector siteA;
-	final Vector siteB;
-
-	Boundary(Ray ray, Vector siteA, Vector siteB)
-	{
-		this.ray = ray;
-		this.siteA = siteA;
-		this.siteB = siteB;
-	}
-}
-
-interface ISortable
-{
-	public double primary(double y);
-	public double secondary();
-}
-
 class BeachlineCompare implements Comparator<ISortable>
 {
 	public double sweepline = 0;
@@ -130,72 +75,6 @@ class BeachlineCompare implements Comparator<ISortable>
 	}
 }
 
-/**
- * Arcs are sorted primarily by the projection of its leftmost endpoint onto the sweepline.
- * If two adjacent arcs have the same primary sort value, at least one of them is vanishing
- * from the beachline, and multiple sites are on the voronoi circle around the event point.
- * In this case, the sites are ordered clockwise, which is equivalent to ordering them from
- * left to right, given each arc is currently above the sweepline.
- */
-class Arc implements ISortable
-{
-	final Boundary left;
-	final Boundary right;
-	final Vector site;
-
-	Arc(Boundary left, Vector site, Boundary right)
-	{
-		this.left = left;
-		this.right = right;
-		this.site = site;
-	}
-
-	public double primary(double y)
-	{
-		if (left == null)
-			return Double.NEGATIVE_INFINITY;
-
-		Vector[] intersections = Utils.parabolaIntersection(left.siteA, left.siteB, y);
-
-		if (intersections.length == 0)
-			return site.x;
-
-		if (intersections.length == 1)
-			return intersections[0].x;
-
-		Vector end;
-
-		// Determine which intersection the boundary ray intersects
-		Vector delta = intersections[0].sub(left.ray.origin).normalize();
-
-		if (delta.equals(left.ray.direction.normalize()))
-			return intersections[0].x;
-		else
-			return intersections[1].x;
-	}
-
-	public double secondary()
-	{
-		return site.x;
-	}
-
-	/**
-	 * Determines the circle event location below the arc's boundary ray intersection point if any.
-	 */
-	Vector circleEvent()
-	{
-		if (left == null || right == null)
-			return null;
-
-		Vector point = Ray.intersect(left.ray, right.ray);
-		if (point == null)
-			return null;
-
-		Vector offset = new Vector(0.0, -point.sub(site).norm());
-		return point.add(offset);
-	}
-}
-
 class PointQuery implements ISortable
 {
 	final double x1;
@@ -215,109 +94,6 @@ class PointQuery implements ISortable
 	public double secondary()
 	{
 		return x2;
-	}
-}
-
-class Parabola
-{
-	final double x2;
-	final double x;
-	final double c;
-	final boolean degenerate;
-
-	Parabola(Vector focus, double directrix)
-	{
-		degenerate = Math.abs(focus.y - directrix) < Vector.PRECISION;
-
-		double d = (2.0f * (focus.y - directrix));
-		x2 = 1.0f / d;
-		x = (-2.0f * focus.x ) / d;
-		c = focus.x * focus.x / d + (1.0f / 2.0f) * (focus.y + directrix);
-	}
-}
-
-class Utils
-{
-	/**
-	 * Given a vector defined by origin and destination, returns a perpendicular vector
-	 * pointing to the right from the viewpoint of the vector.
-	 * Used to generate the bisector direction vector of two adjacent sites.
-	 */
-	static Vector bisector(Vector orig, Vector dst)
-	{
-		Vector d = dst.sub(orig);
-
-		double a1 = d.x;
-		double a2 = d.y;
-		double a3 = 0;
-
-		double b1 = 0;
-		double b2 = 0;
-		double b3 = 1;
-
-		return new Vector(
-			a2 * b3 - a3 * b2,
-			a3 * b1 - a1 * b3
-		).normalize();
-	}
-
-	/**
-	 * Given a parabola defined by a focus and directrix, returns the y coordinate of the
-	 * parabola at x.
-	 */
-	static double parabolaY(Vector focus, double directrix, double x)
-	{
-		double a = focus.x;
-		double b = focus.y;
-
-		return (x - a) * (x - a) / (2.0f * (b - directrix)) + (b + directrix) / 2.0f;
-	}
-
-	/**
-	 * Given two focuses and a directrix, returns the intersection points of the parabolas
-	 * provided neither parabola is degenerate.
-	 * Both parabolas are expected to be above the directrix.
-	 */
-	static Vector[] parabolaIntersection(Vector focusA, Vector focusB, double directrix)
-	{
-		Parabola p1 = new Parabola(focusA, directrix);
-		Parabola p2 = new Parabola(focusB, directrix);
-
-		if (p1.degenerate && p2.degenerate)
-		{
-			return new Vector[] {};
-		} else if (p1.degenerate)
-		{
-			return new Vector[]
-			{
-				new Vector(focusA.x, parabolaY(focusB, directrix, focusA.x))
-			};
-		} else if (p2.degenerate)
-		{
-			return new Vector[]
-			{
-				new Vector(focusB.x, parabolaY(focusA, directrix, focusB.x))
-			};
-		}
-
-		double[] xCoords = solveQuadraticFn(p1.x2 - p2.x2, p1.x - p2.x, p1.c - p2.c);
-
-		return new Vector[]
-		{
-			new Vector(xCoords[0], parabolaY(focusA, directrix, xCoords[0])),
-			new Vector(xCoords[1], parabolaY(focusA, directrix, xCoords[1])),
-		};
-	}
-
-	static double[] solveQuadraticFn(double a, double b, double c)
-	{
-		double sqrt = Math.sqrt(b * b - 4.0f * a * c);
-
-		return new double[]
-		{
-			(-b + sqrt) / (2.0f * a),
-			(-b - sqrt) / (2.0f * a)
-		};
 	}
 }
 
