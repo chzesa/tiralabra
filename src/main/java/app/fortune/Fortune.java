@@ -207,6 +207,7 @@ public class Fortune
 	{
 		Vector point = e.point();
 		Vector site = e.site();
+		Vector circlePoint = new Vector(point.x, Utils.parabolaY(site, point.y, point.x));
 
 		// Find and remove the arc being removed and its adjacent arcs
 		Arc arc = (Arc) beach.floor(new PointQuery(point.x, site.x));
@@ -223,7 +224,7 @@ public class Fortune
 
 		// rebuild the left and right arcs surrounding the removed arc
 		Boundary middle = new Boundary(
-			new Ray(point, Utils.bisector(larc.site, rarc.site)),
+			new Ray(circlePoint, Utils.bisector(larc.site, rarc.site)),
 			larc.site,
 			rarc.site
 		);
@@ -239,8 +240,8 @@ public class Fortune
 		detectEvent(right);
 
 		// add edges of removed arc to result
-		edges.add(new Edge(arc.left.ray.origin, point));
-		edges.add(new Edge(arc.right.ray.origin, point));
+		edges.add(new Edge(arc.left.ray.origin, circlePoint));
+		edges.add(new Edge(arc.right.ray.origin, circlePoint));
 	}
 
 	/**
