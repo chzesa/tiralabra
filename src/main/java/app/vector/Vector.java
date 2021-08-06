@@ -56,6 +56,12 @@ public class Vector
 			&& Math.abs(y - other.y) < PRECISION;
 	}
 
+	@Override
+	public String toString()
+	{
+		return "(" + x + ", " + y + ")";
+	}
+
 	public static double dot(Vector a, Vector b)
 	{
 		return a.x * b.x
