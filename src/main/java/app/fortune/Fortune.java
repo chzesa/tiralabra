@@ -270,7 +270,7 @@ class Utils
 		double a = focus.x;
 		double b = focus.y;
 
-		return (x - a) * (x - a) / (2 * (b - directrix)) + (b + directrix) / 2;
+		return (x - a) * (x - a) / (2.0f * (b - directrix)) + (b + directrix) / 2.0f;
 	}
 
 	/**
@@ -311,8 +311,13 @@ class Utils
 
 	static double[] solveQuadraticFn(double a, double b, double c)
 	{
-		double sqrt = Math.sqrt(b * b - 4 * a * c);
-		return new double[] { (-b + sqrt) / (2 * a), (-b - sqrt) / (2 * a) };
+		double sqrt = Math.sqrt(b * b - 4.0f * a * c);
+
+		return new double[]
+		{
+			(-b + sqrt) / (2.0f * a),
+			(-b - sqrt) / (2.0f * a)
+		};
 	}
 }
 
