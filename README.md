@@ -19,3 +19,4 @@ Run with `gradle run`
 * Numeric keys: Set the number of sites from 1 to 10
 * Space: generate a new set of sites
 * Esc: close
+* A: toggle automatic sweepline progression and dataset generation
