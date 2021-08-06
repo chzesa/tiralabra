@@ -221,6 +221,11 @@ public class Fortune
 		detectEvent(rightArc);
 	}
 
+	String border(Arc a, double y)
+	{
+		return String.format("%.3f", a.leftX(y)) + " ; " + String.format("%.3f", a.rightX(y));
+	}
+
 	void circleEvent(Event e)
 	{
 		Vector point = e.point();
@@ -231,6 +236,14 @@ public class Fortune
 		Arc arc = (Arc) beach.floor(new PointQuery(point.x, site.x));
 		Arc larc = (Arc) beach.lower(arc);
 		Arc rarc = (Arc) beach.higher(arc);
+
+		System.out.println("Removing:\n\t"
+			+ "left  " + larc + " | " + border(larc, point.y)
+			+ "\n\t"
+			+ "mid   " + arc + " | " + border(arc, point.y)
+			+ "\n\t"
+			+ "right " + rarc + " | " + border(rarc, point.y)
+		);
 
 		beach.remove(arc);
 		beach.remove(larc);
@@ -258,6 +271,10 @@ public class Fortune
 
 		Arc left = new Arc(larc.left, larc.site, middle);
 		Arc right = new Arc(middle, rarc.site, rarc.right);
+
+		System.out.println("Adding:\n\t"
+			+ "left  " + left + " | " + border(left, point.y)
+			+ "\n\tright " + right+ " | " + border(right, point.y));
 
 		beach.add(left);
 		beach.add(right);
