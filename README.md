@@ -10,7 +10,7 @@
 
 [Week2](https://github.com/chzesa/tiralabra/blob/master/reports/week2.md)
 
-[Week2](https://github.com/chzesa/tiralabra/blob/master/reports/week3.md)
+[Week3](https://github.com/chzesa/tiralabra/blob/master/reports/week3.md)
 
 ## Keybindings
 
