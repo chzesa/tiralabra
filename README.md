@@ -1,6 +1,6 @@
 # Algorithms project coursework
 
-https://user-images.githubusercontent.com/20567958/128545737-fe38576a-43cd-455e-b6fb-fcac41a51b3d.mp4
+https://user-images.githubusercontent.com/20567958/128546079-4a901962-7d96-4273-9c77-33578d12420a.mp4
 
 ## Documentation
 
