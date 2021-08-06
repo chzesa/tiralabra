@@ -58,4 +58,10 @@ public class Arc implements ISortable
 		Vector offset = new Vector(0.0, -point.sub(site).norm());
 		return point.add(offset);
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Arc of " + site + "{ " + left + " ; " + right + " }";
+	}
 }
