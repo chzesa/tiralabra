@@ -32,6 +32,9 @@ public class Boundary
 
 		Vector end;
 
+		if (intersections[0].equals(ray.origin) || intersections[1].equals(ray.origin))
+			return ray.origin;
+
 		// Determine which intersection the boundary ray intersects
 		Vector delta = intersections[0].sub(ray.origin).normalize();
 
