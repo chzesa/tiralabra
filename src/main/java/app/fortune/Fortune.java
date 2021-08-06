@@ -254,12 +254,32 @@ public class Fortune
 			Event e = queue.pollFirst();
 			beachCmp.sweepline = e.point().y;
 			if(e.isSiteEvent())
+			{
+				System.out.println("Site event " + e.point());
 				siteEvent(e);
+			}
 			else
+			{
+				System.out.println("Circle event " + e.point());
 				circleEvent(e);
+			}
 		}
 
 		return !queue.isEmpty();
+	}
+
+	public Result processTo(double y)
+	{
+		while(!queue.isEmpty())
+		{
+			if (queue.first().point().y < y)
+				break;
+
+			process();
+		}
+
+		setSweepline(y);
+		return result();
 	}
 
 	/**

@@ -6,14 +6,29 @@ plugins {
 
 repositories {
     jcenter()
+    mavenCentral()
 }
+
+project.ext.lwjglVersion = "3.2.3"
+project.ext.lwjglNatives = "natives-linux"
 
 dependencies {
     api 'org.apache.commons:commons-math3:3.6.1'
-
     implementation 'com.google.guava:guava:27.0.1-jre'
-
     testImplementation 'junit:junit:4.12'
+
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.lwjgl:lwjgl-shaderc"
+    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-shaderc::$lwjglNatives"
+
 }
 
-mainClassName = 'app.App'
+application {
+    mainClass = 'app.App'
+}
