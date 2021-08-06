@@ -155,53 +155,23 @@ class Arc implements ISortable
 		if (left == null)
 			return Double.NEGATIVE_INFINITY;
 
-		if (left.ray.direction.x == 0)
-			return left.ray.origin.x;
-
-		double s, t;
-
-		// y = sx + t form for bisector
-		{
-			Vector a = left.ray.origin;
-			Vector b = a.add(left.ray.direction);
-			s = (a.y - b.y) / (a.x - b.x);
-			t = -s * a.x + a.y;
-		}
-
-		double a, b, d;
-	
-		a = site.x;
-		b = site.y;
-		d = y;
-
-		// solve x coordinates for intersection of the line and the site's parabola
-		double[] isects = Utils.solveQuadraticFn(
-			1,
-			-2 * (a + s * (b - d)),
-			(b + d) * (b - d) - 2 * t * (b - d)
-		);
-
-		// If the ray direction is to the right, compare the intersection with greater x coordinate
-		if (left.ray.direction.x > 0)
-			return Math.min(left.ray.origin.x, Math.max(isects[0], isects[1]));
-
-		return Math.min(left.ray.origin.x, Math.min(isects[0], isects[1]));
-
-		/*
 		Vector[] intersections = Utils.parabolaIntersection(left.siteA, left.siteB, y);
+
 		if (intersections.length == 0)
-			return left.ray.origin.x;
+			return site.x;
+
+		if (intersections.length == 1)
+			return intersections[0].x;
 
 		Vector end;
 
-		// Determine which intersection is on the left boundary
-		if (intersections[0].sub(left.ray.origin).normalize().equals(left.ray.direction.normalize()))
-			end = intersections[0];
-		else
-			end = intersections[1];
+		// Determine which intersection the boundary ray intersects
+		Vector delta = intersections[0].sub(left.ray.origin).normalize();
 
-		return Math.min(left.ray.origin.x, end.x);
-		*/
+		if (delta.equals(left.ray.direction.normalize()))
+			return intersections[0].x;
+		else
+			return intersections[1].x;
 	}
 
 	public double secondary()
