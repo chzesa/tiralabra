@@ -100,8 +100,8 @@ class PointQuery implements ISortable
 public class Fortune
 {
 	BeachlineCompare beachCmp = new BeachlineCompare();
-	TreeSet<Event> queue = new TreeSet<>(new QueueCompare());
-	TreeSet<ISortable> beach = new TreeSet<>(beachCmp);
+	public TreeSet<Event> queue = new TreeSet<>(new QueueCompare());
+	public TreeSet<ISortable> beach = new TreeSet<>(beachCmp);
 	ArrayList<Edge> edges = new ArrayList<>();
 
 	public class Result
@@ -125,8 +125,8 @@ public class Fortune
 
 	public class Edge
 	{
-		final Vector a;
-		final Vector b;
+		public final Vector a;
+		public final Vector b;
 
 		public Edge(Vector a, Vector b)
 		{

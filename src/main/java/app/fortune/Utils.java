@@ -20,14 +20,14 @@ class Parabola
 	}
 }
 
-class Utils
+public class Utils
 {
 	/**
 	 * Given a vector defined by origin and destination, returns a perpendicular vector
 	 * pointing to the right from the viewpoint of the vector.
 	 * Used to generate the bisector direction vector of two adjacent sites.
 	 */
-	static Vector bisector(Vector orig, Vector dst)
+	public static Vector bisector(Vector orig, Vector dst)
 	{
 		Vector d = dst.sub(orig);
 
@@ -49,7 +49,7 @@ class Utils
 	 * Given a parabola defined by a focus and directrix, returns the y coordinate of the
 	 * parabola at x.
 	 */
-	static double parabolaY(Vector focus, double directrix, double x)
+	public static double parabolaY(Vector focus, double directrix, double x)
 	{
 		double a = focus.x;
 		double b = focus.y;
@@ -62,7 +62,7 @@ class Utils
 	 * provided neither parabola is degenerate.
 	 * Both parabolas are expected to be above the directrix.
 	 */
-	static Vector[] parabolaIntersection(Vector focusA, Vector focusB, double directrix)
+	public static Vector[] parabolaIntersection(Vector focusA, Vector focusB, double directrix)
 	{
 		Parabola p1 = new Parabola(focusA, directrix);
 		Parabola p2 = new Parabola(focusB, directrix);
@@ -93,7 +93,7 @@ class Utils
 		};
 	}
 
-	static double[] solveQuadraticFn(double a, double b, double c)
+	public static double[] solveQuadraticFn(double a, double b, double c)
 	{
 		double sqrt = Math.sqrt(b * b - 4.0f * a * c);
 

@@ -2,7 +2,7 @@ package app.fortune;
 
 import app.vector.*;
 
-class Event
+public class Event
 {
 	private final Vector pt;
 	private final Vector s;
@@ -19,17 +19,17 @@ class Event
 		this.s = site;
 	}
 
-	boolean isSiteEvent()
+	public boolean isSiteEvent()
 	{
 		return pt == null;
 	}
 
-	Vector site()
+	public Vector site()
 	{
 		return s;
 	}
 
-	Vector point()
+	public Vector point()
 	{
 		if (isSiteEvent())
 			return s;

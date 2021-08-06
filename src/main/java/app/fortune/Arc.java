@@ -9,13 +9,13 @@ import app.vector.*;
  * In this case, the sites are ordered clockwise, which is equivalent to ordering them from
  * left to right, given each arc is currently above the sweepline.
  */
-class Arc implements ISortable
+public class Arc implements ISortable
 {
-	final Boundary left;
-	final Boundary right;
-	final Vector site;
+	public final Boundary left;
+	public final Boundary right;
+	public final Vector site;
 
-	Arc(Boundary left, Vector site, Boundary right)
+	public Arc(Boundary left, Vector site, Boundary right)
 	{
 		this.left = left;
 		this.right = right;
@@ -54,7 +54,7 @@ class Arc implements ISortable
 	/**
 	 * Determines the circle event location below the arc's boundary ray intersection point if any.
 	 */
-	Vector circleEvent()
+	public Vector circleEvent()
 	{
 		if (left == null || right == null)
 			return null;
