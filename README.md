@@ -1,5 +1,7 @@
 # Algorithms project coursework
 
+https://user-images.githubusercontent.com/20567958/128545737-fe38576a-43cd-455e-b6fb-fcac41a51b3d.mp4
+
 ## Documentation
 
 [Design doc](https://github.com/chzesa/tiralabra/blob/master/docs/design.md)
