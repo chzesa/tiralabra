@@ -248,6 +248,24 @@ class PointQuery implements ISortable
 	}
 }
 
+class Parabola
+{
+	final double x2;
+	final double x;
+	final double c;
+	final boolean degenerate;
+
+	Parabola(Vector focus, double directrix)
+	{
+		degenerate = Math.abs(focus.y - directrix) < Vector.PRECISION;
+
+		double d = (2.0f * (focus.y - directrix));
+		x2 = 1.0f / d;
+		x = (-2.0f * focus.x ) / d;
+		c = focus.x * focus.x / d + (1.0f / 2.0f) * (focus.y + directrix);
+	}
+}
+
 class Utils
 {
 	/**
@@ -288,29 +306,34 @@ class Utils
 	/**
 	 * Given two focuses and a directrix, returns the intersection points of the parabolas
 	 * provided neither parabola is degenerate.
+	 * Both parabolas are expected to be above the directrix.
 	 */
 	static Vector[] parabolaIntersection(Vector focusA, Vector focusB, double directrix)
 	{
-		double a = focusA.x;
-		double b = focusA.y;
+		Parabola p1 = new Parabola(focusA, directrix);
+		Parabola p2 = new Parabola(focusB, directrix);
 
-		double s = focusB.x;
-		double t = focusB.y;
-
-		double d = directrix;
-
-		if (b == d || t == d)
+		if (p1.degenerate && p2.degenerate)
 		{
 			return new Vector[] {};
+		} else if (p1.degenerate)
+		{
+			return new Vector[]
+			{
+				new Vector(focusA.x, parabolaY(focusB, directrix, focusA.x))
+			};
+		} else if (p2.degenerate)
+		{
+			return new Vector[]
+			{
+				new Vector(focusB.x, parabolaY(focusA, directrix, focusB.x))
+			};
 		}
 
-		double[] xCoords = solveQuadraticFn(
-			-(b - d) * (t - d),
-			-2 * a * (t - d) + 2 * s * (b - d),
-			((b + d) - ( t + d )) * (b - d) * (t - d) - a * a * (t - d) + s * s * (b - d)
-		);
+		double[] xCoords = solveQuadraticFn(p1.x2 - p2.x2, p1.x - p2.x, p1.c - p2.c);
 
-		return new Vector[] {
+		return new Vector[]
+		{
 			new Vector(xCoords[0], parabolaY(focusA, directrix, xCoords[0])),
 			new Vector(xCoords[1], parabolaY(focusA, directrix, xCoords[1])),
 		};
