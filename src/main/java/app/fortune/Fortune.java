@@ -104,6 +104,10 @@ class BeachlineCompare implements Comparator<ISortable>
 	@Override
 	public int compare(ISortable a, ISortable b)
 	{
+		// Test in case the value is at negative infinity.
+		if (a == b)
+			return 0;
+
 		double aP = a.primary(sweepline);
 		double bP = b.primary(sweepline);
 
