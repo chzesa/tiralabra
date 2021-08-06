@@ -10,6 +10,8 @@
 
 [Week2](https://github.com/chzesa/tiralabra/blob/master/reports/week2.md)
 
+[Week2](https://github.com/chzesa/tiralabra/blob/master/reports/week3.md)
+
 ## Keybindings
 
 * Numeric keys: Set the number of points from 1 to 10
