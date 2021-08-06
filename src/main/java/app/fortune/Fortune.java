@@ -442,7 +442,6 @@ public class Fortune
 		beach.remove(rarc);
 
 		// Remove all events involving the arc including any caused by its boundaries
-		removeEvent(arc);
 		removeEvent(larc);
 		removeEvent(rarc);
 
