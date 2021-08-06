@@ -274,7 +274,7 @@ public class Fortune
 
 		System.out.println("Adding:\n\t"
 			+ "left  " + left + " | " + border(left, point.y)
-			+ "\n\tright " + right+ " | " + border(right, point.y));
+			+ "\n\tright " + right + " | " + border(right, point.y));
 
 		beach.add(left);
 		beach.add(right);
