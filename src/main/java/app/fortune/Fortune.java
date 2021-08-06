@@ -475,7 +475,7 @@ public class Fortune
 	{
 		if(!queue.isEmpty())
 		{
-			Event e = queue.first();
+			Event e = queue.pollFirst();
 			beachCmp.sweepline = e.point().y;
 			if(e.isSiteEvent())
 				siteEvent(e);
