@@ -25,6 +25,7 @@ public class App
 	double cursorX = 0;
 	double cursorY = 0;
 	boolean cursorMoved = true;
+	boolean debug = false;
 
 	int numSites = 8;
 	ArrayList<Vector> sites;
@@ -80,6 +81,8 @@ public class App
 				auto = !auto;
 			if (key == GLFW_KEY_S && action == GLFW_RELEASE)
 				saveDataset();
+			if (key == GLFW_KEY_D && action == GLFW_RELEASE)
+				debug = !debug;
 			if (key == GLFW_KEY_1 && action == GLFW_RELEASE)
 				numSites = 1;
 			if (key == GLFW_KEY_2 && action == GLFW_RELEASE)
@@ -243,7 +246,8 @@ public class App
 
 	void print(String s)
 	{
-		System.out.println(s);
+		if (debug)
+			System.out.println(s);
 	}
 
 	void drawQueuedCircleEvents()
@@ -399,6 +403,7 @@ public class App
 				cursorY += 2.0f;
 			}
 
+			fortune.debug = debug;
 			if (cursorMoved)
 			{
 				cursorMoved = false;
