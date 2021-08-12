@@ -433,7 +433,7 @@ public class App
 				}
 			}
 
-			if (auto && cursorY > windowY)
+			if (auto && fortune.peek() == null || cursorY >= 2 * windowY)
 			{
 				regenerate = true;
 				cursorY = -2.0f;
