@@ -50,6 +50,8 @@ public class PriorityQueue<T>
 
 	public Node push(T item)
 	{
+		used++;
+
 		if (used == capacity - 1)
 		{
 			capacity *= 2;
@@ -62,7 +64,6 @@ public class PriorityQueue<T>
 
 		Node node = new Node(used, item, this);
 		items[used] = node;
-		used++;
 
 		fix(node);
 
