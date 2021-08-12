@@ -8,6 +8,11 @@ public class Tree<T>
 	{
 		final T val;
 
+		Node(T value)
+		{
+			this.val = value;
+		}
+
 		Node ancestor = null;
 		Node left = null;
 		Node right = null;
@@ -90,8 +95,7 @@ public class Tree<T>
 
 	public Node add(T item)
 	{
-		Node node = new Node();
-		node.val = item;
+		Node node = new Node(item);
 		count++;
 
 		if (root == null)
