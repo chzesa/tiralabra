@@ -280,7 +280,7 @@ public class App
 		for (ISortable sort : fortune.beach)
 		{
 			Arc arc = (Arc) sort;
-			double xMin = arc.leftX(fortune.sweepLine());
+			double xMin = arc.left(fortune.sweepLine()).x;
 
 			if (xMin == Double.NEGATIVE_INFINITY)
 				xMin = 0;
@@ -289,9 +289,9 @@ public class App
 			Arc next = (Arc) fortune.beach.higher(sort);
 			if (next != null)
 			{
-				xMax = next.leftX(fortune.sweepLine());
-				if (next.leftX(fortune.sweepLine())
-					< sort.leftX(fortune.sweepLine()))
+				xMax = next.left(fortune.sweepLine()).x;
+				if (next.left(fortune.sweepLine()).x
+					< sort.left(fortune.sweepLine()).x)
 					throw new RuntimeException("asd");
 			}
 
@@ -317,7 +317,7 @@ public class App
 		for (ISortable sort : fortune.beach)
 		{
 			Arc arc = (Arc) sort;
-			float xMin = (float) arc.leftX(fortune.sweepLine());
+			float xMin = (float) arc.left(fortune.sweepLine()).x;
 
 			if (xMin == Double.NEGATIVE_INFINITY)
 				xMin = 0;
@@ -438,12 +438,12 @@ public class App
 						Arc arc = (Arc) sort;
 						Arc next = (Arc) fortune.beach.higher(arc);
 						if (next != null)
-							print("[" + arc.leftX(fortune.sweepLine())
+							print("[" + arc.left(fortune.sweepLine()).x
 								+ ", "
-								+ next.leftX(fortune.sweepLine())
+								+ next.left(fortune.sweepLine()).x
 								+ "]: " + arc.site);
 						else
-							print("[" + arc.leftX(fortune.sweepLine())
+							print("[" + arc.left(fortune.sweepLine()).x
 								+ ", Infinity]: " + arc.site);
 					});
 					print("Queue size: " + fortune.queue.size());

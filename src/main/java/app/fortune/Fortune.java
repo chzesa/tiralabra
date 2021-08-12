@@ -53,14 +53,14 @@ class BeachlineCompare implements Comparator<ISortable>
 		if (a == b)
 			return 0;
 
-		double aP = a.leftX(sweepline);
-		double bP = b.leftX(sweepline);
+		double aP = a.left(sweepline).x;
+		double bP = b.left(sweepline).x;
 
 		if (Math.abs(aP - bP) < Vector.PRECISION)
 		// if (aP == bP)
 		{
-			double aS = a.rightX(sweepline);
-			double bS = b.rightX(sweepline);
+			double aS = a.right(sweepline).x;
+			double bS = b.right(sweepline).x;
 			if (Math.abs(aS - bS) < Vector.PRECISION)
 			// if (aS == bS)
 			{
@@ -90,23 +90,23 @@ class BeachlineCompare implements Comparator<ISortable>
 
 class PointQuery implements ISortable
 {
-	final double x1;
+	final Vector point;
 	final double x2;
 
-	PointQuery(double x1, double x2)
+	PointQuery(Vector point, double x2)
 	{
-		this.x1 = x1;
+		this.point = point;
 		this.x2 = x2;
 	}
 
-	public double leftX(double y)
+	public Vector left(double y)
 	{
-		return x1;
+		return point;
 	}
 
-	public double rightX(double y)
+	public Vector right(double y)
 	{
-		return x1;
+		return point;
 	}
 
 	public double siteX()
@@ -197,7 +197,7 @@ public class Fortune
 
 		// Set the site x-coordinate at positive infinity in case the event point is at the
 		// exact point of the left edge of the arc it's on.
-		Arc arc = (Arc) beach.floor(new PointQuery(site.x, Double.POSITIVE_INFINITY));
+		Arc arc = (Arc) beach.floor(new PointQuery(site, Double.POSITIVE_INFINITY));
 
 		// if the arc defines a circle event it's a false alarm. Remove event from qeueue
 		removeEvent(arc);
@@ -224,7 +224,7 @@ public class Fortune
 
 	String border(Arc a, double y)
 	{
-		return String.format("%.3f", a.leftX(y)) + " ; " + String.format("%.3f", a.rightX(y));
+		return String.format("%.3f", a.left(y).x) + " ; " + String.format("%.3f", a.right(y).x);
 	}
 
 	void print(String s)
@@ -240,7 +240,7 @@ public class Fortune
 		Vector circlePoint = new Vector(point.x, Utils.parabolaY(site, point.y, point.x));
 
 		// Find and remove the arc being removed and its adjacent arcs
-		Arc arc = (Arc) beach.floor(new PointQuery(point.x, site.x));
+		Arc arc = (Arc) beach.floor(new PointQuery(point, site.x));
 		Arc larc = (Arc) beach.lower(arc);
 		Arc rarc = (Arc) beach.higher(arc);
 

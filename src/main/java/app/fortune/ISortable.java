@@ -1,8 +1,10 @@
 package app.fortune;
 
+import app.vector.Vector;
+
 public interface ISortable
 {
-	public double leftX(double y);
-	public double rightX(double y);
+	public Vector left(double y);
+	public Vector right(double y);
 	public double siteX();
 }

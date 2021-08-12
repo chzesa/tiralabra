@@ -22,20 +22,20 @@ public class Arc implements ISortable
 		this.site = site;
 	}
 
-	public double leftX(double y)
+	public Vector left(double y)
 	{
 		if (left == null)
-			return Double.NEGATIVE_INFINITY;
+			return new Vector(Double.NEGATIVE_INFINITY, y);
 
-		return left.end(y).x;
+		return left.end(y);
 	}
 
-	public double rightX(double y)
+	public Vector right(double y)
 	{
 		if (right == null)
-			return Double.POSITIVE_INFINITY;
+			return new Vector(Double.POSITIVE_INFINITY, y);
 
-		return right.end(y).x;
+		return right.end(y);
 	}
 
 	public double siteX()
