@@ -80,6 +80,9 @@ public class PriorityQueue<T>
 
 	public T delete(Node node)
 	{
+		if (used == 0)
+			return null;
+
 		Node last = (Node) items[used];
 
 		swap(node, last);
