@@ -1,12 +1,12 @@
 package app.tree;
 
-import java.util.*;
+import java.util.Comparator;
 
 public class Tree<T>
 {
 	public class Node
 	{
-		T val;
+		final T val;
 
 		Node ancestor = null;
 		Node left = null;
@@ -18,7 +18,7 @@ public class Tree<T>
 		}
 	}
 
-	Comparator<T> cmp;
+	final Comparator<T> cmp;
 	Node root = null;
 	int count = 0;
 

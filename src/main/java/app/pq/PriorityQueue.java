@@ -7,13 +7,13 @@ public class PriorityQueue<T>
 	int capacity = 2;
 	int used = 0;
 	Object[] items = new Object[capacity];
-	Comparator<T> cmp;
+	final Comparator<T> cmp;
 
 	public class Node
 	{
 		int index;
-		T val;
-		PriorityQueue<T> pq;
+		final T val;
+		final PriorityQueue<T> pq;
 
 		Node(int index, T value, PriorityQueue<T> pq)
 		{
