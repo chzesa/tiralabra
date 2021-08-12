@@ -121,6 +121,7 @@ public class Fortune
 	public TreeSet<Event> queue = new TreeSet<>(new QueueCompare());
 	public TreeSet<ISortable> beach = new TreeSet<>(beachCmp);
 	ArrayList<Edge> edges = new ArrayList<>();
+	public boolean debug = false;
 
 	public class Result
 	{
@@ -228,7 +229,8 @@ public class Fortune
 
 	void print(String s)
 	{
-		System.out.println(s);
+		if (debug)
+			System.out.println(s);
 	}
 
 	void circleEvent(Event e)
