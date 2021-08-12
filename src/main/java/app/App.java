@@ -44,6 +44,16 @@ public class App
 		loop();
 	}
 
+	void saveDataset()
+	{
+		java.lang.StringBuilder builder = new java.lang.StringBuilder();
+		for (Vector site : sites)
+		{
+			builder.append(site.x + ", " + site.y + "\n");
+		}
+		FileHandler.write(builder.toString(), "sites_"+ java.time.LocalDateTime.now().toString() + ".txt");
+	}
+
 	void initWindow()
 	{
 		GLFWErrorCallback.createPrint(System.err).set();
@@ -68,6 +78,8 @@ public class App
 			}
 			if (key == GLFW_KEY_A && action == GLFW_RELEASE)
 				auto = !auto;
+			if (key == GLFW_KEY_S && action == GLFW_RELEASE)
+				saveDataset();
 			if (key == GLFW_KEY_1 && action == GLFW_RELEASE)
 				numSites = 1;
 			if (key == GLFW_KEY_2 && action == GLFW_RELEASE)

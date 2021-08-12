@@ -25,4 +25,26 @@ public class FileHandler
 
 		return new String(bytes);
 	}
+
+	public static boolean write(String content, String path) {
+		if (content == null || path == null)
+		{
+			return false;
+		}
+
+		try
+		{
+			Path p = Paths.get(path);
+			byte[] bytes = content.getBytes();
+			Files.write(p, bytes);
+		} catch (IOException e)
+		{
+			return false;
+		} catch (SecurityException e)
+		{
+			return false;
+		}
+
+		return true;
+	}
 }
