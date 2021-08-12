@@ -425,6 +425,7 @@ public class App
 							print("[" + arc.leftX(fortune.sweepLine())
 								+ ", Infinity]: " + arc.site);
 					});
+					print("Queue size: " + fortune.queue.size());
 					print("Beachline size: " + fortune.beach.size());
 				}
 				catch (Exception e)
