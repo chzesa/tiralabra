@@ -226,6 +226,11 @@ public class Fortune
 		return String.format("%.3f", a.leftX(y)) + " ; " + String.format("%.3f", a.rightX(y));
 	}
 
+	void print(String s)
+	{
+		System.out.println(s);
+	}
+
 	void circleEvent(Event e)
 	{
 		Vector point = e.point();
@@ -237,7 +242,7 @@ public class Fortune
 		Arc larc = (Arc) beach.lower(arc);
 		Arc rarc = (Arc) beach.higher(arc);
 
-		System.out.println("Removing:\n\t"
+		print("Removing:\n\t"
 			+ "left  " + larc + " | " + border(larc, point.y)
 			+ "\n\t"
 			+ "mid   " + arc + " | " + border(arc, point.y)
@@ -272,7 +277,7 @@ public class Fortune
 		Arc left = new Arc(larc.left, larc.site, middle);
 		Arc right = new Arc(middle, rarc.site, rarc.right);
 
-		System.out.println("Adding:\n\t"
+		print("Adding:\n\t"
 			+ "left  " + left + " | " + border(left, point.y)
 			+ "\n\tright " + right + " | " + border(right, point.y));
 
@@ -300,12 +305,12 @@ public class Fortune
 			beachCmp.sweepline = e.point().y;
 			if (e.isSiteEvent())
 			{
-				System.out.println("Site event " + e.point());
+				print("Site event " + e.point());
 				siteEvent(e);
 			}
 			else
 			{
-				System.out.println("Circle event " + e.point());
+				print("Circle event " + e.point());
 				circleEvent(e);
 			}
 		}
