@@ -9,6 +9,11 @@ import java.lang.StringBuilder;
 
 public class Parse
 {
+	/**
+	 * Converts a list of vectors to a string.
+	 * Each line contains x and y coordinates separated by a space.
+	 * String ends in a blank line.
+	 */
 	public static String toStringl(List<Vector> sites)
 	{
 		StringBuilder sb = new StringBuilder();
@@ -21,6 +26,10 @@ public class Parse
 		return sb.toString();
 	}
 
+	/**
+	 * Converts the specififed list to strings. Each vector list
+	 * is separated by a blank line.
+	 */
 	public static String toStringll(List<List<Vector>> sites)
 	{
 		StringBuilder sb = new StringBuilder();
@@ -30,6 +39,9 @@ public class Parse
 		return sb.toString();
 	}
 
+	/**
+	 * Parses a string representing a single list of sites.
+	 */
 	public static List<Vector> fromStringl(String s)
 	{
 		Scanner scan = new Scanner(s);
@@ -44,6 +56,9 @@ public class Parse
 		return sites;
 	}
 
+	/**
+	 * Parses a string representing lists of sites.
+	 */
 	public static List<List<Vector>> fromStringll(String in)
 	{
 		String[] parts = in.split("\n\n");
