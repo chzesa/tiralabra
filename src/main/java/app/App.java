@@ -265,7 +265,7 @@ public class App
 		try
 		{
 			Validator valid = new Validator(sites, new Fortune(sites).processAll());
-			if (valid.result())
+			if (!valid.result())
 				System.out.println("Incorrect voronoi diagram generated from dataset.");
 		}
 		catch(Exception e)
