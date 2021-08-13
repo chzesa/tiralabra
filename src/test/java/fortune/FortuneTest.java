@@ -1,38 +1,78 @@
 package app.fortune;
 
 import app.vector.*;
+import app.parse.*;
+import app.io.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.util.List;
 
 public class FortuneTest
 {
-	@Test
-	public void testBisectorsVertical()
+	List<List<Vector>> loadDataset(String file)
 	{
-		Vector a = new Vector(0, 0);
-		Vector b = new Vector(1, 0);
+		String s = FileHandler.readToString(file);
+		if (s.equals(""))
+			throw new Error("Failed to locate test data.");
 
-		assertTrue(Utils.bisector(a, b).equals(new Vector(0, -1)));
-		assertTrue(Utils.bisector(b, a).equals(new Vector(0, 1)));
+		return Parse.fromStringll(s);
 	}
 
 	@Test
-	public void testBisectorsHorizontal()
+	public void testOkDataset1()
 	{
-		Vector a = new Vector(0, 0);
-		Vector b = new Vector(0, 1);
-
-		assertTrue(Utils.bisector(a, b).equals(new Vector(1, 0)));
-		assertTrue(Utils.bisector(b, a).equals(new Vector(-1, 0)));
+		List<List<Vector>> data = loadDataset("dataset/ok_data_1.txt");
+		for (List<Vector> sites : data)
+			assertTrue(new Validator(sites, new Fortune(sites).processAll()).result());
 	}
 
 	@Test
-	public void testBisectorsDiagonal()
+	public void testOkDataset2()
 	{
-		Vector a = new Vector(0, 0);
-		Vector b = new Vector(0, 1);
+		for (List<Vector> sites : loadDataset("dataset/ok_data_2.txt"))
+			assertTrue(new Validator(sites, new Fortune(sites).processAll()).result());
+	}
 
-		assertTrue(Utils.bisector(a, b).equals(new Vector(1, 0)));
-		assertTrue(Utils.bisector(b, a).equals(new Vector(-1, 0)));
+	@Test
+	public void testOkDataset3()
+	{
+		for (List<Vector> sites : loadDataset("dataset/ok_data_3.txt"))
+			assertTrue(new Validator(sites, new Fortune(sites).processAll()).result());
+	}
+
+	void testBadData(String file)
+	{
+		int count = 0;
+		List<List<Vector>> ll = loadDataset("dataset/" + file);
+		for (List<Vector> sites : ll)
+			try
+			{
+				if(new Validator(sites, new Fortune(sites).processAll()).result())
+					count++;
+			}
+			catch (Exception e)
+			{ }
+		System.out.println(file + " successes: " + count + "/" + ll.size());
+	}
+
+	@Test
+	public void testBadDataset1()
+	{
+		String file = "bad_data_1.txt";
+		testBadData(file);
+	}
+
+	@Test
+	public void testBadDataset2()
+	{
+		String file = "bad_data_2.txt";
+		testBadData(file);
+	}
+
+	@Test
+	public void testBadDataset3()
+	{
+		String file = "bad_data_3.txt";
+		testBadData(file);
 	}
 }
