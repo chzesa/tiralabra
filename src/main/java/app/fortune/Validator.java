@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import app.vector.*;
 
+/**
+ * A basic validator class for checking the output of Fortune class.
+ * Does not guarantee that the tested voronoi diagram is correct, only
+ * that it does not contain anything incorrect.
+ */
 public class Validator
 {
 
