@@ -38,4 +38,10 @@ test {
     testLogging {
         showStandardStreams = true
     }
+
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
 }
