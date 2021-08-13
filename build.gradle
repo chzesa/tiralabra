@@ -33,3 +33,9 @@ dependencies {
 application {
     mainClass = 'app.App'
 }
+
+test {
+    testLogging {
+        showStandardStreams = true
+    }
+}
