@@ -1,6 +1,7 @@
 package app.fortune;
 
 import app.vector.*;
+import app.pq.*;
 
 /**
  * Arcs are sorted primarily by the projection of its leftmost endpoint onto the sweepline.
@@ -14,6 +15,8 @@ public class Arc implements ISortable
 	public final Boundary left;
 	public final Boundary right;
 	public final Vector site;
+
+	PriorityQueue<Event>.Node event = null;
 
 	public Arc(Boundary left, Vector site, Boundary right)
 	{

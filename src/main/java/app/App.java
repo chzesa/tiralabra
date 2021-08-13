@@ -286,11 +286,11 @@ public class App
 
 	void drawQueuedCircleEvents()
 	{
-		for (Event e : fortune.queue)
-		{
-			if (!e.isSiteEvent())
-				drawPoints(new float[] {(float) e.point().x, (float) e.point().y});
-		}
+		// for (Event e : fortune.queue)
+		// {
+		// 	if (!e.isSiteEvent())
+		// 		drawPoints(new float[] {(float) e.point().x, (float) e.point().y});
+		// }
 	}
 
 	void drawBeachline()

@@ -1,6 +1,7 @@
 package app.fortune;
 
 import app.vector.*;
+import app.pq.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
@@ -118,7 +119,7 @@ class PointQuery implements ISortable
 public class Fortune
 {
 	BeachlineCompare beachCmp = new BeachlineCompare();
-	public TreeSet<Event> queue = new TreeSet<>(new QueueCompare());
+	public PriorityQueue<Event> queue = new PriorityQueue<>(new QueueCompare());
 	public TreeSet<ISortable> beach = new TreeSet<>(beachCmp);
 	ArrayList<Edge> edges = new ArrayList<>();
 	public boolean debug = false;
@@ -160,7 +161,7 @@ public class Fortune
 	 */
 	public Fortune(List<Vector> sites)
 	{
-		sites.forEach(site -> queue.add(new Event(site)));
+		sites.forEach(site -> queue.push(new Event(site)));
 		limit = sites.size() * 1000;
 	}
 
@@ -168,14 +169,13 @@ public class Fortune
 	{
 		Vector point = arc.circleEvent();
 		if (point != null)
-			queue.add(new Event(point, arc.site));
+			arc.event = queue.push(new Event(point, arc.site));
 	}
 
 	void removeEvent(Arc arc)
 	{
-		Vector point = arc.circleEvent();
-		if (point != null)
-			queue.remove(new Event(point, arc.site));
+		if (arc.event != null)
+			queue.delete(arc.event);
 	}
 
 	Boundary[] generateBoundaries(Arc arc, Vector site)
@@ -305,7 +305,7 @@ public class Fortune
 	{
 		if (!queue.isEmpty())
 		{
-			Event e = queue.pollFirst();
+			Event e = queue.pop();
 			beachCmp.sweepline = e.point().y;
 			if (e.isSiteEvent())
 			{
@@ -326,7 +326,7 @@ public class Fortune
 	{
 		while (!queue.isEmpty())
 		{
-			if (queue.first().point().y < y)
+			if (queue.peek().point().y < y)
 				break;
 
 			process();
@@ -348,7 +348,7 @@ public class Fortune
 	public Vector peek()
 	{
 		if (!queue.isEmpty())
-			return queue.first().point();
+			return queue.peek().point();
 		return null;
 	}
 
@@ -360,7 +360,7 @@ public class Fortune
 	public void setSweepline(double y)
 	{
 		if (queue.isEmpty() ||
-			(y < beachCmp.sweepline && y > queue.first().point().y))
+			(y < beachCmp.sweepline && y > queue.peek().point().y))
 			beachCmp.sweepline = y;
 	}
 
