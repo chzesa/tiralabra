@@ -103,4 +103,10 @@ public class Vector
 	{
 		return norm(sub(a, b));
 	}
+
+	public static double angle(Vector a, Vector b)
+	{
+		double det = a.x * b.y - a.y * b.x;
+		return Math.atan2(det, dot(a, b));
+	}
 }

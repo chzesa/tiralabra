@@ -7,8 +7,6 @@ import app.pq.*;
  * Arcs are sorted primarily by the projection of its leftmost endpoint onto the sweepline.
  * If two adjacent arcs have the same primary sort value, at least one of them is vanishing
  * from the beachline, and multiple sites are on the voronoi circle around the event point.
- * In this case, the sites are ordered clockwise, which is equivalent to ordering them from
- * left to right, given each arc is currently above the sweepline.
  */
 public class Arc implements ISortable
 {

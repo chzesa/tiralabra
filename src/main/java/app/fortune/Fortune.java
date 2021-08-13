@@ -47,6 +47,20 @@ class BeachlineCompare implements Comparator<ISortable>
 {
 	public Vector ep = new Vector(0, 0);
 
+	boolean equals(double a, double b)
+	{
+		return Math.abs(a - b) < Vector.PRECISION;
+	}
+
+	static double angle(Vector vec)
+	{
+		Vector down = new Vector(0, -1);
+		double angle = Vector.angle(vec, down);
+		if (angle < 0)
+			angle += 2 * Math.PI;
+		return angle;
+	}
+
 	@Override
 	public int compare(ISortable a, ISortable b)
 	{
@@ -57,19 +71,21 @@ class BeachlineCompare implements Comparator<ISortable>
 		double aP = a.left(ep.y).x;
 		double bP = b.left(ep.y).x;
 
-		if (Math.abs(aP - bP) < Vector.PRECISION)
+		if (equals(aP, bP))
 		{
 			double aS = a.right(ep.y).x;
 			double bS = b.right(ep.y).x;
-			if (Math.abs(aS - bS) < Vector.PRECISION)
+			if (equals(aS, bS))
 			{
-				double aT = a.site().x;
-				double bT = b.site().x;
+				Vector vA = a.site().sub(ep);
+				Vector vB = b.site().sub(ep);
+				double angleA = angle(vA);
+				double angleB = angle(vB);
 
-				if (Math.abs(aT - bT) < Vector.PRECISION)
+				if (equals(angleA, angleB))
 					return 0;
 
-				return Double.compare(aT, bT);
+				return Double.compare(angleA, angleB);
 			}
 
 			return Double.compare(aS, bS);
@@ -355,7 +371,7 @@ public class Fortune
 	{
 		if (queue.isEmpty() ||
 			(y < beachCmp.ep.y && y > queue.peek().point().y))
-			beachCmp.ep = new Vector(0, y);
+			beachCmp.ep = new Vector(beachCmp.ep.x, y);
 	}
 
 	/**
