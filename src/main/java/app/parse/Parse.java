@@ -14,7 +14,7 @@ public class Parse
 		StringBuilder sb = new StringBuilder();
 
 		for (Vector v : sites)
-			sb.append(v.x + ", " + v.y + "\n");
+			sb.append(v.x + " " + v.y + "\n");
 
 		sb.append("\n");
 
