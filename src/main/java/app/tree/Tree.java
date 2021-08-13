@@ -48,14 +48,6 @@ public class Tree<T>
 		{
 			Node n = next(node);
 			swap(n, node);
-
-			if (node == node.ancestor.left)
-				node.ancestor.left = null;
-			else
-				node.ancestor.right = null;
-
-			node.ancestor = null;
-			return node.value();
 		}
 
 		if (node.left != null)
@@ -80,7 +72,13 @@ public class Tree<T>
 			return node.value();
 		}
 
-		throw new Error("Unreachable.");
+		if (node == node.ancestor.left)
+			node.ancestor.left = null;
+		else
+			node.ancestor.right = null;
+
+		node.ancestor = null;
+		return node.value();
 	}
 
 	public Node next(Node node)
