@@ -3,6 +3,9 @@ package app.tree;
 import java.util.Comparator;
 import app.util.*;
 
+/**
+ * Unbalanced binary tree.
+ */
 public class Tree<T>
 {
 	public class Node
@@ -38,6 +41,10 @@ public class Tree<T>
 	Node root = null;
 	int count = 0;
 
+	/**
+	 * Constructs a new tree.
+	 * @param cmp A comparator determining the ordering of the tree.
+	 */
 	public Tree(Comparator<T> cmp)
 	{
 		this.cmp = cmp;
@@ -53,11 +60,17 @@ public class Tree<T>
 		return this.count;
 	}
 
+	/**
+	 * Delete a single node containing an equal item from the tree.
+	 */
 	public T delete(T item)
 	{
 		return delete(find(item));
 	}
 
+	/**
+	 * Delete a single node from the tree.
+	 */
 	public T delete(Node node)
 	{
 		if (node == null)
@@ -89,16 +102,10 @@ public class Tree<T>
 		return node.value();
 	}
 
-	public Node next(Node node)
-	{
-		return next(node.value());
-	}
-
-	public Node previous(Node node)
-	{
-		return previous(node.value());
-	}
-
+	/**
+	 * Add an item to the tree.
+	 * @return An object representing the node which can be used for deletion.
+	 */
 	public Node add(T item)
 	{
 		if (item == null)
@@ -138,6 +145,17 @@ public class Tree<T>
 		return node;
 	}
 
+	/**
+	 * Returns the smallest contained item that is larger than the parameter.
+	 */
+	public Node next(Node node)
+	{
+		return next(node.value());
+	}
+
+	/**
+	 * Returns the smallest contained item that is larger than the parameter.
+	 */
 	public Node next(T item)
 	{
 		Node result = null;
@@ -160,6 +178,17 @@ public class Tree<T>
 		return result;
 	}
 
+	/**
+	 * Returns the largest contained item that is smaller than the parameter.
+	 */
+	public Node previous(Node node)
+	{
+		return previous(node.value());
+	}
+
+	/**
+	 * Returns the largest contained item that is smaller than the parameter.
+	 */
 	public Node previous(T item)
 	{
 		Node result = null;
@@ -182,6 +211,9 @@ public class Tree<T>
 		return result;
 	}
 
+	/**
+	 * Returns the greatest item smaller than the parameter, or an item which equals it.
+	 */
 	public Node floor(T item)
 	{
 		Node result = null;
