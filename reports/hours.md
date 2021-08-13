@@ -15,3 +15,5 @@
 06.8.|2h|=
 06.8.|1h|Docs etc.
 06.8.|2h|Debugging, docs
+12.8.|2h|
+13.8.|14h|Implementing dataset generation, integrating custom data structures
