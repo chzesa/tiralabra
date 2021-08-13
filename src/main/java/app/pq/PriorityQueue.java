@@ -24,11 +24,17 @@ public class PriorityQueue<T>
 
 		Node left()
 		{
+			if (index * 2 > pq.used)
+				return null;
+
 			return (Node) pq.items[index * 2];
 		}
 
 		Node right()
 		{
+			if (index * 2 + 1 > pq.used)
+				return null;
+
 			return (Node) pq.items[index * 2 + 1];
 		}
 
