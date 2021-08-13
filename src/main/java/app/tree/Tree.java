@@ -43,6 +43,16 @@ public class Tree<T>
 		this.cmp = cmp;
 	}
 
+	public boolean isEmpty()
+	{
+		return size() == 0;
+	}
+
+	public int size()
+	{
+		return this.count;
+	}
+
 	public T delete(T item)
 	{
 		return delete(find(item));
