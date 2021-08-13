@@ -183,4 +183,17 @@ public class TreeTest
 
 		assertNull(tree.next(6));
 	}
+
+	@Test
+	public void testDelete()
+	{
+		balanced();
+		tree.validate();
+		assertTrue(tree.delete(1).equals(1));
+		tree.validate();
+		assertTrue(tree.delete(5).equals(5));
+		tree.validate();
+		assertTrue(tree.delete(3).equals(3));
+		tree.validate();
+	}
 }
