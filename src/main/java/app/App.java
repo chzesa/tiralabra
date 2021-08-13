@@ -82,6 +82,22 @@ public class App
 				saveDataset();
 			if (key == GLFW_KEY_D && action == GLFW_RELEASE)
 				debug = !debug;
+			if (key == GLFW_KEY_V && action == GLFW_RELEASE)
+			{
+				try
+				{
+					if (new Validator(sites, new Fortune(sites).processAll()).result())
+						System.out.println("Ok result.");
+					else
+						System.out.println("Invalid result.");
+				}
+				catch(Exception e)
+				{
+					System.out.println("Invalid result.");
+					System.out.println(e);
+					e.printStackTrace();
+				}
+			}
 			if (key == GLFW_KEY_1 && action == GLFW_RELEASE)
 				numSites = 1;
 			if (key == GLFW_KEY_2 && action == GLFW_RELEASE)
