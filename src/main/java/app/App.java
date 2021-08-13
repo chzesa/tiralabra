@@ -305,9 +305,6 @@ public class App
 			{
 				Arc next = (Arc) node.value();
 				xMax = next.left(fortune.sweepLine()).x;
-				if (next.left(fortune.sweepLine()).x
-					< v.left(fortune.sweepLine()).x)
-					throw new RuntimeException("asd");
 			}
 
 			drawParabola(arc.site, fortune.sweepLine(), xMin, xMax);
