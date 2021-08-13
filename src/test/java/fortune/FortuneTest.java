@@ -47,7 +47,7 @@ public class FortuneTest
 		for (List<Vector> sites : ll)
 			try
 			{
-				if(new Validator(sites, new Fortune(sites).processAll()).result())
+				if (new Validator(sites, new Fortune(sites).processAll()).result())
 					count++;
 			}
 			catch (Exception e)

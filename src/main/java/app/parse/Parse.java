@@ -46,7 +46,7 @@ public class Parse
 	{
 		Scanner scan = new Scanner(s);
 		List<Vector> sites = new ArrayList<>();
-		while(scan.hasNextDouble())
+		while (scan.hasNextDouble())
 		{
 			double x = scan.nextDouble();
 			double y = scan.nextDouble();

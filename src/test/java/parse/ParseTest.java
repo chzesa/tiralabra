@@ -1,6 +1,5 @@
-package app.Parse;
+package app.parse;
 
-import app.parse.*;
 import app.vector.*;
 
 import java.util.ArrayList;

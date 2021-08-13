@@ -22,7 +22,7 @@ public class BeachlineCompareTest
 
 		for (int i = 1; i < vecs.length; i++)
 			assertTrue(Double.compare(
-				BeachlineCompare.angle(vecs[i -1]),
+				BeachlineCompare.angle(vecs[i - 1]),
 				BeachlineCompare.angle(vecs[i])) == -1);
 	}
 }

@@ -386,7 +386,8 @@ public class Fortune
 
 		ArrayList<Edge> infEdges = new ArrayList<>();
 
-		beach.forEach(is -> {
+		beach.forEach(is ->
+		{
 			Arc arc = (Arc) is;
 			if (arc.left != null)
 				infEdges.add(new Edge(arc.left.ray.origin, arc.left.ray.direction));

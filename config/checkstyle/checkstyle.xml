@@ -79,11 +79,4 @@
 	</module>
 	<module name='NewlineAtEndOfFile' />
 
-	<!-- File Length -->
-
-	<module name='FileLength'>
-		<property name='max' value='500' />
-	</module>
-
-
 </module>

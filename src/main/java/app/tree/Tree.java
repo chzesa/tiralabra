@@ -28,7 +28,7 @@ public class Tree<T>
 
 		public String toString()
 		{
-			return "[ "+ val.toString() +" ] [A]: "
+			return "[ " + val.toString() + " ] [A]: "
 				+ (ancestor == null ? "null" : ancestor.val.toString())
 				+ "; [L]: "
 				+ (left == null ? "null" : left.val.toString())

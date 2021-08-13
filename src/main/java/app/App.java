@@ -52,7 +52,7 @@ public class App
 
 	void saveDataset()
 	{
-		FileHandler.write(Parse.toStringl(sites), "sites_"+ java.time.LocalDateTime.now().toString() + ".txt");
+		FileHandler.write(Parse.toStringl(sites), "sites_" + java.time.LocalDateTime.now().toString() + ".txt");
 	}
 
 	void initWindow()
@@ -92,7 +92,7 @@ public class App
 					else
 						System.out.println("Invalid result.");
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					System.out.println("Invalid result.");
 					System.out.println(e);
@@ -268,7 +268,7 @@ public class App
 			if (!valid.result())
 				System.out.println("Incorrect voronoi diagram generated from dataset.");
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			System.out.println("Error processing the generated list of sites.");
 			System.out.println(e);
@@ -284,7 +284,8 @@ public class App
 
 	void drawQueuedCircleEvents()
 	{
-		fortune.queue.forEach(e -> {
+		fortune.queue.forEach(e ->
+		{
 			if (!e.isSiteEvent())
 				drawPoints(new float[] {(float) e.point().x, (float) e.point().y});
 		});
@@ -292,7 +293,8 @@ public class App
 
 	void drawBeachline()
 	{
-		fortune.beach.forEach(v -> {
+		fortune.beach.forEach(v ->
+		{
 			Arc arc = (Arc) v;
 			double xMin = arc.left(fortune.sweepLine()).x;
 
@@ -326,7 +328,8 @@ public class App
 
 	void drawBeachlineVerticals()
 	{
-		fortune.beach.forEach(v -> {
+		fortune.beach.forEach(v ->
+		{
 			Arc arc = (Arc) v;
 			float xMin = (float) arc.left(fortune.sweepLine()).x;
 
@@ -339,7 +342,8 @@ public class App
 
 	void drawBoundaries()
 	{
-		fortune.beach.forEach(v -> {
+		fortune.beach.forEach(v ->
+		{
 			Arc arc = (Arc) v;
 			if (arc.left == null)
 				return;
@@ -443,7 +447,8 @@ public class App
 				{
 					fortune.processTo(cursorPos);
 					processResult();
-					fortune.beach.forEach(v -> {
+					fortune.beach.forEach(v ->
+					{
 						Arc arc = (Arc) v;
 						Tree<ISortable>.Node node = fortune.beach.next(arc);
 						Arc next = (Arc) fortune.beach.next(arc).value();
@@ -523,7 +528,7 @@ public class App
 					System.out.println("Invalid result");
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				System.out.println(e);
 			}
@@ -549,7 +554,7 @@ public class App
 				}
 
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				res.add(sites);
 				count--;
