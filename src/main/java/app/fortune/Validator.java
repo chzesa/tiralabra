@@ -96,7 +96,7 @@ public class Validator
 			res = res && validateEdge(e);
 
 		for (Fortune.Edge r : result.rays)
-			res = res && validateEdge(r);
+			res = res && validateRay(r);
 
 		return res;
 	}
