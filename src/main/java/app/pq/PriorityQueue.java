@@ -1,6 +1,7 @@
 package app.pq;
 
 import java.util.*;
+import app.util.*;
 
 public class PriorityQueue<T>
 {
@@ -119,6 +120,12 @@ public class PriorityQueue<T>
 	public boolean isEmpty()
 	{
 		return size() == 0;
+	}
+
+	public void forEach(ICallback<T> fn)
+	{
+		for (int i = 1; i <= used; i++)
+			fn.operation(((Node) items[i]).value());
 	}
 
 	/**

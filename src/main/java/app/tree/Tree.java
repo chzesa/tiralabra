@@ -1,6 +1,7 @@
 package app.tree;
 
 import java.util.Comparator;
+import app.util.*;
 
 public class Tree<T>
 {
@@ -178,6 +179,23 @@ public class Tree<T>
 
 		return result;
 	}
+
+	void forEachNode(Node n, ICallback<T> fn)
+	{
+		if (n == null)
+			return;
+
+		fn.operation(n.value());
+
+		forEachNode(n.left, fn);
+		forEachNode(n.right, fn);
+	}
+
+	public void forEach(ICallback<T> fn)
+	{
+		forEachNode(root, fn);
+	}
+
 
 	public Node find(T item)
 	{
