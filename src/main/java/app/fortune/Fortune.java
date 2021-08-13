@@ -2,10 +2,10 @@ package app.fortune;
 
 import app.vector.*;
 import app.pq.*;
+import app.tree.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
-import java.util.TreeSet;
 
 /**
  * Site events are sorted top to bottom, left to right.
@@ -120,7 +120,7 @@ public class Fortune
 {
 	BeachlineCompare beachCmp = new BeachlineCompare();
 	public PriorityQueue<Event> queue = new PriorityQueue<>(new QueueCompare());
-	public TreeSet<ISortable> beach = new TreeSet<>(beachCmp);
+	public Tree<ISortable> beach = new Tree<>(beachCmp);
 	ArrayList<Edge> edges = new ArrayList<>();
 	public boolean debug = false;
 	int limit;
@@ -199,13 +199,13 @@ public class Fortune
 
 		// Set the site x-coordinate at positive infinity in case the event point is at the
 		// exact point of the left edge of the arc it's on.
-		Arc arc = (Arc) beach.floor(new PointQuery(site, Double.POSITIVE_INFINITY));
+		Arc arc = (Arc) beach.floor(new PointQuery(site, Double.POSITIVE_INFINITY)).value();
 
 		// if the arc defines a circle event it's a false alarm. Remove event from qeueue
 		removeEvent(arc);
 
 		// split the arc into new sections
-		beach.remove(arc);
+		beach.delete(arc);
 
 		Boundary[] bounds = generateBoundaries(arc, site);
 		Boundary left = bounds[0];
@@ -242,9 +242,13 @@ public class Fortune
 		Vector circlePoint = new Vector(point.x, Utils.parabolaY(site, point.y, point.x));
 
 		// Find and remove the arc being removed and its adjacent arcs
-		Arc arc = (Arc) beach.floor(new PointQuery(point, site.x));
-		Arc larc = (Arc) beach.lower(arc);
-		Arc rarc = (Arc) beach.higher(arc);
+		Tree<ISortable>.Node node = beach.floor(new PointQuery(point, site.x));
+		Arc arc = (Arc) node.value();
+		node = beach.previous(arc);
+		Arc larc = node == null ? null : (Arc) node.value();
+		node = beach.next(arc);
+		Arc rarc = node == null ? null : (Arc) node.value();
+
 
 		print("Removing:\n\t"
 			+ "left  " + larc + " | " + border(larc, point.y)
@@ -254,9 +258,9 @@ public class Fortune
 			+ "right " + rarc + " | " + border(rarc, point.y)
 		);
 
-		beach.remove(arc);
-		beach.remove(larc);
-		beach.remove(rarc);
+		beach.delete(arc);
+		beach.delete(larc);
+		beach.delete(rarc);
 
 		// Remove all events involving the arc including any caused by its boundaries
 		removeEvent(larc);
@@ -376,14 +380,11 @@ public class Fortune
 
 		ArrayList<Edge> infEdges = new ArrayList<>();
 
-		for (ISortable is : beach)
-		{
+		beach.forEach(is -> {
 			Arc arc = (Arc) is;
-			if (arc.left == null)
-				continue;
-
-			infEdges.add(new Edge(arc.left.ray.origin, arc.left.ray.direction));
-		}
+			if (arc.left != null)
+				infEdges.add(new Edge(arc.left.ray.origin, arc.left.ray.direction));
+		});
 
 		return new Result(resEdges, infEdges);
 	}

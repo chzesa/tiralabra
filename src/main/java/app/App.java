@@ -4,6 +4,7 @@ import app.io.*;
 import app.vector.Vector;
 import app.fortune.*;
 import app.parse.Parse;
+import app.tree.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -286,36 +287,35 @@ public class App
 
 	void drawQueuedCircleEvents()
 	{
-		// for (Event e : fortune.queue)
-		// {
-		// 	if (!e.isSiteEvent())
-		// 		drawPoints(new float[] {(float) e.point().x, (float) e.point().y});
-		// }
+		fortune.queue.forEach(e -> {
+			if (!e.isSiteEvent())
+				drawPoints(new float[] {(float) e.point().x, (float) e.point().y});
+		});
 	}
 
 	void drawBeachline()
 	{
-		for (ISortable sort : fortune.beach)
-		{
-			Arc arc = (Arc) sort;
+		fortune.beach.forEach(v -> {
+			Arc arc = (Arc) v;
 			double xMin = arc.left(fortune.sweepLine()).x;
 
 			if (xMin == Double.NEGATIVE_INFINITY)
 				xMin = 0;
 
 			double xMax = 1.0;
-			Arc next = (Arc) fortune.beach.higher(sort);
-			if (next != null)
+			Tree<ISortable>.Node node = fortune.beach.next(v);
+			if (node != null)
 			{
+				Arc next = (Arc) node.value();
 				xMax = next.left(fortune.sweepLine()).x;
 				if (next.left(fortune.sweepLine()).x
-					< sort.left(fortune.sweepLine()).x)
+					< v.left(fortune.sweepLine()).x)
 					throw new RuntimeException("asd");
 			}
 
 			drawParabola(arc.site, fortune.sweepLine(), xMin, xMax);
 			// drawLines(new float[] {(float)xMin, 1.0f, (float)xMin, 0.0f});
-		}
+		});
 	}
 
 	void drawAllParabolas()
@@ -332,25 +332,23 @@ public class App
 
 	void drawBeachlineVerticals()
 	{
-		for (ISortable sort : fortune.beach)
-		{
-			Arc arc = (Arc) sort;
+		fortune.beach.forEach(v -> {
+			Arc arc = (Arc) v;
 			float xMin = (float) arc.left(fortune.sweepLine()).x;
 
 			if (xMin == Double.NEGATIVE_INFINITY)
 				xMin = 0;
 
 			drawLines(new float[] {xMin, 1.0f, xMin, 0.0f});
-		}
+		});
 	}
 
 	void drawBoundaries()
 	{
-		for (ISortable sort : fortune.beach)
-		{
-			Arc arc = (Arc) sort;
+		fortune.beach.forEach(v -> {
+			Arc arc = (Arc) v;
 			if (arc.left == null)
-				continue;
+				return;
 
 			Vector origin = arc.left.ray.origin;
 			Vector direction = arc.left.ray.direction.normalize();
@@ -361,7 +359,7 @@ public class App
 			y2 = y1 + (float) direction.y * 100;
 
 			drawLines(new float[]{x1, y1, x2, y2});
-		}
+		});
 	}
 
 	Fortune.Result processResult()
@@ -451,10 +449,10 @@ public class App
 				{
 					fortune.processTo(cursorPos);
 					processResult();
-					fortune.beach.forEach(sort ->
-					{
-						Arc arc = (Arc) sort;
-						Arc next = (Arc) fortune.beach.higher(arc);
+					fortune.beach.forEach(v -> {
+						Arc arc = (Arc) v;
+						Tree<ISortable>.Node node = fortune.beach.next(arc);
+						Arc next = (Arc) fortune.beach.next(arc).value();
 						if (next != null)
 							print("[" + arc.left(fortune.sweepLine()).x
 								+ ", "
