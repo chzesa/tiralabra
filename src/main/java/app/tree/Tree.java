@@ -66,39 +66,26 @@ public class Tree<T>
 		count--;
 
 		if (node.left != null && node.right != null)
+			swap(next(node), node);
+
+		Node child = node.left == null ? node.right : node.left;
+		if (root == node)
+			root = child;
+
+		if (node.ancestor != null)
 		{
-			Node n = next(node);
-			swap(n, node);
+			if (node.ancestor.left == node)
+				node.ancestor.left = child;
+			else
+				node.ancestor.right = child;
 		}
 
-		if (node.left != null)
-		{
-			swap(node, node.left);
-			node.ancestor.left = null;
-			node.ancestor = null;
-			return node.value();
-		}
-
-		if (node.right != null)
-		{
-			swap(node, node.right);
-			node.ancestor.right = null;
-			node.ancestor = null;
-			return node.value();
-		}
-
-		if (node.ancestor == null)
-		{
-			root = null;
-			return node.value();
-		}
-
-		if (node == node.ancestor.left)
-			node.ancestor.left = null;
-		else
-			node.ancestor.right = null;
+		if (child != null)
+			child.ancestor = node.ancestor;
 
 		node.ancestor = null;
+		node.left = null;
+		node.right = null;
 		return node.value();
 	}
 
@@ -156,14 +143,15 @@ public class Tree<T>
 		while (current != null)
 		{
 			int comparison = cmp.compare(item, current.value());
-
-			if (comparison == 1)
-				result = current;
-
 			if (comparison == -1)
+			{
+				result = current;
 				current = current.left;
+			}
 			else
+			{
 				current = current.right;
+			}
 		}
 
 		return result;
@@ -177,14 +165,40 @@ public class Tree<T>
 		while (current != null)
 		{
 			int comparison = cmp.compare(item, current.value());
-
-			if (comparison == -1)
+			if (comparison == 1)
+			{
 				result = current;
+				current = current.right;
+			}
+			else
+			{
+				current = current.left;
+			}
+		}
+
+		return result;
+	}
+
+	public Node floor(T item)
+	{
+		Node result = null;
+		Node current = root;
+
+		while (current != null)
+		{
+			int comparison = cmp.compare(item, current.value());
+			if (comparison == 0)
+				return current;
 
 			if (comparison == 1)
-				current = current.left;
-			else
+			{
+				result = current;
 				current = current.right;
+			}
+			else
+			{
+				current = current.left;
+			}
 		}
 
 		return result;
@@ -274,7 +288,6 @@ public class Tree<T>
 		while (current != null)
 		{
 			int comparison = cmp.compare(item, current.value());
-
 			if (comparison == 0)
 				return current;
 
@@ -289,47 +302,58 @@ public class Tree<T>
 
 	void swap(Node a, Node b)
 	{
-		Node tLeft = a.left;
-		Node tRight = a.right;
-		Node tAncestor = a.ancestor;
+		if (a == null || b == null)
+			throw new IllegalArgumentException();
 
-		a.left = b.left;
-		a.right = b.right;
-		a.ancestor = b.ancestor;
+		Node aLeft = a.left;
+		Node aRight = a.right;
+		Node aAnc = a.ancestor;
 
-		b.left = tLeft;
-		b.right = tRight;
-		b.ancestor = tAncestor;
+		Node bLeft = b.left;
+		Node bRight = b.right;
+		Node bAnc = b.ancestor;
 
-		if (b.left != null)
-			b.left.ancestor = b;
-		if (b.right != null)
-			b.right.ancestor = b;
-
-		if (b.ancestor != null)
+		if (aAnc != null)
 		{
-			if (b.ancestor.left == a)
-				b.ancestor.left = b;
-			else if (b.ancestor.right == a)
-				b.ancestor.right = b;
+			if (aAnc.left == a)
+				aAnc.left = b;
+			else if (aAnc.right == a)
+				aAnc.right = b;
 		}
 
-		if (a.left != null)
-			a.left.ancestor = a;
-		if (a.right != null)
-			a.right.ancestor = a;
-
-		if (a.ancestor != null)
+		if (bAnc != null)
 		{
-			if (a.ancestor.left == b)
-				a.ancestor.left = a;
-			else if (a.ancestor.right == b)
-				a.ancestor.right = a;
+			if (bAnc.left == b)
+				bAnc.left = a;
+			else if (bAnc.right == b)
+				bAnc.right = a;
 		}
+
+		if (aLeft != null)
+			aLeft.ancestor = b;
+		if (aRight != null)
+			aRight.ancestor = b;
+
+		if (bLeft != null)
+			bLeft.ancestor = a;
+		if (bRight != null)
+			bRight.ancestor = a;
 
 		if (root == a)
+		{
 			root = b;
+		}
 		else if (root == b)
+		{
 			root = a;
+		}
+
+		a.left = bLeft == a ? b : bLeft;
+		a.right = bRight == a ? b : bRight;
+		a.ancestor = bAnc == a ? b : bAnc;
+
+		b.left = aLeft == b ? a : aLeft;
+		b.right = aRight == b ? a : aRight;
+		b.ancestor = aAnc == b ? a : aAnc;
 	}
 }
