@@ -266,16 +266,13 @@ public class App
 		{
 			Validator valid = new Validator(sites, new Fortune(sites).processAll());
 			if (valid.result())
-			{
 				System.out.println("Incorrect voronoi diagram generated from dataset.");
-				saveDataset();
-			}
 		}
 		catch(Exception e)
 		{
+			System.out.println("Error processing the generated list of sites.");
 			System.out.println(e);
 			e.printStackTrace();
-			saveDataset();
 		}
 	}
 
