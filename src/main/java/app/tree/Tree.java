@@ -101,6 +101,9 @@ public class Tree<T>
 
 	public Node add(T item)
 	{
+		if (item == null)
+			return null;
+
 		Node node = new Node(item);
 		count++;
 
