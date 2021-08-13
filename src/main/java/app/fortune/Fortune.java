@@ -58,34 +58,24 @@ class BeachlineCompare implements Comparator<ISortable>
 		double bP = b.left(ep.y).x;
 
 		if (Math.abs(aP - bP) < Vector.PRECISION)
-		// if (aP == bP)
 		{
 			double aS = a.right(ep.y).x;
 			double bS = b.right(ep.y).x;
 			if (Math.abs(aS - bS) < Vector.PRECISION)
-			// if (aS == bS)
 			{
 				double aT = a.site().x;
 				double bT = b.site().x;
 
 				if (Math.abs(aT - bT) < Vector.PRECISION)
-				// if (aT == bT)
 					return 0;
 
-				if (aT < bT)
-					return -1;
-				return 1;
+				return Double.compare(aT, bT);
 			}
 
-			if (aS < bS)
-				return -1;
-			return 1;
+			return Double.compare(aS, bS);
 		}
 
-		if (aP < bP)
-			return -1;
-
-		return 1;
+		return Double.compare(aP, bP);
 	}
 }
 
