@@ -79,10 +79,14 @@ public class Validator
 		 * The usual solution to handling rays and lines is to enclose the voronoi diagram
 		 * in a box, which is also a possibility.
 		 */
-		if (sitesA.size() == 2 && sitesB.size() == 2)
+
+		if (sitesA.size() > 2 && sitesB.size() > 2)
 			return true;
 
-		return sitesA.size() > 2 && sitesB.size() > 2;
+		if (sitesA.size() == 2)
+			return true;
+
+		return false;
 	}
 
 	public boolean result()
