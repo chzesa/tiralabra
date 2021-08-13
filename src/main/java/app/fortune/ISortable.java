@@ -6,5 +6,5 @@ public interface ISortable
 {
 	public Vector left(double y);
 	public Vector right(double y);
-	public double siteX();
+	public Vector site();
 }

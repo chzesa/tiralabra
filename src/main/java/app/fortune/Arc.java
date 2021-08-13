@@ -41,9 +41,9 @@ public class Arc implements ISortable
 		return right.end(y);
 	}
 
-	public double siteX()
+	public Vector site()
 	{
-		return site.x;
+		return site;
 	}
 
 	/**

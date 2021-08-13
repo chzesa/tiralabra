@@ -65,8 +65,8 @@ class BeachlineCompare implements Comparator<ISortable>
 			if (Math.abs(aS - bS) < Vector.PRECISION)
 			// if (aS == bS)
 			{
-				double aT = a.siteX();
-				double bT = b.siteX();
+				double aT = a.site().x;
+				double bT = b.site().x;
 
 				if (Math.abs(aT - bT) < Vector.PRECISION)
 				// if (aT == bT)
@@ -92,12 +92,12 @@ class BeachlineCompare implements Comparator<ISortable>
 class PointQuery implements ISortable
 {
 	final Vector point;
-	final double x2;
+	final Vector site;
 
-	PointQuery(Vector point, double x2)
+	PointQuery(Vector point, Vector site)
 	{
 		this.point = point;
-		this.x2 = x2;
+		this.site = site;
 	}
 
 	public Vector left(double y)
@@ -110,9 +110,9 @@ class PointQuery implements ISortable
 		return point;
 	}
 
-	public double siteX()
+	public Vector site()
 	{
-		return x2;
+		return site;
 	}
 }
 
@@ -199,7 +199,7 @@ public class Fortune
 
 		// Set the site x-coordinate at positive infinity in case the event point is at the
 		// exact point of the left edge of the arc it's on.
-		Arc arc = (Arc) beach.floor(new PointQuery(site, Double.POSITIVE_INFINITY)).value();
+		Arc arc = (Arc) beach.floor(new PointQuery(site, site)).value();
 
 		// if the arc defines a circle event it's a false alarm. Remove event from qeueue
 		removeEvent(arc);
@@ -242,7 +242,7 @@ public class Fortune
 		Vector circlePoint = new Vector(point.x, Utils.parabolaY(site, point.y, point.x));
 
 		// Find and remove the arc being removed and its adjacent arcs
-		Tree<ISortable>.Node node = beach.floor(new PointQuery(point, site.x));
+		Tree<ISortable>.Node node = beach.floor(new PointQuery(point, site));
 		Arc arc = (Arc) node.value();
 		node = beach.previous(arc);
 		Arc larc = node == null ? null : (Arc) node.value();
