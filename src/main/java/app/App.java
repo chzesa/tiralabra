@@ -3,9 +3,12 @@ package app;
 import app.io.*;
 import app.vector.Vector;
 import app.fortune.*;
+import app.parse.Parse;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import java.lang.StringBuilder;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -47,12 +50,7 @@ public class App
 
 	void saveDataset()
 	{
-		java.lang.StringBuilder builder = new java.lang.StringBuilder();
-		for (Vector site : sites)
-		{
-			builder.append(site.x + ", " + site.y + "\n");
-		}
-		FileHandler.write(builder.toString(), "sites_"+ java.time.LocalDateTime.now().toString() + ".txt");
+		FileHandler.write(Parse.toStringl(sites), "sites_"+ java.time.LocalDateTime.now().toString() + ".txt");
 	}
 
 	void initWindow()
