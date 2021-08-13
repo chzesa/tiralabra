@@ -5,7 +5,7 @@ import app.util.*;
 
 public class PriorityQueue<T>
 {
-	int capacity = 2;
+	int capacity = 32;
 	int used = 0;
 	Object[] items = new Object[capacity];
 	final Comparator<T> cmp;
