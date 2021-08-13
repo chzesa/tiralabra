@@ -87,6 +87,11 @@ public class PriorityQueue<T>
 		return delete((Node) items[1]);
 	}
 
+	public T peek()
+	{
+		return ((Node) items[1]).value();
+	}
+
 	public T delete(Node node)
 	{
 		if (node == null)
@@ -109,6 +114,11 @@ public class PriorityQueue<T>
 	public int size()
 	{
 		return used;
+	}
+
+	public boolean isEmpty()
+	{
+		return size() == 0;
 	}
 
 	/**
