@@ -10,6 +10,9 @@ public class PriorityQueue<T>
 	Object[] items = new Object[capacity];
 	final Comparator<T> cmp;
 
+	/**
+	 * A class representing items in the queue.
+	 */
 	public class Node
 	{
 		int index;
@@ -44,17 +47,28 @@ public class PriorityQueue<T>
 			return (Node) pq.items[(index - index % 2) / 2];
 		}
 
+		/**
+		 * Get the item this node represents.
+		 */
 		public T value()
 		{
 			return val;
 		}
 	}
 
+	/**
+	 * Constructs a priority queue.
+	 * @param cmp A comparator object determining the queue ordering.
+	 */
 	public PriorityQueue(Comparator<T> cmp)
 	{
 		this.cmp = cmp;
 	}
 
+	/**
+	 * Add an item into the priority queue.
+	 * @return An object which can be used to delete the added value.
+	 */
 	public Node push(T item)
 	{
 		if (item == null)
@@ -80,6 +94,9 @@ public class PriorityQueue<T>
 		return node;
 	}
 
+	/**
+	 * Remove the first item from the queue.
+	 */
 	public T pop()
 	{
 		if (used == 0)
@@ -88,11 +105,17 @@ public class PriorityQueue<T>
 		return delete((Node) items[1]);
 	}
 
+	/**
+	 * Returns the first item in the queue without removing it.
+	 */
 	public T peek()
 	{
 		return ((Node) items[1]).value();
 	}
 
+	/**
+	 * Deletes the item represented by the node from the queue.
+	 */
 	public T delete(Node node)
 	{
 		if (node == null)
