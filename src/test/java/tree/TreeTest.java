@@ -14,7 +14,16 @@ public class TreeTest
 		}
 	}
 
-	Tree tree;
+	void printTree(Tree<Integer>.Node n)
+	{
+		if (n == null)
+			return;
+		printTree(n.left);
+		System.out.println(n);
+		printTree(n.right);
+	}
+
+	Tree<Integer> tree;
 
 	void balanced()
 	{
