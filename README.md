@@ -10,6 +10,8 @@ https://user-images.githubusercontent.com/20567958/128546079-4a901962-7d96-4273-
 
 [Implementation](https://github.com/chzesa/tiralabra/blob/master/docs/implementation.md)
 
+[Performance](https://github.com/chzesa/tiralabra/blob/master/docs/performance.md)
+
 ## Weekly reports
 
 [Week1](https://github.com/chzesa/tiralabra/blob/master/reports/week1.md)
