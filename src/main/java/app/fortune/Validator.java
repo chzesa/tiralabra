@@ -62,14 +62,17 @@ public class Validator
 		List<Vector> sitesB = closestSites(edge.b);
 		List<Vector> sitesH = closestSites(half);
 
-		if (sitesH.size() != 2)
-			return false;
+		if (!edge.a.equals(edge.b))
+		{
+			if (sitesH.size() != 2)
+				return false;
 
-		if (!sitesA.containsAll(sitesH))
-			return false;
+			if (!sitesA.containsAll(sitesH))
+				return false;
 
-		if (!sitesB.containsAll(sitesH))
-			return false;
+			if (!sitesB.containsAll(sitesH))
+				return false;
+		}
 
 		/**
 		 * TODO: The algorithm currently inserts two parallel rays with the same origin
