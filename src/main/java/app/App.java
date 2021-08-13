@@ -6,6 +6,7 @@ import app.fortune.*;
 import app.parse.Parse;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import java.lang.StringBuilder;
@@ -31,7 +32,7 @@ public class App
 	boolean debug = false;
 
 	int numSites = 8;
-	ArrayList<Vector> sites;
+	List<Vector> sites;
 	Fortune fortune;
 	boolean regenerate = true;
 	boolean auto = true;
@@ -218,19 +219,22 @@ public class App
 		drawLines(coords);
 	}
 
-	void generateDataset()
+	static List<Vector> genSites(int count)
 	{
 		Random rand = new Random();
-		sites = new ArrayList<>();
-		int count = numSites;
-		while (count > 0)
-		{
-			sites.add(new Vector(
+		List<Vector> ret = new ArrayList<>();
+		while (count-- > 0)
+			ret.add(new Vector(
 				rand.nextDouble() * 0.9f + 0.05f,
 				rand.nextDouble() * 0.9f + 0.05f
 			));
-			count--;
-		}
+
+		return ret;
+	}
+
+	void generateDataset()
+	{
+		sites = genSites(numSites);
 
 		int i = 0;
 		coords = new float[numSites * 2];
@@ -489,6 +493,62 @@ public class App
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
+	}
+
+	static void genOkData(int count, int numSites)
+	{
+		List<List<Vector>> res = new ArrayList<>();
+
+		while (count > 0)
+		{
+			List<Vector> sites = genSites(numSites);
+			try
+			{
+				Validator valid = new Validator(sites, new Fortune(sites).processAll());
+				if (valid.result())
+				{
+					res.add(sites);
+					count--;
+				}
+				else
+				{
+					System.out.println("Invalid result");
+				}
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+		}
+
+		FileHandler.write(Parse.toStringll(res), "ok_data.txt");
+	}
+
+	static void genBadData(int count, int numSites)
+	{
+		List<List<Vector>> res = new ArrayList<>();
+
+		while (count > 0)
+		{
+			List<Vector> sites = genSites(numSites);
+			try
+			{
+				Validator valid = new Validator(sites, new Fortune(sites).processAll());
+				if (!valid.result())
+				{
+					res.add(sites);
+					count--;
+				}
+
+			}
+			catch(Exception e)
+			{
+				res.add(sites);
+				count--;
+			}
+		}
+
+		FileHandler.write(Parse.toStringll(res), "bad_data.txt");
 	}
 
 	public static void main(String[] args)
