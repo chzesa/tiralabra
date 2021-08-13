@@ -206,6 +206,66 @@ public class Tree<T>
 		forEachNode(root, fn);
 	}
 
+	void checkAncestry(Node n)
+	{
+		if (n == null)
+			return;
+
+		if (n.left != null)
+		{
+			if (n.left.ancestor != n)
+				throw new RuntimeException("Node " + n.left.value() + " has incorrect ancestor " + n.left.ancestor.value());
+			checkAncestry(n.left);
+		}
+		if (n.right != null)
+		{
+			if (n.right.ancestor != n)
+				throw new RuntimeException("Node " + n.right.value() + " has incorrect ancestor " + n.right.ancestor.value());
+			checkAncestry(n.right);
+		}
+	}
+
+	void checkLeft(Node n, T value)
+	{
+		if (n == null)
+			return;
+
+		if (cmp.compare(n.value(), value) == 1)
+			throw new RuntimeException("Left subtree of " + value.toString() + " has a larger item.");
+
+		checkLeft(n.left, value);
+		checkLeft(n.right, value);
+	}
+
+	void checkRight(Node n, T value)
+	{
+		if (n == null)
+			return;
+
+		if (cmp.compare(value, n.value()) != -1)
+			throw new RuntimeException("Right subtree of " + value.toString() + " has an equal or smaller item.");
+
+		checkRight(n.left, value);
+		checkRight(n.right, value);
+	}
+
+	void checkBalanced(Node n)
+	{
+		if (n == null)
+			return;
+
+		checkLeft(n.left, n.value());
+		checkRight(n.right, n.value());
+
+		checkBalanced(n.left);
+		checkBalanced(n.right);
+	}
+
+	public void validate()
+	{
+		checkBalanced(root);
+		checkAncestry(root);
+	}
 
 	public Node find(T item)
 	{
