@@ -122,6 +122,7 @@ public class Fortune
 	public TreeSet<ISortable> beach = new TreeSet<>(beachCmp);
 	ArrayList<Edge> edges = new ArrayList<>();
 	public boolean debug = false;
+	int limit;
 
 	public class Result
 	{
@@ -160,6 +161,7 @@ public class Fortune
 	public Fortune(List<Vector> sites)
 	{
 		sites.forEach(site -> queue.add(new Event(site)));
+		limit = sites.size() * 1000;
 	}
 
 	void detectEvent(Arc arc)
@@ -339,7 +341,7 @@ public class Fortune
 	 */
 	public Result processAll()
 	{
-		while (process());
+		while (process() && limit-- > 0);
 		return result();
 	}
 
