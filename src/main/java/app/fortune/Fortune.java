@@ -45,7 +45,7 @@ class QueueCompare implements Comparator<Event>
 
 class BeachlineCompare implements Comparator<ISortable>
 {
-	public double sweepline = 0;
+	public Vector ep = new Vector(0, 0);
 
 	@Override
 	public int compare(ISortable a, ISortable b)
@@ -54,14 +54,14 @@ class BeachlineCompare implements Comparator<ISortable>
 		if (a == b)
 			return 0;
 
-		double aP = a.left(sweepline).x;
-		double bP = b.left(sweepline).x;
+		double aP = a.left(ep.y).x;
+		double bP = b.left(ep.y).x;
 
 		if (Math.abs(aP - bP) < Vector.PRECISION)
 		// if (aP == bP)
 		{
-			double aS = a.right(sweepline).x;
-			double bS = b.right(sweepline).x;
+			double aS = a.right(ep.y).x;
+			double bS = b.right(ep.y).x;
 			if (Math.abs(aS - bS) < Vector.PRECISION)
 			// if (aS == bS)
 			{
@@ -310,7 +310,7 @@ public class Fortune
 		if (!queue.isEmpty())
 		{
 			Event e = queue.pop();
-			beachCmp.sweepline = e.point().y;
+			beachCmp.ep = e.point();
 			if (e.isSiteEvent())
 			{
 				print("Site event " + e.point());
@@ -358,14 +358,14 @@ public class Fortune
 
 	public double sweepLine()
 	{
-		return beachCmp.sweepline;
+		return beachCmp.ep.y;
 	}
 
 	public void setSweepline(double y)
 	{
 		if (queue.isEmpty() ||
-			(y < beachCmp.sweepline && y > queue.peek().point().y))
-			beachCmp.sweepline = y;
+			(y < beachCmp.ep.y && y > queue.peek().point().y))
+			beachCmp.ep = new Vector(0, y);
 	}
 
 	/**
