@@ -56,6 +56,9 @@ public class PriorityQueue<T>
 
 	public Node push(T item)
 	{
+		if (item == null)
+			throw new IllegalArgumentException("Attempted to add null item.");
+
 		used++;
 
 		if (used == capacity - 1)
@@ -86,6 +89,9 @@ public class PriorityQueue<T>
 
 	public T delete(Node node)
 	{
+		if (node == null)
+			throw new IllegalArgumentException("Attempted to delete null node.");
+
 		if (used == 0)
 			return null;
 
