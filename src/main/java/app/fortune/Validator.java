@@ -42,7 +42,7 @@ public class Validator
 
 	boolean validateRay(Fortune.Edge ray)
 	{
-		Vector half = ray.b.sub(ray.a).scale(0.5f).add(ray.a);
+		Vector half = ray.a.add(ray.b);
 		List<Vector> sitesA = closestSites(ray.a);
 		List<Vector> sitesH = closestSites(half);
 
