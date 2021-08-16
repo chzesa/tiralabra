@@ -410,7 +410,7 @@ public class Tree<T>
 		checkRight(n.right, value);
 	}
 
-	void checkBalanced(Node n)
+	void checkOrdered(Node n)
 	{
 		if (n == null)
 			return;
@@ -418,13 +418,13 @@ public class Tree<T>
 		checkLeft(n.left, n.value());
 		checkRight(n.right, n.value());
 
-		checkBalanced(n.left);
-		checkBalanced(n.right);
+		checkOrdered(n.left);
+		checkOrdered(n.right);
 	}
 
 	public void validate()
 	{
-		checkBalanced(root);
+		checkOrdered(root);
 		checkAncestry(root);
 	}
 
