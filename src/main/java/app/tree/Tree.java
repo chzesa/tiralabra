@@ -156,7 +156,7 @@ public class Tree<T>
 
 	void rebalance(Node n)
 	{
-		while(n != null)
+		while (n != null)
 		{
 			updateDepth(n);
 
@@ -172,7 +172,8 @@ public class Tree<T>
 					cwRotate(n.right);
 
 				ccwRotate(n);
-			} else
+			}
+			else
 			{
 				if (depth(n.left.right) > depth(n.left.left))
 					ccwRotate(n.left);
