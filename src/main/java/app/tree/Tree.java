@@ -12,14 +12,16 @@ public class Tree<T>
 	{
 		final T val;
 
+		Node ancestor = null;
+		Node left = null;
+		Node right = null;
+
+		int depth = 0;
+
 		Node(T value)
 		{
 			this.val = value;
 		}
-
-		Node ancestor = null;
-		Node left = null;
-		Node right = null;
 
 		public T value()
 		{
@@ -94,7 +96,12 @@ public class Tree<T>
 		}
 
 		if (child != null)
+		{
 			child.ancestor = node.ancestor;
+			rebalance(child);
+		}
+		else
+			rebalance(node.ancestor);
 
 		node.ancestor = null;
 		node.left = null;
@@ -142,7 +149,112 @@ public class Tree<T>
 
 		node.ancestor = previous;
 
+		rebalance(node);
+
 		return node;
+	}
+
+	void rebalance(Node n)
+	{
+		while(n != null)
+		{
+			updateDepth(n);
+
+			if (Math.abs(depth(n.right) - depth(n.left)) < 2)
+			{
+				n = n.ancestor;
+				continue;
+			}
+
+			if (depth(n.right) > depth(n.left))
+			{
+				if (depth(n.right.right) < depth(n.right.left))
+					cwRotate(n.right);
+
+				ccwRotate(n);
+			} else
+			{
+				if (depth(n.left.right) > depth(n.left.left))
+					ccwRotate(n.left);
+
+				cwRotate(n);
+			}
+
+			n = n.ancestor;
+		}
+	}
+
+	int depth(Node n)
+	{
+		if (n == null)
+			return 0;
+
+		return n.depth;
+	}
+
+	void updateDepth(Node n)
+	{
+		n.depth = Math.max(depth(n.left), depth(n.right)) + 1;
+	}
+
+	void cwRotate(Node node)
+	{
+		Node child = node.left;
+		Node mover = child.right;
+		Node parent = node.ancestor;
+
+		child.right = node;
+		node.left = mover;
+
+		if (parent == null)
+		{
+			root = child;
+		}
+		else
+		{
+			if (parent.left == node)
+				parent.left = child;
+			else
+				parent.right = child;
+		}
+
+		child.ancestor = parent;
+		node.ancestor = child;
+		if (mover != null)
+			mover.ancestor = node;
+
+		updateDepth(node);
+		updateDepth(child);
+	}
+
+	void ccwRotate(Node node)
+	{
+		Node child = node.right;
+		Node mover = child.left;
+		Node parent = node.ancestor;
+
+		child.left = node;
+		node.right = mover;
+
+		if (parent == null)
+		{
+			root = child;
+		}
+		else
+		{
+			if (parent.left == node)
+				parent.left = child;
+			else
+				parent.right = child;
+		}
+
+		child.ancestor = parent;
+		node.ancestor = child;
+		if (mover != null)
+			mover.ancestor = node;
+
+		updateDepth(node);
+		updateDepth(child);
 	}
 
 	/**
