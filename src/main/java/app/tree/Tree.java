@@ -453,6 +453,10 @@ public class Tree<T>
 		if (a == null || b == null)
 			throw new IllegalArgumentException();
 
+		int depth = a.depth;
+		a.depth = b.depth;
+		b.depth = depth;
+
 		Node aLeft = a.left;
 		Node aRight = a.right;
 		Node aAnc = a.ancestor;
