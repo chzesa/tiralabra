@@ -52,8 +52,7 @@ public class Vector
 			return false;
 
 		Vector other = (Vector) o;
-		return Math.abs(x - other.x) < PRECISION
-			&& Math.abs(y - other.y) < PRECISION;
+		return distance(this, other) < PRECISION;
 	}
 
 	@Override
