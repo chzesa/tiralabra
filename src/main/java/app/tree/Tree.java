@@ -207,7 +207,7 @@ public class Tree<T>
 		child.right = node;
 		node.left = mover;
 
-		if (parent == null)
+		if (root == node)
 		{
 			root = child;
 		}
@@ -237,7 +237,7 @@ public class Tree<T>
 		child.left = node;
 		node.right = mover;
 
-		if (parent == null)
+		if (root == node)
 		{
 			root = child;
 		}
