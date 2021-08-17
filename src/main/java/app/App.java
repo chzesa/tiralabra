@@ -42,6 +42,20 @@ public class App
 	float[] coords;
 	float[] rayOrigins;
 
+	App()
+	{
+		
+	}
+
+	App(List<Vector> sites)
+	{
+		this.sites = sites;
+		this.regenerate = false;
+		this.auto = false;
+		extractSiteCoords();
+		fortune = new Fortune(sites);
+	}
+
 	public void run()
 	{
 		initWindow();
@@ -249,10 +263,8 @@ public class App
 		return ret;
 	}
 
-	void generateDataset()
+	void extractSiteCoords()
 	{
-		sites = genSites(numSites);
-
 		int i = 0;
 		coords = new float[numSites * 2];
 		for (Vector site : sites)
@@ -423,7 +435,8 @@ public class App
 			if (regenerate)
 			{
 				regenerate = false;
-				generateDataset();
+				sites = genSites(numSites);
+				extractSiteCoords();
 				fortune = new Fortune(sites);
 			}
 
@@ -566,6 +579,17 @@ public class App
 
 	public static void main(String[] args)
 	{
-		new App().run();
+		App app;
+		if (args.length == 0)
+			app = new App();
+		else
+		{
+			String s = "";
+			for (int i = 0; i < args.length; i++)
+				s += args[i] + " ";
+			app = new App(Parse.fromStringl(s));
+		}
+
+		app.run();
 	}
 }
