@@ -5,7 +5,7 @@ package app.vector;
  */
 public class Vector
 {
-	public static final double PRECISION = 0.00001;
+	public static final double PRECISION = 0.0000001;
 	public final double x;
 	public final double y;
 
