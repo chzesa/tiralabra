@@ -464,12 +464,14 @@ public class App
 					{
 						Arc arc = (Arc) v;
 						Tree<ISortable>.Node node = fortune.beach.next(arc);
-						Arc next = (Arc) fortune.beach.next(arc).value();
-						if (next != null)
+						if (node != null)
+						{
+							Arc next = (Arc) node.value();
 							print("[" + arc.left(fortune.sweepLine()).x
 								+ ", "
 								+ next.left(fortune.sweepLine()).x
 								+ "]: " + arc.site);
+						}
 						else
 							print("[" + arc.left(fortune.sweepLine()).x
 								+ ", Infinity]: " + arc.site);
