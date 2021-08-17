@@ -1,22 +1,26 @@
 package app.fortune;
 
 import app.vector.*;
+import app.tree.*;
 
 public class Event
 {
 	private final Vector pt;
 	private final Vector s;
+	final Tree<ISortable>.Node arc;
 
 	Event(Vector site)
 	{
 		this.pt = null;
 		this.s = site;
+		this.arc = null;
 	}
 
-	Event(Vector point, Vector site)
+	Event(Vector point, Vector site, Tree<ISortable>.Node arc)
 	{
 		this.pt = point;
 		this.s = site;
+		this.arc = arc;
 	}
 
 	public boolean isSiteEvent()

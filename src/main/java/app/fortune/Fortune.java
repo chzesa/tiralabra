@@ -171,11 +171,12 @@ public class Fortune
 		limit = sites.size() * 1000;
 	}
 
-	void detectEvent(Arc arc)
+	void detectEvent(Tree<ISortable>.Node node)
 	{
+		Arc arc = (Arc) node.value();
 		Vector point = arc.circleEvent();
 		if (point != null)
-			arc.event = queue.push(new Event(point, arc.site));
+			arc.event = queue.push(new Event(point, arc.site, node));
 	}
 
 	void removeEvent(Arc arc)
@@ -221,13 +222,9 @@ public class Fortune
 		Arc newArc = new Arc(left, site, right);
 		Arc rightArc = new Arc(right, arc.site, arc.right);
 
-		beach.add(leftArc);
 		beach.add(newArc);
-		beach.add(rightArc);
-
-		// Detect potential circle events
-		detectEvent(leftArc);
-		detectEvent(rightArc);
+		detectEvent(beach.add(leftArc));
+		detectEvent(beach.add(rightArc));
 	}
 
 	String border(Arc a, double y)
@@ -248,7 +245,7 @@ public class Fortune
 		Vector circlePoint = new Vector(point.x, Utils.parabolaY(site, point.y, point.x));
 
 		// Find and remove the arc being removed and its adjacent arcs
-		Tree<ISortable>.Node node = beach.floor(new PointQuery(point, site));
+		Tree<ISortable>.Node node = e.arc;
 		Arc arc = (Arc) node.value();
 		node = beach.previous(arc);
 		Arc larc = node == null ? null : (Arc) node.value();
@@ -295,12 +292,8 @@ public class Fortune
 			+ "left  " + left + " | " + border(left, point.y)
 			+ "\n\tright " + right + " | " + border(right, point.y));
 
-		beach.add(left);
-		beach.add(right);
-
-		// detect events
-		detectEvent(left);
-		detectEvent(right);
+		detectEvent(beach.add(left));
+		detectEvent(beach.add(right));
 
 		// add edges of removed arc to result
 		edges.add(new Edge(arc.left.ray.origin, circlePoint));
