@@ -181,8 +181,11 @@ public class Fortune
 
 	void removeEvent(Arc arc)
 	{
-		if (arc.event != null)
+		if (arc != null && arc.event != null)
+		{
 			queue.delete(arc.event);
+			arc.event = null;
+		}
 	}
 
 	Boundary[] generateBoundaries(Arc arc, Vector site)
