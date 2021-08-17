@@ -30,15 +30,14 @@ public class Boundary
 		if (intersections.length == 1)
 			return new Vector(intersections[0].x, Utils.parabolaY(siteA, sweepline, intersections[0].x));
 
-		Vector end;
-
 		if (intersections[0].equals(ray.origin) || intersections[1].equals(ray.origin))
 			return ray.origin;
 
 		// Determine which intersection the boundary ray intersects
-		Vector delta = intersections[0].sub(ray.origin).normalize();
+		double delta0 = Vector.distance(ray.direction, intersections[0].sub(ray.origin).normalize());
+		double delta1 = Vector.distance(ray.direction, intersections[1].sub(ray.origin).normalize());
 
-		if (delta.equals(ray.direction.normalize()))
+		if (delta0 < delta1)
 			return new Vector(intersections[0].x, Utils.parabolaY(siteA, sweepline, intersections[0].x));
 		else
 			return new Vector(intersections[1].x, Utils.parabolaY(siteA, sweepline, intersections[1].x));
