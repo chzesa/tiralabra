@@ -28,19 +28,29 @@ public class Boundary
 			return ray.origin;
 
 		if (intersections.length == 1)
-			return new Vector(intersections[0].x, Utils.parabolaY(siteA, sweepline, intersections[0].x));
+			return intersections[0];
 
-		if (intersections[0].equals(ray.origin) || intersections[1].equals(ray.origin))
-			return ray.origin;
+		double do0 = Vector.distance(ray.origin, intersections[0]);
+		double do1 = Vector.distance(ray.origin, intersections[1]);
+
+		Vector closest = do0 < do1 ? intersections[0] : intersections[1];
 
 		// Determine which intersection the boundary ray intersects
-		double delta0 = Vector.distance(ray.direction, intersections[0].sub(ray.origin).normalize());
-		double delta1 = Vector.distance(ray.direction, intersections[1].sub(ray.origin).normalize());
+		double dd0 = Vector.distance(ray.direction, intersections[0].sub(ray.origin).normalize());
+		double dd1 = Vector.distance(ray.direction, intersections[1].sub(ray.origin).normalize());
 
-		if (delta0 < delta1)
-			return new Vector(intersections[0].x, Utils.parabolaY(siteA, sweepline, intersections[0].x));
+		if (dd0 < dd1)
+		{
+			if (dd0 < Math.min(do0, do1))
+				closest = intersections[0];
+		}
 		else
-			return new Vector(intersections[1].x, Utils.parabolaY(siteA, sweepline, intersections[1].x));
+		{
+			if (dd1 < Math.min(do0, do1))
+				closest = intersections[1];
+		}
+
+		return closest;
 	}
 
 	@Override
