@@ -17,7 +17,7 @@ class QueueCompare implements Comparator<Event>
 	@Override
 	public int compare(Event a, Event b)
 	{
-		if (a.point().equals(b.point()))
+		if (Math.abs(a.point().y - b.point().y) < Vector.PRECISION)
 		{
 			if (a.isSiteEvent() && !b.isSiteEvent())
 				return -1;
