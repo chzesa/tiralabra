@@ -277,11 +277,11 @@ public class Fortune
 
 
 		print("Removing:\n\t"
-			+ "left  " + larc + " | " + border(larc, point.y)
+			+ "left  " + border(larc, sweepLine()) + " | " + larc
 			+ "\n\t"
-			+ "mid   " + arc + " | " + border(arc, point.y)
+			+ "mid   " + border(arc, sweepLine()) + " | " + arc
 			+ "\n\t"
-			+ "right " + rarc + " | " + border(rarc, point.y)
+			+ "right " + border(rarc, sweepLine()) + " | " + rarc
 		);
 
 		beach.delete(arc);
@@ -312,8 +312,12 @@ public class Fortune
 		Arc right = new Arc(middle, rarc.site, rarc.right);
 
 		print("Adding:\n\t"
-			+ "left  " + left + " | " + border(left, point.y)
-			+ "\n\tright " + right + " | " + border(right, point.y));
+			+ "left  " + border(left, sweepLine()) + " | " + left
+			+ "\n\t"
+			+ "right " + border(right, sweepLine()) + " | " + right
+			+ "\n\t"
+			+ "with bisector " + middle.ray
+		);
 
 		detectEvent(beach.add(left));
 		detectEvent(beach.add(right));
