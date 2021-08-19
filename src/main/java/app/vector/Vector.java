@@ -74,7 +74,11 @@ public class Vector
 
 	public static Vector normalize(Vector v)
 	{
-		double s = 1 / v.norm();
+		double n = v.norm();
+		if (n == 0)
+			return new Vector(0, 0);
+
+		double s = 1.0 / n;
 		return scale(s, v);
 	}
 
