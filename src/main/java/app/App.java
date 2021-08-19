@@ -456,6 +456,22 @@ public class App
 			.scale(1.0f / zoomFactor)
 			.add(new Vector(0.5f, 0.5f));
 	}
+
+	void printInfo()
+	{
+		processResult();
+		fortune.beach.forEach(v ->
+		{
+			Arc arc = (Arc) v;
+			print("[" + arc.left(fortune.sweepLine()).x
+				+ ", "
+				+ arc.right(fortune.sweepLine()).x
+				+ "]: " + arc.site);
+		});
+		print("Queue size: " + fortune.queue.size());
+		print("Beachline size: " + fortune.beach.size());
+	}
+
 	void loop()
 	{
 		double cursorPos = 0;
@@ -485,6 +501,7 @@ public class App
 				fortune.process();
 				fortune.beach.validate();
 				processResult();
+				printInfo();
 			}
 
 			if (auto)
@@ -510,24 +527,7 @@ public class App
 				{
 					fortune.processTo(cursorPos);
 					processResult();
-					fortune.beach.forEach(v ->
-					{
-						Arc arc = (Arc) v;
-						Tree<ISortable>.Node node = fortune.beach.next(arc);
-						if (node != null)
-						{
-							Arc next = (Arc) node.value();
-							print("[" + arc.left(fortune.sweepLine()).x
-								+ ", "
-								+ next.left(fortune.sweepLine()).x
-								+ "]: " + arc.site);
-						}
-						else
-							print("[" + arc.left(fortune.sweepLine()).x
-								+ ", Infinity]: " + arc.site);
-					});
-					print("Queue size: " + fortune.queue.size());
-					print("Beachline size: " + fortune.beach.size());
+					printInfo();
 				}
 				catch (Exception e)
 				{
