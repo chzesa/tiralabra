@@ -237,9 +237,9 @@ public class Fortune
 		detectEvent(beach.add(leftArc));
 		detectEvent(beach.add(rightArc));
 
-		check(leftArc, site.y);
-		check(newArc, site.y);
-		check(rightArc, site.y);
+		check(leftArc, sweepLine());
+		check(newArc, sweepLine());
+		check(rightArc, sweepLine());
 	}
 
 	String border(Arc a, double y)
@@ -321,8 +321,8 @@ public class Fortune
 		// add edges of removed arc to result
 		edges.add(new Edge(arc.left.ray.origin, circlePoint));
 		edges.add(new Edge(arc.right.ray.origin, circlePoint));
-		check(left, point.y);
-		check(right, point.y);
+		check(left, sweepLine());
+		check(right, sweepLine());
 	}
 
 	/**
