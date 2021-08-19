@@ -37,6 +37,7 @@ public class App
 	Fortune fortune;
 	boolean regenerate = true;
 	boolean auto = true;
+	boolean next = false;
 	float zoomFactor = 1.0f;
 	float[] edges;
 	float[] rays;
@@ -104,6 +105,8 @@ public class App
 				saveDataset();
 			if (key == GLFW_KEY_D && action == GLFW_RELEASE)
 				debug = !debug;
+			if (key == GLFW_KEY_N && action == GLFW_RELEASE)
+				next = true;
 			if (key == GLFW_KEY_V && action == GLFW_RELEASE)
 			{
 				try
@@ -450,6 +453,15 @@ public class App
 				sites = genSites(numSites);
 				extractSiteCoords();
 				fortune = new Fortune(sites);
+			}
+
+			if (next)
+			{
+				next = false;
+				cursorMoved = false;
+				fortune.process();
+				fortune.beach.validate();
+				processResult();
 			}
 
 			if (auto)
