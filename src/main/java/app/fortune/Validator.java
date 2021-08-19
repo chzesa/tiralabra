@@ -71,7 +71,7 @@ public class Validator
 
 	static boolean validateEdge(Fortune.Edge edge, List<Vector> sites)
 	{
-		Vector half = edge.b.sub(edge.a).scale(0.5f).add(edge.a);
+		Vector half = edge.b.sub(edge.a).scale(0.5).add(edge.a);
 		List<Vector> sitesA = closestSites(edge.a, sites);
 		List<Vector> sitesB = closestSites(edge.b, sites);
 		List<Vector> sitesH = closestSites(half, sites);

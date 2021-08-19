@@ -13,10 +13,10 @@ class Parabola
 	{
 		degenerate = Math.abs(focus.y - directrix) < Vector.PRECISION;
 
-		double d = (2.0f * (focus.y - directrix));
-		x2 = 1.0f / d;
-		x = (-2.0f * focus.x) / d;
-		c = focus.x * focus.x / d + (1.0f / 2.0f) * (focus.y + directrix);
+		double d = (2.0 * (focus.y - directrix));
+		x2 = 1.0 / d;
+		x = (-2.0 * focus.x) / d;
+		c = focus.x * focus.x / d + (1.0 / 2.0) * (focus.y + directrix);
 	}
 
 	public String toString()
@@ -58,8 +58,7 @@ public class Utils
 	{
 		double a = focus.x;
 		double b = focus.y;
-
-		return (x - a) * (x - a) / (2.0f * (b - directrix)) + (b + directrix) / 2.0f;
+		return (x - a) * (x - a) / (2.0 * (b - directrix)) + (b + directrix) / 2.0;
 	}
 
 	public static Vector parabolaPt(Vector focus, double directrix, double x)
@@ -107,12 +106,12 @@ public class Utils
 
 	public static double[] solveQuadraticFn(double a, double b, double c)
 	{
-		double sqrt = Math.sqrt(b * b - 4.0f * a * c);
+		double sqrt = Math.sqrt(b * b - 4.0 * a * c);
 
 		return new double[]
 		{
-			(-b + sqrt) / (2.0f * a),
-			(-b - sqrt) / (2.0f * a)
+			(-b + sqrt) / (2.0 * a),
+			(-b - sqrt) / (2.0 * a)
 		};
 	}
 }
