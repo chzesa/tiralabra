@@ -37,6 +37,7 @@ public class App
 	Fortune fortune;
 	boolean regenerate = true;
 	boolean auto = true;
+	float zoomFactor = 1.0f;
 	float[] edges;
 	float[] rays;
 	float[] coords;
@@ -81,6 +82,12 @@ public class App
 		window = glfwCreateWindow(windowX, windowY, "Voronoi", 0, 0);
 		if (window == 0)
 			throw new RuntimeException("GLFW Window creation failed");
+
+		glfwSetScrollCallback(window, (window, xoffset, yoffset) ->
+		{
+			zoomFactor *= yoffset < 0 ? 0.8f : 1.2f;
+			cursorMoved = true;
+		});
 
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) ->
 		{
@@ -207,6 +214,11 @@ public class App
 	void setColor(float r, float g, float b, float a)
 	{
 		glUniform4f(0, r, g, b, a);
+	}
+
+	void setZoomFactor(float z)
+	{
+		glUniform1f(1, z);
 	}
 
 	void drawPoints(float[] coords)
@@ -450,11 +462,15 @@ public class App
 			if (cursorMoved)
 			{
 				cursorMoved = false;
-				double h = 1.0 - cursorY / windowY;
-				if (h > cursorPos)
+				Vector cPos = new Vector(cursorX / windowX, 1.0 - cursorY / windowY)
+					.sub(new Vector(0.5f, 0.5f))
+					.scale(1.0f / zoomFactor)
+					.add(new Vector(0.5f, 0.5f));
+
+				if (cPos.y > cursorPos)
 					fortune = new Fortune(sites);
 
-				cursorPos = h;
+				cursorPos = cPos.y;
 
 				try
 				{
@@ -492,6 +508,7 @@ public class App
 			}
 
 			glClear(GL_COLOR_BUFFER_BIT);
+			setZoomFactor(zoomFactor);
 
 			setColor(0.0f, 0.0f, 0.0f, 1.0f);
 			drawLines(new float[] {0.0f, (float) cursorPos, 1.0f, (float) cursorPos});
