@@ -310,7 +310,7 @@ public class App
 			if (!valid.result())
 				System.out.println("Incorrect voronoi diagram generated from dataset.");
 		}
-		catch (Exception e)
+		catch (Error e)
 		{
 			System.out.println("Error processing the generated list of sites.");
 			System.out.println(e);
@@ -498,10 +498,14 @@ public class App
 			{
 				next = false;
 				cursorMoved = false;
-				fortune.process();
-				fortune.beach.validate();
-				processResult();
-				printInfo();
+				try {
+					fortune.process();
+					processResult();
+					printInfo();
+				} catch(Error e)
+				{
+					print(e.toString());
+				}
 			}
 
 			if (auto)
@@ -529,7 +533,7 @@ public class App
 					processResult();
 					printInfo();
 				}
-				catch (Exception e)
+				catch (Error e)
 				{
 					print(e.toString());
 				}
