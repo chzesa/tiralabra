@@ -43,6 +43,8 @@ public class App
 	float[] rays;
 	float[] coords;
 	float[] rayOrigins;
+	Vector topLeft = screenPointToWorldPoint(new Vector(0, 0));
+	Vector bottomRight = screenPointToWorldPoint(new Vector(1, 1));
 
 	App()
 	{
@@ -339,9 +341,9 @@ public class App
 			double xMin = arc.left(fortune.sweepLine()).x;
 
 			if (xMin == Double.NEGATIVE_INFINITY)
-				xMin = 0;
+				xMin = topLeft.x;
 
-			double xMax = 1.0;
+			double xMax = bottomRight.x;
 			Tree<ISortable>.Node node = fortune.beach.next(v);
 			if (node != null)
 			{
@@ -362,7 +364,7 @@ public class App
 				|| site.y < fortune.sweepLine())
 				continue;
 
-			drawParabola(site, fortune.sweepLine(), 0, 1);
+			drawParabola(site, fortune.sweepLine(), topLeft.x, bottomRight.x);
 		}
 	}
 
@@ -376,7 +378,7 @@ public class App
 			if (xMin == Double.NEGATIVE_INFINITY)
 				xMin = 0;
 
-			drawLines(new float[] {xMin, 1.0f, xMin, 0.0f});
+			drawLines(new float[] {xMin, (float)topLeft.y, xMin, (float)bottomRight.y});
 		});
 	}
 
@@ -448,12 +450,20 @@ public class App
 		return result;
 	}
 
+	Vector screenPointToWorldPoint(Vector p)
+	{
+		return p.sub(new Vector(0.5f, 0.5f))
+			.scale(1.0f / zoomFactor)
+			.add(new Vector(0.5f, 0.5f));
+	}
 	void loop()
 	{
 		double cursorPos = 0;
 
 		while (!glfwWindowShouldClose(window))
 		{
+			topLeft = screenPointToWorldPoint(new Vector(0, 0));
+			bottomRight = screenPointToWorldPoint(new Vector(1, 1));
 			if (viewportChanged)
 			{
 				viewportChanged = false;
@@ -487,10 +497,9 @@ public class App
 			if (cursorMoved)
 			{
 				cursorMoved = false;
-				Vector cPos = new Vector(cursorX / windowX, 1.0 - cursorY / windowY)
-					.sub(new Vector(0.5f, 0.5f))
-					.scale(1.0f / zoomFactor)
-					.add(new Vector(0.5f, 0.5f));
+				Vector cPos = screenPointToWorldPoint(
+					new Vector(cursorX / windowX, 1.0 - cursorY / windowY)
+				);
 
 				if (cPos.y > cursorPos)
 					fortune = new Fortune(sites);
@@ -536,7 +545,7 @@ public class App
 			setZoomFactor(zoomFactor);
 
 			setColor(0.0f, 0.0f, 0.0f, 1.0f);
-			drawLines(new float[] {0.0f, (float) cursorPos, 1.0f, (float) cursorPos});
+			drawLines(new float[] {(float)topLeft.x, (float) cursorPos, (float)bottomRight.x, (float) cursorPos});
 
 			setColor(1.0f, 0.0f, 0.0f, 1.0f);
 			drawBeachline();
