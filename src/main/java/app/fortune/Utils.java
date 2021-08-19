@@ -18,6 +18,11 @@ class Parabola
 		x = (-2.0f * focus.x) / d;
 		c = focus.x * focus.x / d + (1.0f / 2.0f) * (focus.y + directrix);
 	}
+
+	public String toString()
+	{
+		return "( " +x2 + "x^2 + " + x + "x + " + c + " )";
+	}
 }
 
 public class Utils

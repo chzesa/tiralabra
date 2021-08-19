@@ -48,6 +48,6 @@ public class Ray
 	@Override
 	public String toString()
 	{
-		return "(Origin: " + origin + "; Direction: " + direction + ")";
+		return "( " + origin + " -> " + direction + " )";
 	}
 }
