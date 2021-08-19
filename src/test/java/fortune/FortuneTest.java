@@ -78,9 +78,10 @@ public class FortuneTest
 	}
 
 	@Test
-	public void testGrid()
+	public void testOverlappingCircleSiteEvents()
 	{
 		test(new Vector[] {
+			new Vector(1.5, 3),
 			new Vector(0, 0),
 			new Vector(0, 1),
 			new Vector(1, 0),
@@ -93,16 +94,31 @@ public class FortuneTest
 	}
 
 	@Test
-	public void testGridWithInitialSiteAbove()
+	public void testGrid()
 	{
 		test(new Vector[] {
-			new Vector(1.5f, 3),
 			new Vector(0, 0),
 			new Vector(0, 1),
 			new Vector(1, 0),
-			new Vector(1, 2),
+			new Vector(1, 1),
 			new Vector(2, 0),
-			new Vector(2, 2),
+			new Vector(2, 1),
+			new Vector(3, 0),
+			new Vector(3, 1),
+		});
+	}
+
+	@Test
+	public void testGridWithInitialSiteAbove()
+	{
+		test(new Vector[] {
+			new Vector(1.5, 3),
+			new Vector(0, 0),
+			new Vector(0, 1),
+			new Vector(1, 0),
+			new Vector(1, 1),
+			new Vector(2, 0),
+			new Vector(2, 1),
 			new Vector(3, 0),
 			new Vector(3, 1),
 		});
