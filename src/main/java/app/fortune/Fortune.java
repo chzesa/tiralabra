@@ -233,6 +233,10 @@ public class Fortune
 		Arc newArc = new Arc(left, site, right);
 		Arc rightArc = new Arc(right, arc.site, arc.right);
 
+		check(leftArc, site.y);
+		check(newArc, site.y);
+		check(rightArc, site.y);
+
 		beach.add(newArc);
 		detectEvent(beach.add(leftArc));
 		detectEvent(beach.add(rightArc));
@@ -241,6 +245,14 @@ public class Fortune
 	String border(Arc a, double y)
 	{
 		return String.format("%.3f", a.left(y).x) + " ; " + String.format("%.3f", a.right(y).x);
+	}
+
+	void check(Arc a, double y)
+	{
+		double left = a.left(y).x;
+		double right = a.right(y).x;
+		if (Math.abs(left - right) > Vector.PRECISION && right < left)
+			throw new Error(beachCmp.ep + "\n\t" + border(a, y) + " | " + a.toString());
 	}
 
 	void print(String s)
@@ -303,6 +315,8 @@ public class Fortune
 			+ "left  " + left + " | " + border(left, point.y)
 			+ "\n\tright " + right + " | " + border(right, point.y));
 
+		check(left, point.y);
+		check(right, point.y);
 		detectEvent(beach.add(left));
 		detectEvent(beach.add(right));
 
