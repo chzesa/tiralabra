@@ -9,6 +9,200 @@ import java.util.List;
 
 public class FortuneTest
 {
+	void test(Vector[] sites)
+	{
+		Fortune f = new Fortune(sites);
+		Validator valid = new Validator(sites, f.processAll());
+		assertTrue(valid.result());
+	}
+
+	@Test
+	public void testNone()
+	{
+		test(new Vector[] {});
+	}
+
+	@Test
+	public void testOne()
+	{
+		test(new Vector[] {
+			new Vector(1, 1)
+		});
+	}
+
+	@Test
+	public void testFew()
+	{
+		test(new Vector[] {
+			new Vector(1, 1),
+			new Vector(2, 3),
+			new Vector(1, 2)
+		});
+	}
+
+	@Test
+	public void testVertical()
+	{
+		test(new Vector[] {
+			new Vector(0, 5),
+			new Vector(0, 4),
+			new Vector(0, 3),
+			new Vector(0, 2),
+			new Vector(0, 1),
+		});
+	}
+
+	@Test
+	public void testHorizontal()
+	{
+		test(new Vector[] {
+			new Vector(0, 0),
+			new Vector(1, 0),
+			new Vector(2, 0),
+			new Vector(3, 0),
+			new Vector(4, 0),
+		});
+	}
+
+	@Test
+	public void testHorizontalWithInitialSiteAbove()
+	{
+		test(new Vector[] {
+			new Vector(1, 1),
+			new Vector(0, 0),
+			new Vector(1, 0),
+			new Vector(2, 0),
+			new Vector(3, 0),
+			new Vector(4, 0),
+		});
+	}
+
+	@Test
+	public void testGrid()
+	{
+		test(new Vector[] {
+			new Vector(0, 0),
+			new Vector(0, 1),
+			new Vector(1, 0),
+			new Vector(1, 2),
+			new Vector(2, 0),
+			new Vector(2, 2),
+			new Vector(3, 0),
+			new Vector(3, 1),
+		});
+	}
+
+	@Test
+	public void testGridWithInitialSiteAbove()
+	{
+		test(new Vector[] {
+			new Vector(1.5f, 3),
+			new Vector(0, 0),
+			new Vector(0, 1),
+			new Vector(1, 0),
+			new Vector(1, 2),
+			new Vector(2, 0),
+			new Vector(2, 2),
+			new Vector(3, 0),
+			new Vector(3, 1),
+		});
+	}
+
+	@Test
+	public void testConverging()
+	{
+		double x = 1.0f/Math.sqrt(2);
+
+		test(new Vector[] {
+			new Vector(-x, x),
+			new Vector(0, 1),
+			new Vector(x, x)
+		});
+	}
+
+	@Test
+	public void testConvergingWithParallels()
+	{
+		double x = 1.0f/Math.sqrt(2);
+
+		test(new Vector[] {
+			new Vector(-1, 0),
+			new Vector(-x, x),
+			new Vector(0, 1),
+			new Vector(x, x),
+			new Vector(1, 0)
+		});
+	}
+
+	@Test
+	public void testConvergingWithPointBelow()
+	{
+		double x = 1.0f/Math.sqrt(2);
+
+		test(new Vector[] {
+			new Vector(-x, x),
+			new Vector(0, 1),
+			new Vector(x, x),
+			new Vector(0, -2)
+		});
+	}
+
+	@Test
+	public void testConvergingWithPointBelowOnCircle()
+	{
+		double x = 1.0f/Math.sqrt(2);
+
+		test(new Vector[] {
+			new Vector(-x, x),
+			new Vector(0, 1),
+			new Vector(x, x),
+			new Vector(0, -1)
+		});
+	}
+
+	@Test
+	public void testConvergingWithParallelsAndPointBelow()
+	{
+		double x = 1.0f/Math.sqrt(2);
+
+		test(new Vector[] {
+			new Vector(-1, 0),
+			new Vector(-x, x),
+			new Vector(0, 1),
+			new Vector(x, x),
+			new Vector(1, 0),
+			new Vector(0, -2)
+		});
+	}
+
+	@Test
+	public void testConvergingWithParallelsAndPointBelowOnCircle()
+	{
+		double x = 1.0f/Math.sqrt(2);
+
+		test(new Vector[] {
+			new Vector(-1, 0),
+			new Vector(-x, x),
+			new Vector(0, 1),
+			new Vector(x, x),
+			new Vector(1, 0),
+			new Vector(0, -1)
+		});
+	}
+
+	@Test
+	public void testConvergingWithSiteOverlappingPoint()
+	{
+		double x = 1.0f/Math.sqrt(2);
+
+		test(new Vector[] {
+			new Vector(-x, x),
+			new Vector(0, 1),
+			new Vector(x, x),
+			new Vector(0, 0)
+		});
+	}
+
 	List<List<Vector>> loadDataset(String file)
 	{
 		String s = FileHandler.readToString(file);
