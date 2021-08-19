@@ -99,7 +99,7 @@ public class Vector
 
 	public static Vector sub(Vector a, Vector b)
 	{
-		return add(a, neg(b));
+		return new Vector(a.x - b.x, a.y - b.y);
 	}
 
 	public static double distance(Vector a, Vector b)
