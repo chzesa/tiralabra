@@ -109,14 +109,26 @@ public class FortuneTest
 	}
 
 	@Test
-	public void testConverging()
+	public void testConvergingLeft()
 	{
 		double x = 1.0f/Math.sqrt(2);
 
 		test(new Vector[] {
+			new Vector(-1, 0),
 			new Vector(-x, x),
+			new Vector(0, 1)
+		});
+	}
+
+	@Test
+	public void testConvergingRight()
+	{
+		double x = 1.0f/Math.sqrt(2);
+
+		test(new Vector[] {
 			new Vector(0, 1),
-			new Vector(x, x)
+			new Vector(x, x),
+			new Vector(1, 0)
 		});
 	}
 
