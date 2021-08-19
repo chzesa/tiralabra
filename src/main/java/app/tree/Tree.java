@@ -357,9 +357,8 @@ public class Tree<T>
 		if (n == null)
 			return;
 
-		fn.operation(n.value());
-
 		forEachNode(n.left, fn);
+		fn.operation(n.value());
 		forEachNode(n.right, fn);
 	}
 
