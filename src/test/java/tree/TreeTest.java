@@ -25,9 +25,14 @@ public class TreeTest
 
 	Tree<Integer> tree;
 
-	void balanced()
+	@Before
+	public void init()
 	{
 		tree = new Tree(new Cmp());
+	}
+
+	void balanced()
+	{
 		tree.add(3);
 
 		tree.add(1);
@@ -41,14 +46,12 @@ public class TreeTest
 
 	void leftHeavy()
 	{
-		tree = new Tree(new Cmp());
 		for (int i = 0; i < 10; i++)
 			tree.add(9 - i);
 	}
 
 	void rightHeavy()
 	{
-		tree = new Tree(new Cmp());
 		for (int i = 0; i < 10; i++)
 			tree.add(i);
 	}
