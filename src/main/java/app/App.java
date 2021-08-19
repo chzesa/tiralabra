@@ -500,12 +500,12 @@ public class App
 				cursorMoved = false;
 				try {
 					fortune.process();
-					processResult();
-					printInfo();
 				} catch(Error e)
 				{
 					print(e.toString());
 				}
+				processResult();
+				printInfo();
 			}
 
 			if (auto)
@@ -530,13 +530,13 @@ public class App
 				try
 				{
 					fortune.processTo(cursorPos);
-					processResult();
-					printInfo();
 				}
 				catch (Error e)
 				{
 					print(e.toString());
 				}
+				processResult();
+				printInfo();
 			}
 
 			if (auto && fortune.peek() == null || cursorY >= 2 * windowY)
