@@ -62,6 +62,11 @@ public class Utils
 		return (x - a) * (x - a) / (2.0f * (b - directrix)) + (b + directrix) / 2.0f;
 	}
 
+	public static Vector parabolaPt(Vector focus, double directrix, double x)
+	{
+		return new Vector(x, parabolaY(focus, directrix, x));
+	}
+
 	/**
 	 * Given two focuses and a directrix, returns the intersection points of the parabolas
 	 * provided neither parabola is degenerate.
@@ -80,14 +85,14 @@ public class Utils
 		{
 			return new Vector[]
 			{
-				new Vector(focusA.x, parabolaY(focusB, directrix, focusA.x))
+				parabolaPt(focusB, directrix, focusA.x)
 			};
 		}
 		else if (p2.degenerate)
 		{
 			return new Vector[]
 			{
-				new Vector(focusB.x, parabolaY(focusA, directrix, focusB.x))
+				parabolaPt(focusA, directrix, focusB.x)
 			};
 		}
 
@@ -95,8 +100,8 @@ public class Utils
 
 		return new Vector[]
 		{
-			new Vector(xCoords[0], parabolaY(focusA, directrix, xCoords[0])),
-			new Vector(xCoords[1], parabolaY(focusA, directrix, xCoords[1])),
+			parabolaPt(focusA, directrix, xCoords[0]),
+			parabolaPt(focusB, directrix, xCoords[1])
 		};
 	}
 

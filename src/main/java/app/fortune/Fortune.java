@@ -198,7 +198,7 @@ public class Fortune
 
 	Boundary[] generateBoundaries(Arc arc, Vector site)
 	{
-		Vector isect = new Vector(site.x, Utils.parabolaY(arc.site, site.y, site.x));
+		Vector isect = Utils.parabolaPt(arc.site, site.y, site.x);
 		Ray left = new Ray(isect, Utils.bisector(arc.site, site));
 		Ray right = new Ray(isect, Utils.bisector(site, arc.site));
 		return new Boundary[] { new Boundary(left, arc.site, site), new Boundary(right, site, arc.site) };
@@ -265,7 +265,7 @@ public class Fortune
 	{
 		Vector point = e.point();
 		Vector site = e.site();
-		Vector circlePoint = new Vector(point.x, Utils.parabolaY(site, point.y, point.x));
+		Vector circlePoint = Utils.parabolaPt(site, sweepLine(), point.x);
 
 		// Find and remove the arc being removed and its adjacent arcs
 		Tree<ISortable>.Node node = e.arc;
