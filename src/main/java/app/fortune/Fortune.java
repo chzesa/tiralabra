@@ -171,6 +171,14 @@ public class Fortune
 		limit = sites.size() * 1000;
 	}
 
+	public Fortune(Vector[] sites)
+	{
+		for (int i = 0; i < sites.length; i++)
+			queue.push(new Event(sites[i]));
+
+		limit = sites.length * 1000;
+	}
+
 	void detectEvent(Tree<ISortable>.Node node)
 	{
 		Arc arc = (Arc) node.value();

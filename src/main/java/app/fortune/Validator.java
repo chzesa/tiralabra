@@ -22,6 +22,15 @@ public class Validator
 		this.result = result;
 	}
 
+	public Validator(Vector[] sites, Fortune.Result result)
+	{
+		this.sites = new ArrayList<>();
+		for (int i = 0; i < sites.length; i++)
+			this.sites.add(sites[i]);
+
+		this.result = result;
+	}
+
 	static List<Vector> closestSites(Vector point, List<Vector> sites)
 	{
 		ArrayList<Vector> res = new ArrayList<>();
