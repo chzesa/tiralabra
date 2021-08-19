@@ -296,7 +296,7 @@ public class App
 	void extractSiteCoords()
 	{
 		int i = 0;
-		coords = new float[numSites * 2];
+		coords = new float[sites.size() * 2];
 		for (Vector site : sites)
 		{
 			coords[i * 2] = (float) site.x;
