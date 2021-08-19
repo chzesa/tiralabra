@@ -199,4 +199,52 @@ public class TreeTest
 		assertTrue(tree.delete(3).equals(3));
 		tree.validate();
 	}
+
+	@Test
+	public void testNext4()
+	{
+		for (int i = 0; i < 1000000; i++)
+			tree.add(i * 2);
+
+		for (int i = 0; i < 999999; i++)
+			assertTrue(tree.next(i * 2 + 1).value() == (i + 1) * 2);
+	}
+
+	@Test
+	public void testNext5()
+	{
+		int mod = 3;
+		for (int i = 0; i < 1000000; i++)
+			tree.add(i * 2);
+
+		for (int i = 0; i < 1000000; i++)
+			tree.delete(i * mod);
+
+		for (int i = 0; i < 999000; i++)
+		{
+			int expected = (i + 1) * 2;
+			if (expected % mod == 0)
+				expected += 2;
+			assertTrue(tree.next(i * 2 + 1).value() == expected);
+		}
+	}
+
+	@Test
+	public void testNext6()
+	{
+		int mod = 4;
+		for (int i = 0; i < 1000000; i++)
+			tree.add(i * 2);
+
+		for (int i = 0; i < 1000000; i++)
+			tree.delete(i * mod);
+
+		for (int i = 0; i < 999000; i++)
+		{
+			int expected = (i + 1) * 2;
+			if (expected % mod == 0)
+				expected += 2;
+			assertTrue(tree.next(i * 2 + 1).value() == expected);
+		}
+	}
 }
