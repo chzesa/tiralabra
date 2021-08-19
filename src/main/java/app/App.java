@@ -58,6 +58,19 @@ public class App
 		fortune = new Fortune(sites);
 	}
 
+	App(Vector[] arr)
+	{
+		List<Vector> sites = new ArrayList<>();
+		for (int i = 0; i < arr.length; i++)
+			sites.add(arr[i]);
+
+		this.sites = sites;
+		this.regenerate = false;
+		this.auto = false;
+		extractSiteCoords();
+		fortune = new Fortune(sites);
+	}
+
 	public void run()
 	{
 		initWindow();
