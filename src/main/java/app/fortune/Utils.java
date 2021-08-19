@@ -76,6 +76,11 @@ public class Utils
 		Parabola p1 = new Parabola(focusA, directrix);
 		Parabola p2 = new Parabola(focusB, directrix);
 
+		if (Math.abs(focusA.y - focusB.y) < Vector.PRECISION)
+			return new Vector[] {
+				parabolaPt(focusA, directrix, (focusA.x + focusB.x) / 2)
+			};
+
 		if (p1.degenerate && p2.degenerate)
 		{
 			return new Vector[] {};
