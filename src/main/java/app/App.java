@@ -425,7 +425,6 @@ public class App
 		{
 			Vector a = edge.a;
 			Vector b = edge.b;
-			print(a + " to " + b);
 			edges[i * 4 + 0] = (float) a.x;
 			edges[i * 4 + 1] = (float) a.y;
 
