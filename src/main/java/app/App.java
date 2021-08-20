@@ -335,25 +335,37 @@ public class App
 
 	void drawBeachline()
 	{
-		fortune.beach.forEach(v ->
+		double inc = 2.0 / windowX * (bottomRight.x - topLeft.x);
+		List<Vector> coords = new ArrayList<>();
+		List<Arc> arcs = new ArrayList<>();
+		fortune.beach.forEach(v -> arcs.add((Arc) v));
+
+		double x = topLeft.x;
+		for (Arc arc : arcs)
 		{
-			Arc arc = (Arc) v;
-			double xMin = arc.left(fortune.sweepLine()).x;
-
-			if (xMin == Double.NEGATIVE_INFINITY)
-				xMin = topLeft.x;
-
-			double xMax = bottomRight.x;
-			Tree<ISortable>.Node node = fortune.beach.next(v);
-			if (node != null)
+			x = Math.min(x, Math.max(arc.left(fortune.sweepLine()).x, topLeft.x));
+			double limit = arc.right(fortune.sweepLine()).x;
+			limit = Math.min(limit, bottomRight.x);
+			while (x < limit)
 			{
-				Arc next = (Arc) node.value();
-				xMax = next.left(fortune.sweepLine()).x;
+				Vector a = Utils.parabolaPt(arc. site, fortune.sweepLine(), x);
+				Vector b = Utils.parabolaPt(arc. site, fortune.sweepLine(), Math.min(x + inc, limit));
+				coords.add(a);
+				coords.add(b);
+				x += inc;
 			}
+		}
 
-			drawParabola(arc.site, fortune.sweepLine(), xMin, xMax);
-			// drawLines(new float[] {(float)xMin, 1.0f, (float)xMin, 0.0f});
-		});
+		float[] arr = new float[coords.size() * 2];
+		int i = 0;
+		for (Vector point : coords)
+		{
+			arr[i * 2 + 0] = (float)point.x;
+			arr[i * 2 + 1] = (float)point.y;
+			i++;
+		}
+
+		drawLines(arr);
 	}
 
 	void drawAllParabolas()
