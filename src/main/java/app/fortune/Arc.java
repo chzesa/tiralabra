@@ -44,20 +44,6 @@ public class Arc implements ISortable
 		return site;
 	}
 
-	Ray reconstruct(Boundary bound)
-	{
-		// Pick the lowest of the sites and the ray origin point as the initial sweepline height
-		// Lower sweepline to ensure non-degeneracy
-		Ray ray = bound.ray;
-		double sweepline = Math.min(Math.min(bound.siteA.y, bound.siteB.y), ray.origin.y);
-		sweepline -= Vector.distance(bound.siteA, bound.siteB);
-
-		return new Ray(
-			ray.origin,
-			bound.end(sweepline).sub(ray.origin).normalize()
-		);
-	}
-
 	/**
 	 * Determines the circle event location below the arc's boundary ray intersection point if any.
 	 */
@@ -66,20 +52,12 @@ public class Arc implements ISortable
 		if (left == null || right == null)
 			return null;
 
-		Ray lRay = reconstruct(left);
-		Ray rRay = reconstruct(right);
-		Vector point = Ray.intersect(lRay, rRay);
-
+		Vector point = Ray.intersect(left.ray, right.ray);
 		if (point == null)
 			return null;
 
 		Vector offset = new Vector(0.0, -point.sub(site).norm());
-		Vector ret = point.add(offset);
-
-		if (ret.equals(site))
-			return null;
-
-		return ret;
+		return point.add(offset);
 	}
 
 	@Override

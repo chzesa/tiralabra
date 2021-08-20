@@ -201,22 +201,10 @@ public class Fortune
 
 	Boundary[] generateBoundaries(Arc arc, Vector site)
 	{
-		Vector first, second;
-		if (Utils.vectorCompare(arc.site, site) <= 0)
-		{
-			first = arc.site;
-			second = site;
-		}
-		else
-		{
-			first = site;
-			second = arc.site;
-		}
-
 		Vector isect = Utils.parabolaPt(arc.site, site.y, site.x);
 		Ray left = new Ray(isect, Utils.bisector(arc.site, site));
 		Ray right = new Ray(isect, Utils.bisector(site, arc.site));
-		return new Boundary[] { new Boundary(left, first, second), new Boundary(right, second, first) };
+		return new Boundary[] { new Boundary(left, arc.site, site), new Boundary(right, site, arc.site) };
 	}
 	
 	void siteEvent(Event event)
@@ -332,15 +320,6 @@ public class Fortune
 			larc.site,
 			rarc.site
 		);
-
-		if (!middle.end(sweepLine()).equals(circlePoint))
-		{
-			middle = new Boundary(
-				new Ray(circlePoint, bisector),
-				rarc.site,
-				larc.site
-			);
-		}
 
 		Arc left = new Arc(larc.left, larc.site, middle);
 		Arc right = new Arc(middle, rarc.site, rarc.right);
