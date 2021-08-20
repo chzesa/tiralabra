@@ -264,17 +264,9 @@ public class FortuneTest
 
 	void testBadData(String file)
 	{
-		int count = 0;
 		List<List<Vector>> ll = loadDataset("dataset/" + file);
 		for (List<Vector> sites : ll)
-			try
-			{
-				if (new Validator(sites, new Fortune(sites).processAll()).result())
-					count++;
-			}
-			catch (Exception e)
-			{ }
-		System.out.println(file + " successes: " + count + "/" + ll.size());
+			assertTrue(new Validator(sites, new Fortune(sites).processAll()).result());
 	}
 
 	@Test
