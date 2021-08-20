@@ -56,7 +56,7 @@ public class Validator
 
 	static boolean validateRay(Fortune.Edge ray, List<Vector> sites)
 	{
-		Vector half = ray.a.add(ray.b);
+		Vector half = ray.a.add(ray.b.normalize().scale(Math.max(ray.a.norm(), 1)));
 		List<Vector> sitesA = closestSites(ray.a, sites);
 		List<Vector> sitesH = closestSites(half, sites);
 
