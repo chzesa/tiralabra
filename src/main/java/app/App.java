@@ -253,9 +253,9 @@ public class App
 
 	void drawParabola(Vector focus, double directrix, double xMin, double xMax)
 	{
-		double delta = 2.0 / windowX;
+		double inc = 2.0 / windowX * (bottomRight.x - topLeft.x);
 		float[] coords = new float[
-			4 * ((int) Math.ceil(Math.abs(xMax - xMin) / delta) + 1)
+			4 * ((int) Math.ceil(Math.abs(xMax - xMin) / inc) + 1)
 		];
 		int i = 0;
 
@@ -263,7 +263,7 @@ public class App
 		{
 			double x1, x2, y1, y2;
 			x1 = xMin;
-			x2 = Math.min(x1 + delta, xMax);
+			x2 = Math.min(x1 + inc, xMax);
 			y1 = Utils.parabolaY(focus, directrix, x1);
 			y2 = Utils.parabolaY(focus, directrix, x2);
 
@@ -273,7 +273,7 @@ public class App
 			coords[i * 4 + 2] = (float) x2;
 			coords[i * 4 + 3] = (float) y2;
 
-			xMin += delta;
+			xMin += inc;
 			i++;
 		}
 
