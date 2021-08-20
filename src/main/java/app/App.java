@@ -514,6 +514,7 @@ public class App
 				} catch(Error e)
 				{
 					print(e.toString());
+					e.printStackTrace();
 				}
 				processResult();
 				printInfo();
@@ -545,6 +546,7 @@ public class App
 				catch (Error e)
 				{
 					print(e.toString());
+					e.printStackTrace();
 				}
 				processResult();
 				printInfo();

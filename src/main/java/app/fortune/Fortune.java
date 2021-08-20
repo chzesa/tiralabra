@@ -184,7 +184,10 @@ public class Fortune
 		Arc arc = (Arc) node.value();
 		Vector point = arc.circleEvent();
 		if (point != null)
+		{
+			print("Detected circle event of " + arc.site + " at " + point);
 			arc.event = queue.push(new Event(point, arc.site, node));
+		}
 	}
 
 	void removeEvent(Arc arc)
@@ -234,6 +237,8 @@ public class Fortune
 		// if the arc defines a circle event it's a false alarm. Remove event from qeueue
 		removeEvent(arc);
 
+		print("Removing:\n\t" + border(arc, sweepLine()) + " | " + arc);
+
 		// split the arc into new sections
 		beach.delete(arc);
 
@@ -244,6 +249,14 @@ public class Fortune
 		Arc leftArc = new Arc(arc.left, arc.site, left);
 		Arc newArc = new Arc(left, site, right);
 		Arc rightArc = new Arc(right, arc.site, arc.right);
+
+		print("Adding:\n\t"
+			+ "left  " + border(leftArc, sweepLine()) + " | " + leftArc
+			+ "\n\t"
+			+ "mid   " + border(newArc, sweepLine()) + " | " + newArc
+			+ "\n\t"
+			+ "right " + border(rightArc, sweepLine()) + " | " + rightArc
+		);
 
 		beach.add(newArc);
 		detectEvent(beach.add(leftArc));
@@ -367,7 +380,7 @@ public class Fortune
 			}
 			else
 			{
-				print("Circle event " + e.point());
+				print("Circle event " + e.point() + " of " + e.site());
 				circleEvent(e);
 			}
 		}
