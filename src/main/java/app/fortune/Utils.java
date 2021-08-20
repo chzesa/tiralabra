@@ -50,6 +50,14 @@ public class Utils
 		).normalize();
 	}
 
+	public static int vectorCompare(Vector a, Vector b)
+	{
+		if (Math.abs(a.y - b.y) < Vector.PRECISION)
+			return Double.compare(a.x, b.x);
+
+		return Double.compare(b.y, a.y);
+	}
+
 	/**
 	 * Given a parabola defined by a focus and directrix, returns the y coordinate of the
 	 * parabola at x.
