@@ -31,7 +31,7 @@ public class Ray
 		Vector bD = b.direction;
 
 		double det = bD.x * aD.y - bD.y * aD.x;
-		if (det == 0)
+		if (Math.abs(det) < Vector.PRECISION)
 			return null;
 
 		double dX = bO.x - aO.x;
@@ -39,8 +39,11 @@ public class Ray
 
 		double s = (dY * aD.x - dX * aD.y) / det;
 		double t = (dY * bD.x - dX * bD.y) / det;
-		if (s >= 0 && t >= 0)
+		if (s + Vector.PRECISION / 2.0 >= 0 && t + Vector.PRECISION / 2.0 >= 0)
+		{
+			t = t < 0 ? 0 : t;
 			return aO.add(aD.scale(t));
+		}
 
 		return null;
 	}
