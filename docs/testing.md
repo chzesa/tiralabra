@@ -6,6 +6,8 @@ The aforementioned datasets are used for regression testing. Further unit tests 
 
 Currently, with the two tests which aren't passed (testing a case in which only degenerate parabola exist at the time of adding a new site), the test coverage is around 80% or higher for the components relevant to the algorithm implementation, but most of the coverage is purely from testing the algorithm itself instead of unit testing of the supplementary data structures.
 
+A coverage report can be found in /docs/coverage
+
 # Performance testing
 
 Testing the algorithm's performance will be done using randomly generated data, either with seeded random number generation or by reading the input from a pregenerated file.
