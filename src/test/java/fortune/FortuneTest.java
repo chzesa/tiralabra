@@ -127,7 +127,7 @@ public class FortuneTest
 	@Test
 	public void testConvergingLeft()
 	{
-		double x = 1.0f/Math.sqrt(2);
+		double x = 1.0 / Math.sqrt(2);
 
 		test(new Vector[] {
 			new Vector(-1, 0),
@@ -139,7 +139,7 @@ public class FortuneTest
 	@Test
 	public void testConvergingRight()
 	{
-		double x = 1.0f/Math.sqrt(2);
+		double x = 1.0 / Math.sqrt(2);
 
 		test(new Vector[] {
 			new Vector(0, 1),
@@ -151,7 +151,7 @@ public class FortuneTest
 	@Test
 	public void testConvergingWithParallels()
 	{
-		double x = 1.0f/Math.sqrt(2);
+		double x = 1.0 / Math.sqrt(2);
 
 		test(new Vector[] {
 			new Vector(-1, 0),
@@ -165,7 +165,7 @@ public class FortuneTest
 	@Test
 	public void testConvergingWithPointBelow()
 	{
-		double x = 1.0f/Math.sqrt(2);
+		double x = 1.0 / Math.sqrt(2);
 
 		test(new Vector[] {
 			new Vector(-x, x),
@@ -178,7 +178,7 @@ public class FortuneTest
 	@Test
 	public void testConvergingWithPointBelowOnCircle()
 	{
-		double x = 1.0f/Math.sqrt(2);
+		double x = 1.0 / Math.sqrt(2);
 
 		test(new Vector[] {
 			new Vector(-x, x),
@@ -191,7 +191,7 @@ public class FortuneTest
 	@Test
 	public void testConvergingWithParallelsAndPointBelow()
 	{
-		double x = 1.0f/Math.sqrt(2);
+		double x = 1.0 / Math.sqrt(2);
 
 		test(new Vector[] {
 			new Vector(-1, 0),
@@ -206,7 +206,7 @@ public class FortuneTest
 	@Test
 	public void testConvergingWithParallelsAndPointBelowOnCircle()
 	{
-		double x = 1.0f/Math.sqrt(2);
+		double x = 1.0 / Math.sqrt(2);
 
 		test(new Vector[] {
 			new Vector(-1, 0),
@@ -221,7 +221,7 @@ public class FortuneTest
 	@Test
 	public void testConvergingWithSiteOverlappingPoint()
 	{
-		double x = 1.0f/Math.sqrt(2);
+		double x = 1.0 / Math.sqrt(2);
 
 		test(new Vector[] {
 			new Vector(-x, x),

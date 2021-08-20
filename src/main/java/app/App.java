@@ -348,8 +348,8 @@ public class App
 			limit = Math.min(limit, bottomRight.x);
 			while (x < limit)
 			{
-				Vector a = Utils.parabolaPt(arc. site, fortune.sweepLine(), x);
-				Vector b = Utils.parabolaPt(arc. site, fortune.sweepLine(), Math.min(x + inc, limit));
+				Vector a = Utils.parabolaPt(arc.site, fortune.sweepLine(), x);
+				Vector b = Utils.parabolaPt(arc.site, fortune.sweepLine(), Math.min(x + inc, limit));
 				coords.add(a);
 				coords.add(b);
 				x += inc;
@@ -360,8 +360,8 @@ public class App
 		int i = 0;
 		for (Vector point : coords)
 		{
-			arr[i * 2 + 0] = (float)point.x;
-			arr[i * 2 + 1] = (float)point.y;
+			arr[i * 2 + 0] = (float) point.x;
+			arr[i * 2 + 1] = (float) point.y;
 			i++;
 		}
 
@@ -390,7 +390,7 @@ public class App
 			if (xMin == Double.NEGATIVE_INFINITY)
 				xMin = 0;
 
-			drawLines(new float[] {xMin, (float)topLeft.y, xMin, (float)bottomRight.y});
+			drawLines(new float[] {xMin, (float) topLeft.y, xMin, (float) bottomRight.y});
 		});
 	}
 
@@ -509,9 +509,11 @@ public class App
 			{
 				next = false;
 				cursorMoved = false;
-				try {
+				try
+				{
 					fortune.process();
-				} catch(Error e)
+				}
+				catch (Error e)
 				{
 					print(e.toString());
 					e.printStackTrace();
@@ -562,7 +564,7 @@ public class App
 			setZoomFactor(zoomFactor);
 
 			setColor(0.0f, 0.0f, 0.0f, 1.0f);
-			drawLines(new float[] {(float)topLeft.x, (float) cursorPos, (float)bottomRight.x, (float) cursorPos});
+			drawLines(new float[] {(float) topLeft.x, (float) cursorPos, (float) bottomRight.x, (float) cursorPos});
 
 			setColor(1.0f, 0.0f, 0.0f, 1.0f);
 			drawBeachline();

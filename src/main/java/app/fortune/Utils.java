@@ -21,7 +21,7 @@ class Parabola
 
 	public String toString()
 	{
-		return "( " +x2 + "x^2 + " + x + "x + " + c + " )";
+		return "( " + x2 + "x^2 + " + x + "x + " + c + " )";
 	}
 }
 
