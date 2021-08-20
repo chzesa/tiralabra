@@ -57,7 +57,12 @@ public class Arc implements ISortable
 			return null;
 
 		Vector offset = new Vector(0.0, -point.sub(site).norm());
-		return point.add(offset);
+		Vector ret = point.add(offset);
+
+		if (ret.equals(site))
+			return null;
+
+		return ret;
 	}
 
 	@Override
