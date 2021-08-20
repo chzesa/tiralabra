@@ -234,6 +234,15 @@ public class Fortune
 		Boundary left = bounds[0];
 		Boundary right = bounds[1];
 
+		if (Math.abs(arc.site.y - site.y) < Vector.PRECISION && arc.right == null)
+		{
+			Arc leftArc = new Arc(arc.left, arc.site, left);
+			Arc newArc = new Arc(left, site, null);
+			detectEvent(beach.add(leftArc));
+			detectEvent(beach.add(newArc));
+			return;
+		}
+
 		Arc leftArc = new Arc(arc.left, arc.site, left);
 		Arc newArc = new Arc(left, site, right);
 		Arc rightArc = new Arc(right, arc.site, arc.right);
