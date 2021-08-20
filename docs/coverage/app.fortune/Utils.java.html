@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Utils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tira</a> &gt; <a href="index.source.html" class="el_package">app.fortune</a> &gt; <span class="el_source">Utils.java</span></div><h1>Utils.java</h1><pre class="source lang-java linenums">package app.fortune;
+
+import app.vector.*;
+
+class Parabola
+{
+	final double x2;
+	final double x;
+	final double c;
+	final boolean degenerate;
+
+	Parabola(Vector focus, double directrix)
+<span class="fc" id="L13">	{</span>
+<span class="fc bfc" id="L14" title="All 2 branches covered.">		degenerate = Math.abs(focus.y - directrix) &lt; Vector.PRECISION;</span>
+
+<span class="fc" id="L16">		double d = (2.0 * (focus.y - directrix));</span>
+<span class="fc" id="L17">		x2 = 1.0 / d;</span>
+<span class="fc" id="L18">		x = (-2.0 * focus.x) / d;</span>
+<span class="fc" id="L19">		c = focus.x * focus.x / d + (1.0 / 2.0) * (focus.y + directrix);</span>
+<span class="fc" id="L20">	}</span>
+
+	public String toString()
+	{
+<span class="nc" id="L24">		return &quot;( &quot; + x2 + &quot;x^2 + &quot; + x + &quot;x + &quot; + c + &quot; )&quot;;</span>
+	}
+}
+
+<span class="nc" id="L28">public class Utils</span>
+{
+	/**
+	 * Given a vector defined by origin and destination, returns a perpendicular vector
+	 * pointing to the right from the viewpoint of the vector.
+	 * Used to generate the bisector direction vector of two adjacent sites.
+	 */
+	public static Vector bisector(Vector orig, Vector dst)
+	{
+<span class="fc" id="L37">		Vector d = dst.sub(orig);</span>
+
+<span class="fc" id="L39">		double a1 = d.x;</span>
+<span class="fc" id="L40">		double a2 = d.y;</span>
+<span class="fc" id="L41">		double a3 = 0;</span>
+
+<span class="fc" id="L43">		double b1 = 0;</span>
+<span class="fc" id="L44">		double b2 = 0;</span>
+<span class="fc" id="L45">		double b3 = 1;</span>
+
+<span class="fc" id="L47">		return new Vector(</span>
+			a2 * b3 - a3 * b2,
+			a3 * b1 - a1 * b3
+<span class="fc" id="L50">		).normalize();</span>
+	}
+
+	/**
+	 * Given a parabola defined by a focus and directrix, returns the y coordinate of the
+	 * parabola at x.
+	 */
+	public static double parabolaY(Vector focus, double directrix, double x)
+	{
+<span class="fc" id="L59">		double a = focus.x;</span>
+<span class="fc" id="L60">		double b = focus.y;</span>
+<span class="fc" id="L61">		return (x - a) * (x - a) / (2.0 * (b - directrix)) + (b + directrix) / 2.0;</span>
+	}
+
+	public static Vector parabolaPt(Vector focus, double directrix, double x)
+	{
+<span class="fc" id="L66">		return new Vector(x, parabolaY(focus, directrix, x));</span>
+	}
+
+	/**
+	 * Given two focuses and a directrix, returns the intersection points of the parabolas
+	 * provided neither parabola is degenerate.
+	 * Both parabolas are expected to be above the directrix.
+	 */
+	public static Vector[] parabolaIntersection(Vector focusA, Vector focusB, double directrix)
+	{
+<span class="fc" id="L76">		Parabola p1 = new Parabola(focusA, directrix);</span>
+<span class="fc" id="L77">		Parabola p2 = new Parabola(focusB, directrix);</span>
+
+<span class="fc bfc" id="L79" title="All 2 branches covered.">		if (Math.abs(focusA.y - focusB.y) &lt; Vector.PRECISION)</span>
+<span class="fc" id="L80">			return new Vector[] {</span>
+<span class="fc" id="L81">				parabolaPt(focusA, directrix, (focusA.x + focusB.x) / 2)</span>
+			};
+
+<span class="pc bpc" id="L84" title="1 of 4 branches missed.">		if (p1.degenerate &amp;&amp; p2.degenerate)</span>
+		{
+<span class="nc" id="L86">			return new Vector[] {};</span>
+		}
+<span class="fc bfc" id="L88" title="All 2 branches covered.">		else if (p1.degenerate)</span>
+		{
+<span class="fc" id="L90">			return new Vector[]</span>
+			{
+<span class="fc" id="L92">				parabolaPt(focusB, directrix, focusA.x)</span>
+			};
+		}
+<span class="fc bfc" id="L95" title="All 2 branches covered.">		else if (p2.degenerate)</span>
+		{
+<span class="fc" id="L97">			return new Vector[]</span>
+			{
+<span class="fc" id="L99">				parabolaPt(focusA, directrix, focusB.x)</span>
+			};
+		}
+
+<span class="fc" id="L103">		double[] xCoords = solveQuadraticFn(p1.x2 - p2.x2, p1.x - p2.x, p1.c - p2.c);</span>
+
+<span class="fc" id="L105">		return new Vector[]</span>
+		{
+<span class="fc" id="L107">			parabolaPt(focusA, directrix, xCoords[0]),</span>
+<span class="fc" id="L108">			parabolaPt(focusB, directrix, xCoords[1])</span>
+		};
+	}
+
+	public static double[] solveQuadraticFn(double a, double b, double c)
+	{
+<span class="fc" id="L114">		double sqrt = Math.sqrt(b * b - 4.0 * a * c);</span>
+
+<span class="fc" id="L116">		return new double[]</span>
+		{
+			(-b + sqrt) / (2.0 * a),
+			(-b - sqrt) / (2.0 * a)
+		};
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

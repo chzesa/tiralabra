@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Validator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tira</a> &gt; <a href="index.source.html" class="el_package">app.fortune</a> &gt; <span class="el_source">Validator.java</span></div><h1>Validator.java</h1><pre class="source lang-java linenums">package app.fortune;
+
+import app.fortune.*;
+import java.util.ArrayList;
+import java.util.List;
+import app.vector.*;
+
+/**
+ * A basic validator class for checking the output of Fortune class.
+ * Does not guarantee that the tested voronoi diagram is correct, only
+ * that it does not contain anything incorrect.
+ */
+public class Validator
+{
+
+	List&lt;Vector&gt; sites;
+	Fortune.Result result;
+
+	public Validator(List&lt;Vector&gt; sites, Fortune.Result result)
+<span class="fc" id="L20">	{</span>
+<span class="fc" id="L21">		this.sites = sites;</span>
+<span class="fc" id="L22">		this.result = result;</span>
+<span class="fc" id="L23">	}</span>
+
+	public Validator(Vector[] sites, Fortune.Result result)
+<span class="fc" id="L26">	{</span>
+<span class="fc" id="L27">		this.sites = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">		for (int i = 0; i &lt; sites.length; i++)</span>
+<span class="fc" id="L29">			this.sites.add(sites[i]);</span>
+
+<span class="fc" id="L31">		this.result = result;</span>
+<span class="fc" id="L32">	}</span>
+
+	static List&lt;Vector&gt; closestSites(Vector point, List&lt;Vector&gt; sites)
+	{
+<span class="fc" id="L36">		ArrayList&lt;Vector&gt; res = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L37">		double dist = Double.POSITIVE_INFINITY;</span>
+
+<span class="fc bfc" id="L39" title="All 2 branches covered.">		for (Vector site : sites)</span>
+		{
+<span class="fc" id="L41">			double d = Vector.distance(site, point);</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">			if (Math.abs(d - dist) &lt; Vector.PRECISION)</span>
+			{
+<span class="fc" id="L44">				res.add(site);</span>
+			}
+<span class="fc bfc" id="L46" title="All 2 branches covered.">			else if (d &lt; dist)</span>
+			{
+<span class="fc" id="L48">				res.clear();</span>
+<span class="fc" id="L49">				res.add(site);</span>
+<span class="fc" id="L50">				dist = d;</span>
+			}
+<span class="fc" id="L52">		}</span>
+
+<span class="fc" id="L54">		return res;</span>
+	}
+
+	static boolean validateRay(Fortune.Edge ray, List&lt;Vector&gt; sites)
+	{
+<span class="fc" id="L59">		Vector half = ray.a.add(ray.b.normalize().scale(Math.max(ray.a.norm(), 1)));</span>
+<span class="fc" id="L60">		List&lt;Vector&gt; sitesA = closestSites(ray.a, sites);</span>
+<span class="fc" id="L61">		List&lt;Vector&gt; sitesH = closestSites(half, sites);</span>
+
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">		if (sitesH.size() != 2)</span>
+<span class="nc" id="L64">			return false;</span>
+
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">		if (!sitesA.containsAll(sitesH))</span>
+<span class="nc" id="L67">			return false;</span>
+
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">		return sitesA.size() &gt; 1;</span>
+	}
+
+	static boolean validateEdge(Fortune.Edge edge, List&lt;Vector&gt; sites)
+	{
+<span class="fc" id="L74">		Vector half = edge.b.sub(edge.a).scale(0.5).add(edge.a);</span>
+<span class="fc" id="L75">		List&lt;Vector&gt; sitesA = closestSites(edge.a, sites);</span>
+<span class="fc" id="L76">		List&lt;Vector&gt; sitesB = closestSites(edge.b, sites);</span>
+<span class="fc" id="L77">		List&lt;Vector&gt; sitesH = closestSites(half, sites);</span>
+
+<span class="fc bfc" id="L79" title="All 2 branches covered.">		if (!edge.a.equals(edge.b))</span>
+		{
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">			if (sitesH.size() != 2)</span>
+<span class="nc" id="L82">				return false;</span>
+
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">			if (!sitesA.containsAll(sitesH))</span>
+<span class="nc" id="L85">				return false;</span>
+
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">			if (!sitesB.containsAll(sitesH))</span>
+<span class="nc" id="L88">				return false;</span>
+		}
+
+		/**
+		 * TODO: The algorithm currently inserts two parallel rays with the same origin
+		 * but with opposite directions when a new site is added. This can be detected
+		 * whenever the beachline is updated, or converted to lines (not supported) if
+		 * any such split edges remain at the end.
+		 * The usual solution to handling rays and lines is to enclose the voronoi diagram
+		 * in a box, which is also a possibility.
+		 */
+
+<span class="pc bpc" id="L100" title="1 of 4 branches missed.">		if (sitesA.size() &gt; 2 &amp;&amp; sitesB.size() &gt; 2)</span>
+<span class="fc" id="L101">			return true;</span>
+
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">		if (sitesA.size() == 2)</span>
+<span class="fc" id="L104">			return true;</span>
+
+<span class="nc" id="L106">		return false;</span>
+	}
+
+	public boolean result()
+	{
+<span class="fc" id="L111">		boolean res = true;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">		for (Fortune.Edge e : result.edges)</span>
+<span class="pc bpc" id="L113" title="2 of 4 branches missed.">			res = res &amp;&amp; validateEdge(e, sites);</span>
+
+<span class="fc bfc" id="L115" title="All 2 branches covered.">		for (Fortune.Edge r : result.rays)</span>
+<span class="pc bpc" id="L116" title="2 of 4 branches missed.">			res = res &amp;&amp; validateRay(r, sites);</span>
+
+<span class="fc" id="L118">		return res;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

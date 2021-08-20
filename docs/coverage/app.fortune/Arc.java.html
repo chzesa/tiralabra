@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Arc.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tira</a> &gt; <a href="index.source.html" class="el_package">app.fortune</a> &gt; <span class="el_source">Arc.java</span></div><h1>Arc.java</h1><pre class="source lang-java linenums">package app.fortune;
+
+import app.vector.*;
+import app.pq.*;
+
+/**
+ * Arcs are sorted primarily by the projection of its leftmost endpoint onto the sweepline.
+ * If two adjacent arcs have the same primary sort value, at least one of them is vanishing
+ * from the beachline, and multiple sites are on the voronoi circle around the event point.
+ */
+public class Arc implements ISortable
+{
+	public final Boundary left;
+	public final Boundary right;
+	public final Vector site;
+
+<span class="fc" id="L17">	PriorityQueue&lt;Event&gt;.Node event = null;</span>
+
+	public Arc(Boundary left, Vector site, Boundary right)
+<span class="fc" id="L20">	{</span>
+<span class="fc" id="L21">		this.left = left;</span>
+<span class="fc" id="L22">		this.right = right;</span>
+<span class="fc" id="L23">		this.site = site;</span>
+<span class="fc" id="L24">	}</span>
+
+	public Vector left(double y)
+	{
+<span class="fc bfc" id="L28" title="All 2 branches covered.">		if (left == null)</span>
+<span class="fc" id="L29">			return new Vector(Double.NEGATIVE_INFINITY, y);</span>
+
+<span class="fc" id="L31">		return left.end(y);</span>
+	}
+
+	public Vector right(double y)
+	{
+<span class="fc bfc" id="L36" title="All 2 branches covered.">		if (right == null)</span>
+<span class="fc" id="L37">			return new Vector(Double.POSITIVE_INFINITY, y);</span>
+
+<span class="fc" id="L39">		return right.end(y);</span>
+	}
+
+	public Vector site()
+	{
+<span class="fc" id="L44">		return site;</span>
+	}
+
+	/**
+	 * Determines the circle event location below the arc's boundary ray intersection point if any.
+	 */
+	public Vector circleEvent()
+	{
+<span class="fc bfc" id="L52" title="All 4 branches covered.">		if (left == null || right == null)</span>
+<span class="fc" id="L53">			return null;</span>
+
+<span class="fc" id="L55">		Vector point = Ray.intersect(left.ray, right.ray);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">		if (point == null)</span>
+<span class="fc" id="L57">			return null;</span>
+
+<span class="fc" id="L59">		Vector offset = new Vector(0.0, -point.sub(site).norm());</span>
+<span class="fc" id="L60">		Vector ret = point.add(offset);</span>
+
+<span class="fc bfc" id="L62" title="All 2 branches covered.">		if (ret.equals(site))</span>
+<span class="fc" id="L63">			return null;</span>
+
+<span class="fc" id="L65">		return ret;</span>
+	}
+
+	@Override
+	public String toString()
+	{
+<span class="fc" id="L71">		return &quot;Arc of &quot; + site + &quot;{ &quot; + left + &quot; ; &quot; + right + &quot; }&quot;;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

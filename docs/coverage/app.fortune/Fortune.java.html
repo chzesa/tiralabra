@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Fortune.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tira</a> &gt; <a href="index.source.html" class="el_package">app.fortune</a> &gt; <span class="el_source">Fortune.java</span></div><h1>Fortune.java</h1><pre class="source lang-java linenums">package app.fortune;
+
+import app.vector.*;
+import app.pq.*;
+import app.tree.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Comparator;
+
+/**
+ * Site events are sorted top to bottom, left to right.
+ * If two events have an equal point, if only one of them is a site event, the site event is sorted
+ * first because it will cancel any circle events at that location.
+ */
+<span class="fc" id="L15">class QueueCompare implements Comparator&lt;Event&gt;</span>
+{
+	@Override
+	public int compare(Event a, Event b)
+	{
+<span class="fc bfc" id="L20" title="All 2 branches covered.">		if (Math.abs(a.point().y - b.point().y) &lt; Vector.PRECISION)</span>
+		{
+<span class="fc bfc" id="L22" title="All 4 branches covered.">			if (a.isSiteEvent() &amp;&amp; !b.isSiteEvent())</span>
+<span class="fc" id="L23">				return -1;</span>
+
+<span class="fc bfc" id="L25" title="All 4 branches covered.">			if (!a.isSiteEvent() &amp;&amp; b.isSiteEvent())</span>
+<span class="fc" id="L26">				return 1;</span>
+
+<span class="fc bfc" id="L28" title="All 2 branches covered.">			if (a.site().equals(b.site()))</span>
+			{
+<span class="fc" id="L30">				return 0;</span>
+			}
+
+<span class="fc bfc" id="L33" title="All 2 branches covered.">			if (a.site().x &lt; b.site().x)</span>
+<span class="fc" id="L34">				return -1;</span>
+
+<span class="fc" id="L36">			return 1;</span>
+		}
+
+<span class="fc bfc" id="L39" title="All 2 branches covered.">		if (a.point().y &gt; b.point().y)</span>
+<span class="fc" id="L40">			return -1;</span>
+
+<span class="fc" id="L42">		return 1;</span>
+	}
+}
+
+<span class="fc" id="L46">class BeachlineCompare implements Comparator&lt;ISortable&gt;</span>
+{
+<span class="fc" id="L48">	public Vector ep = new Vector(0, 0);</span>
+
+	boolean equals(double a, double b)
+	{
+<span class="fc bfc" id="L52" title="All 2 branches covered.">		return Math.abs(a - b) &lt; Vector.PRECISION;</span>
+	}
+
+	static double angle(Vector vec)
+	{
+<span class="fc" id="L57">		Vector down = new Vector(0, -1);</span>
+<span class="fc" id="L58">		double angle = Vector.angle(vec, down);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">		if (angle &lt; 0)</span>
+<span class="fc" id="L60">			angle += 2 * Math.PI;</span>
+<span class="fc" id="L61">		return angle;</span>
+	}
+
+	@Override
+	public int compare(ISortable a, ISortable b)
+	{
+		// Test in case the value is at negative infinity.
+<span class="fc bfc" id="L68" title="All 2 branches covered.">		if (a == b)</span>
+<span class="fc" id="L69">			return 0;</span>
+
+<span class="fc" id="L71">		double aP = a.left(ep.y).x;</span>
+<span class="fc" id="L72">		double bP = b.left(ep.y).x;</span>
+
+<span class="fc bfc" id="L74" title="All 2 branches covered.">		if (equals(aP, bP))</span>
+		{
+<span class="fc" id="L76">			double aS = a.right(ep.y).x;</span>
+<span class="fc" id="L77">			double bS = b.right(ep.y).x;</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">			if (equals(aS, bS))</span>
+			{
+<span class="fc" id="L80">				Vector vA = a.site().sub(ep);</span>
+<span class="fc" id="L81">				Vector vB = b.site().sub(ep);</span>
+<span class="fc" id="L82">				double angleA = angle(vA);</span>
+<span class="fc" id="L83">				double angleB = angle(vB);</span>
+
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">				if (equals(angleA, angleB))</span>
+<span class="nc" id="L86">					return 0;</span>
+
+<span class="fc" id="L88">				return Double.compare(angleA, angleB);</span>
+			}
+
+<span class="fc" id="L91">			return Double.compare(aS, bS);</span>
+		}
+
+<span class="fc" id="L94">		return Double.compare(aP, bP);</span>
+	}
+}
+
+class PointQuery implements ISortable
+{
+	final Vector point;
+	final Vector site;
+
+	PointQuery(Vector point, Vector site)
+<span class="fc" id="L104">	{</span>
+<span class="fc" id="L105">		this.point = point;</span>
+<span class="fc" id="L106">		this.site = site;</span>
+<span class="fc" id="L107">	}</span>
+
+	public Vector left(double y)
+	{
+<span class="fc" id="L111">		return point;</span>
+	}
+
+	public Vector right(double y)
+	{
+<span class="fc" id="L116">		return point;</span>
+	}
+
+	public Vector site()
+	{
+<span class="fc" id="L121">		return site;</span>
+	}
+}
+
+public class Fortune
+{
+<span class="fc" id="L127">	BeachlineCompare beachCmp = new BeachlineCompare();</span>
+<span class="fc" id="L128">	public PriorityQueue&lt;Event&gt; queue = new PriorityQueue&lt;&gt;(new QueueCompare());</span>
+<span class="fc" id="L129">	public Tree&lt;ISortable&gt; beach = new Tree&lt;&gt;(beachCmp);</span>
+<span class="fc" id="L130">	ArrayList&lt;Edge&gt; edges = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L131">	public boolean debug = false;</span>
+	int limit;
+
+	public class Result
+	{
+		/**
+		 * List of line segments equaling the closed edges of the voronoi diagram.
+		 */
+		public List&lt;Edge&gt; edges;
+
+		/**
+		 * List of rays extending to infinity from origin Edge.a in the direction of Edge.b.
+		 */
+		public List&lt;Edge&gt; rays;
+
+		Result(List&lt;Edge&gt; edges, List&lt;Edge&gt; rays)
+<span class="fc" id="L147">		{</span>
+<span class="fc" id="L148">			this.edges = edges;</span>
+<span class="fc" id="L149">			this.rays = rays;</span>
+<span class="fc" id="L150">		}</span>
+	}
+
+	public class Edge
+	{
+		public final Vector a;
+		public final Vector b;
+
+		public Edge(Vector a, Vector b)
+<span class="fc" id="L159">		{</span>
+<span class="fc" id="L160">			this.a = a;</span>
+<span class="fc" id="L161">			this.b = b;</span>
+<span class="fc" id="L162">		}</span>
+	}
+
+	/**
+	 * @param sites List of seeds of the voronoi diagram.
+	 */
+	public Fortune(List&lt;Vector&gt; sites)
+<span class="fc" id="L169">	{</span>
+<span class="fc" id="L170">		sites.forEach(site -&gt; queue.push(new Event(site)));</span>
+<span class="fc" id="L171">		limit = sites.size() * 1000;</span>
+<span class="fc" id="L172">	}</span>
+
+	public Fortune(Vector[] sites)
+<span class="fc" id="L175">	{</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">		for (int i = 0; i &lt; sites.length; i++)</span>
+<span class="fc" id="L177">			queue.push(new Event(sites[i]));</span>
+
+<span class="fc" id="L179">		limit = sites.length * 1000;</span>
+<span class="fc" id="L180">	}</span>
+
+	void detectEvent(Tree&lt;ISortable&gt;.Node node)
+	{
+<span class="fc" id="L184">		Arc arc = (Arc) node.value();</span>
+<span class="fc" id="L185">		Vector point = arc.circleEvent();</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">		if (point != null)</span>
+		{
+<span class="fc" id="L188">			print(&quot;Detected circle event of &quot; + arc.site + &quot; at &quot; + point);</span>
+<span class="fc" id="L189">			arc.event = queue.push(new Event(point, arc.site, node));</span>
+		}
+<span class="fc" id="L191">	}</span>
+
+	void removeEvent(Arc arc)
+	{
+<span class="pc bpc" id="L195" title="1 of 4 branches missed.">		if (arc != null &amp;&amp; arc.event != null)</span>
+		{
+<span class="fc" id="L197">			queue.delete(arc.event);</span>
+<span class="fc" id="L198">			arc.event = null;</span>
+		}
+<span class="fc" id="L200">	}</span>
+
+	Boundary[] generateBoundaries(Arc arc, Vector site)
+	{
+<span class="fc" id="L204">		Vector isect = Utils.parabolaPt(arc.site, site.y, site.x);</span>
+<span class="fc" id="L205">		Ray left = new Ray(isect, Utils.bisector(arc.site, site));</span>
+<span class="fc" id="L206">		Ray right = new Ray(isect, Utils.bisector(site, arc.site));</span>
+<span class="fc" id="L207">		return new Boundary[] { new Boundary(left, arc.site, site), new Boundary(right, site, arc.site) };</span>
+	}
+	
+	void siteEvent(Event event)
+	{
+<span class="fc" id="L212">		Vector site = event.site();</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">		if (beach.isEmpty())</span>
+		{
+<span class="fc" id="L215">			beach.add(new Arc(null, site, null));</span>
+<span class="fc" id="L216">			return;</span>
+		}
+
+		// find arc above the event point
+
+		// Set the site x-coordinate at positive infinity in case the event point is at the
+		// exact point of the left edge of the arc it's on.
+<span class="fc" id="L223">		Arc arc = (Arc) beach.floor(new PointQuery(site, site)).value();</span>
+
+		// if the arc defines a circle event it's a false alarm. Remove event from qeueue
+<span class="fc" id="L226">		removeEvent(arc);</span>
+
+<span class="fc" id="L228">		print(&quot;Removing:\n\t&quot; + border(arc, sweepLine()) + &quot; | &quot; + arc);</span>
+
+		// split the arc into new sections
+<span class="fc" id="L231">		beach.delete(arc);</span>
+
+<span class="fc" id="L233">		Boundary[] bounds = generateBoundaries(arc, site);</span>
+<span class="fc" id="L234">		Boundary left = bounds[0];</span>
+<span class="fc" id="L235">		Boundary right = bounds[1];</span>
+
+<span class="pc bpc" id="L237" title="3 of 4 branches missed.">		if (Math.abs(arc.site.y - site.y) &lt; Vector.PRECISION &amp;&amp; arc.right == null)</span>
+		{
+<span class="nc" id="L239">			Arc leftArc = new Arc(arc.left, arc.site, left);</span>
+<span class="nc" id="L240">			Arc newArc = new Arc(left, site, null);</span>
+<span class="nc" id="L241">			detectEvent(beach.add(leftArc));</span>
+<span class="nc" id="L242">			detectEvent(beach.add(newArc));</span>
+<span class="nc" id="L243">			return;</span>
+		}
+
+<span class="fc" id="L246">		Arc leftArc = new Arc(arc.left, arc.site, left);</span>
+<span class="fc" id="L247">		Arc newArc = new Arc(left, site, right);</span>
+<span class="fc" id="L248">		Arc rightArc = new Arc(right, arc.site, arc.right);</span>
+
+<span class="fc" id="L250">		print(&quot;Adding:\n\t&quot;</span>
+<span class="fc" id="L251">			+ &quot;left  &quot; + border(leftArc, sweepLine()) + &quot; | &quot; + leftArc</span>
+			+ &quot;\n\t&quot;
+<span class="fc" id="L253">			+ &quot;mid   &quot; + border(newArc, sweepLine()) + &quot; | &quot; + newArc</span>
+			+ &quot;\n\t&quot;
+<span class="fc" id="L255">			+ &quot;right &quot; + border(rightArc, sweepLine()) + &quot; | &quot; + rightArc</span>
+		);
+
+<span class="fc" id="L258">		beach.add(newArc);</span>
+<span class="fc" id="L259">		detectEvent(beach.add(leftArc));</span>
+<span class="fc" id="L260">		detectEvent(beach.add(rightArc));</span>
+
+<span class="fc" id="L262">		check(leftArc, sweepLine());</span>
+<span class="fc" id="L263">		check(newArc, sweepLine());</span>
+<span class="fc" id="L264">		check(rightArc, sweepLine());</span>
+<span class="fc" id="L265">	}</span>
+
+	String border(Arc a, double y)
+	{
+<span class="fc" id="L269">		return String.format(&quot;%.3f&quot;, a.left(y).x) + &quot; ; &quot; + String.format(&quot;%.3f&quot;, a.right(y).x);</span>
+	}
+
+	void check(Arc a, double y)
+	{
+<span class="fc" id="L274">		double left = a.left(y).x;</span>
+<span class="fc" id="L275">		double right = a.right(y).x;</span>
+<span class="pc bpc" id="L276" title="1 of 4 branches missed.">		if (Math.abs(left - right) &gt; Vector.PRECISION &amp;&amp; right &lt; left)</span>
+<span class="nc" id="L277">			throw new Error(beachCmp.ep + &quot;\n\t&quot; + border(a, y) + &quot; | &quot; + a.toString());</span>
+<span class="fc" id="L278">	}</span>
+
+	void print(String s)
+	{
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">		if (debug)</span>
+<span class="nc" id="L283">			System.out.println(s);</span>
+<span class="fc" id="L284">	}</span>
+
+	void circleEvent(Event e)
+	{
+<span class="fc" id="L288">		Vector point = e.point();</span>
+<span class="fc" id="L289">		Vector site = e.site();</span>
+<span class="fc" id="L290">		Vector circlePoint = Utils.parabolaPt(site, sweepLine(), point.x);</span>
+
+		// Find and remove the arc being removed and its adjacent arcs
+<span class="fc" id="L293">		Tree&lt;ISortable&gt;.Node node = e.arc;</span>
+<span class="fc" id="L294">		Arc arc = (Arc) node.value();</span>
+<span class="fc" id="L295">		node = beach.previous(arc);</span>
+<span class="pc bpc" id="L296" title="1 of 2 branches missed.">		Arc larc = node == null ? null : (Arc) node.value();</span>
+<span class="fc" id="L297">		node = beach.next(arc);</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">		Arc rarc = node == null ? null : (Arc) node.value();</span>
+
+
+<span class="fc" id="L301">		print(&quot;Removing:\n\t&quot;</span>
+<span class="fc" id="L302">			+ &quot;left  &quot; + border(larc, sweepLine()) + &quot; | &quot; + larc</span>
+			+ &quot;\n\t&quot;
+<span class="fc" id="L304">			+ &quot;mid   &quot; + border(arc, sweepLine()) + &quot; | &quot; + arc</span>
+			+ &quot;\n\t&quot;
+<span class="fc" id="L306">			+ &quot;right &quot; + border(rarc, sweepLine()) + &quot; | &quot; + rarc</span>
+		);
+
+<span class="fc" id="L309">		beach.delete(arc);</span>
+<span class="fc" id="L310">		beach.delete(larc);</span>
+<span class="fc" id="L311">		beach.delete(rarc);</span>
+
+		// Remove all events involving the arc including any caused by its boundaries
+<span class="fc" id="L314">		removeEvent(larc);</span>
+<span class="fc" id="L315">		removeEvent(rarc);</span>
+
+		// rebuild the left and right arcs surrounding the removed arc
+<span class="fc" id="L318">		Vector direction = arc.left.ray.direction.normalize()</span>
+<span class="fc" id="L319">			.add(arc.right.ray.direction.normalize())</span>
+<span class="fc" id="L320">			.normalize();</span>
+
+<span class="fc" id="L322">		Vector bisector = Utils.bisector(larc.site, rarc.site);</span>
+
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">		if (Vector.dot(direction, bisector) &lt; 0)</span>
+<span class="nc" id="L325">			bisector = bisector.neg();</span>
+
+<span class="fc" id="L327">		Boundary middle = new Boundary(</span>
+			new Ray(circlePoint, bisector),
+			larc.site,
+			rarc.site
+		);
+
+<span class="fc" id="L333">		Arc left = new Arc(larc.left, larc.site, middle);</span>
+<span class="fc" id="L334">		Arc right = new Arc(middle, rarc.site, rarc.right);</span>
+
+<span class="fc" id="L336">		print(&quot;Adding:\n\t&quot;</span>
+<span class="fc" id="L337">			+ &quot;left  &quot; + border(left, sweepLine()) + &quot; | &quot; + left</span>
+			+ &quot;\n\t&quot;
+<span class="fc" id="L339">			+ &quot;right &quot; + border(right, sweepLine()) + &quot; | &quot; + right</span>
+			+ &quot;\n\t&quot;
+			+ &quot;with bisector &quot; + middle.ray
+		);
+
+<span class="fc" id="L344">		detectEvent(beach.add(left));</span>
+<span class="fc" id="L345">		detectEvent(beach.add(right));</span>
+
+		// add edges of removed arc to result
+<span class="fc" id="L348">		edges.add(new Edge(arc.left.ray.origin, circlePoint));</span>
+<span class="fc" id="L349">		edges.add(new Edge(arc.right.ray.origin, circlePoint));</span>
+<span class="fc" id="L350">		check(left, sweepLine());</span>
+<span class="fc" id="L351">		check(right, sweepLine());</span>
+<span class="fc" id="L352">	}</span>
+
+	/**
+	 * Processes a single event point per call.
+	 * @return true, if not all events have been processed.
+	 */
+	public boolean process()
+	{
+<span class="fc bfc" id="L360" title="All 2 branches covered.">		if (!queue.isEmpty())</span>
+		{
+<span class="fc" id="L362">			Event e = queue.pop();</span>
+<span class="fc" id="L363">			beachCmp.ep = e.point();</span>
+<span class="fc bfc" id="L364" title="All 2 branches covered.">			if (e.isSiteEvent())</span>
+			{
+<span class="fc" id="L366">				print(&quot;Site event &quot; + e.point());</span>
+<span class="fc" id="L367">				siteEvent(e);</span>
+			}
+			else
+			{
+<span class="fc" id="L371">				print(&quot;Circle event &quot; + e.point() + &quot; of &quot; + e.site());</span>
+<span class="fc" id="L372">				circleEvent(e);</span>
+			}
+		}
+
+<span class="fc bfc" id="L376" title="All 2 branches covered.">		return !queue.isEmpty();</span>
+	}
+
+	public Result processTo(double y)
+	{
+<span class="nc bnc" id="L381" title="All 2 branches missed.">		while (!queue.isEmpty())</span>
+		{
+<span class="nc bnc" id="L383" title="All 2 branches missed.">			if (queue.peek().point().y &lt; y)</span>
+<span class="nc" id="L384">				break;</span>
+
+<span class="nc" id="L386">			process();</span>
+		}
+
+<span class="nc" id="L389">		setSweepline(y);</span>
+<span class="nc" id="L390">		return result();</span>
+	}
+
+	/**
+	 * Immediately generates the voronoi diagram.
+	 */
+	public Result processAll()
+	{
+<span class="pc bpc" id="L398" title="1 of 4 branches missed.">		while (process() &amp;&amp; limit-- &gt; 0);</span>
+<span class="fc" id="L399">		return result();</span>
+	}
+
+	public Vector peek()
+	{
+<span class="nc bnc" id="L404" title="All 2 branches missed.">		if (!queue.isEmpty())</span>
+<span class="nc" id="L405">			return queue.peek().point();</span>
+<span class="nc" id="L406">		return null;</span>
+	}
+
+	public double sweepLine()
+	{
+<span class="fc" id="L411">		return beachCmp.ep.y;</span>
+	}
+
+	public void setSweepline(double y)
+	{
+<span class="nc bnc" id="L416" title="All 4 branches missed.">		if (queue.isEmpty() ||</span>
+<span class="nc bnc" id="L417" title="All 2 branches missed.">			(y &lt; beachCmp.ep.y &amp;&amp; y &gt; queue.peek().point().y))</span>
+<span class="nc" id="L418">			beachCmp.ep = new Vector(beachCmp.ep.x, y);</span>
+<span class="nc" id="L419">	}</span>
+
+	/**
+	 * Query the result of the algorithm.
+	 * @return the current state of the generated diagram.
+	 */
+	public Result result()
+	{
+<span class="fc" id="L427">		ArrayList&lt;Edge&gt; resEdges = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L428" title="All 2 branches covered.">		for (Edge edge : edges)</span>
+<span class="fc" id="L429">			resEdges.add(edge);</span>
+
+<span class="fc" id="L431">		ArrayList&lt;Edge&gt; infEdges = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L433">		beach.forEach(is -&gt;</span>
+		{
+<span class="fc" id="L435">			Arc arc = (Arc) is;</span>
+<span class="fc bfc" id="L436" title="All 2 branches covered.">			if (arc.left != null)</span>
+<span class="fc" id="L437">				infEdges.add(new Edge(arc.left.ray.origin, arc.left.ray.direction));</span>
+<span class="fc" id="L438">		});</span>
+
+<span class="fc" id="L440">		return new Result(resEdges, infEdges);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

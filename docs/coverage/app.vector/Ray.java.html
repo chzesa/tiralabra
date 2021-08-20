@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Ray.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tira</a> &gt; <a href="index.source.html" class="el_package">app.vector</a> &gt; <span class="el_source">Ray.java</span></div><h1>Ray.java</h1><pre class="source lang-java linenums">package app.vector;
+
+/**
+ * 2d ray class.
+ */
+public class Ray
+{
+	public final Vector origin;
+	public final Vector direction;
+
+	public Ray(Vector origin, Vector direction)
+<span class="fc" id="L12">	{</span>
+<span class="fc" id="L13">		this.origin = origin;</span>
+<span class="fc" id="L14">		this.direction = direction;</span>
+<span class="fc" id="L15">	}</span>
+
+	public Vector intersect(Ray other)
+	{
+<span class="nc" id="L19">		return intersect(this, other);</span>
+	}
+
+	/**
+	 * Determines the intersection of two rays.
+	 * @return Intersection point of the two rays, or null if they don't intersect.
+	 */
+	public static Vector intersect(Ray a, Ray b)
+	{
+<span class="fc" id="L28">		Vector aO = a.origin;</span>
+<span class="fc" id="L29">		Vector aD = a.direction;</span>
+<span class="fc" id="L30">		Vector bO = b.origin;</span>
+<span class="fc" id="L31">		Vector bD = b.direction;</span>
+
+<span class="fc" id="L33">		double det = bD.x * aD.y - bD.y * aD.x;</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">		if (Math.abs(det) &lt; Vector.PRECISION)</span>
+<span class="fc" id="L35">			return null;</span>
+
+<span class="fc" id="L37">		double dX = bO.x - aO.x;</span>
+<span class="fc" id="L38">		double dY = bO.y - aO.y;</span>
+
+<span class="fc" id="L40">		double s = (dY * aD.x - dX * aD.y) / det;</span>
+<span class="fc" id="L41">		double t = (dY * bD.x - dX * bD.y) / det;</span>
+<span class="fc bfc" id="L42" title="All 4 branches covered.">		if (s + Vector.PRECISION / 2.0 &gt;= 0 &amp;&amp; t + Vector.PRECISION / 2.0 &gt;= 0)</span>
+		{
+<span class="fc bfc" id="L44" title="All 2 branches covered.">			t = t &lt; 0 ? 0 : t;</span>
+<span class="fc" id="L45">			return aO.add(aD.scale(t));</span>
+		}
+
+<span class="fc" id="L48">		return null;</span>
+	}
+
+	@Override
+	public String toString()
+	{
+<span class="fc" id="L54">		return &quot;( &quot; + origin + &quot; -&gt; &quot; + direction + &quot; )&quot;;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

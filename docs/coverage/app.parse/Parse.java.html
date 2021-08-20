@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Parse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tira</a> &gt; <a href="index.source.html" class="el_package">app.parse</a> &gt; <span class="el_source">Parse.java</span></div><h1>Parse.java</h1><pre class="source lang-java linenums">package app.parse;
+
+import app.vector.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.lang.StringBuilder;
+
+<span class="nc" id="L10">public class Parse</span>
+{
+	/**
+	 * Converts a list of vectors to a string.
+	 * Each line contains x and y coordinates separated by a space.
+	 * String ends in a blank line.
+	 */
+	public static String toStringl(List&lt;Vector&gt; sites)
+	{
+<span class="fc" id="L19">		StringBuilder sb = new StringBuilder();</span>
+
+<span class="fc bfc" id="L21" title="All 2 branches covered.">		for (Vector v : sites)</span>
+<span class="fc" id="L22">			sb.append(v.x + &quot; &quot; + v.y + &quot; &quot;);</span>
+
+<span class="fc" id="L24">		sb.append(&quot;\n\n&quot;);</span>
+
+<span class="fc" id="L26">		return sb.toString();</span>
+	}
+
+	/**
+	 * Converts the specififed list to strings. Each vector list
+	 * is separated by a blank line.
+	 */
+	public static String toStringll(List&lt;List&lt;Vector&gt;&gt; sites)
+	{
+<span class="fc" id="L35">		StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">		for (List&lt;Vector&gt; l : sites)</span>
+<span class="fc" id="L37">			sb.append(toStringl(l));</span>
+
+<span class="fc" id="L39">		return sb.toString();</span>
+	}
+
+	/**
+	 * Parses a string representing a single list of sites.
+	 */
+	public static List&lt;Vector&gt; fromStringl(String s)
+	{
+<span class="fc" id="L47">		Scanner scan = new Scanner(s);</span>
+<span class="fc" id="L48">		List&lt;Vector&gt; sites = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">		while (scan.hasNextDouble())</span>
+		{
+<span class="fc" id="L51">			double x = scan.nextDouble();</span>
+<span class="fc" id="L52">			double y = scan.nextDouble();</span>
+<span class="fc" id="L53">			sites.add(new Vector(x, y));</span>
+<span class="fc" id="L54">		}</span>
+
+<span class="fc" id="L56">		return sites;</span>
+	}
+
+	/**
+	 * Parses a string representing lists of sites.
+	 */
+	public static List&lt;List&lt;Vector&gt;&gt; fromStringll(String in)
+	{
+<span class="fc" id="L64">		String[] parts = in.split(&quot;\n\n&quot;);</span>
+<span class="fc" id="L65">		ArrayList&lt;List&lt;Vector&gt;&gt; res = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L67" title="All 2 branches covered.">		for (String s : parts)</span>
+<span class="fc" id="L68">			res.add(fromStringl(s));</span>
+
+<span class="fc" id="L70">		return res;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

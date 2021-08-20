@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tree.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tira</a> &gt; <a href="index.source.html" class="el_package">app.tree</a> &gt; <span class="el_source">Tree.java</span></div><h1>Tree.java</h1><pre class="source lang-java linenums">package app.tree;
+
+import java.util.Comparator;
+import app.util.*;
+
+/**
+ * Unbalanced binary tree.
+ */
+public class Tree&lt;T&gt;
+{
+	public class Node
+	{
+		final T val;
+
+<span class="fc" id="L15">		Node ancestor = null;</span>
+<span class="fc" id="L16">		Node left = null;</span>
+<span class="fc" id="L17">		Node right = null;</span>
+
+<span class="fc" id="L19">		int depth = 0;</span>
+
+		Node(T value)
+<span class="fc" id="L22">		{</span>
+<span class="fc" id="L23">			this.val = value;</span>
+<span class="fc" id="L24">		}</span>
+
+		public T value()
+		{
+<span class="fc" id="L28">			return val;</span>
+		}
+
+		public String toString()
+		{
+<span class="nc" id="L33">			return &quot;[ &quot; + val.toString() + &quot; ] [A]: &quot;</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">				+ (ancestor == null ? &quot;null&quot; : ancestor.val.toString())</span>
+				+ &quot;; [L]: &quot;
+<span class="nc bnc" id="L36" title="All 2 branches missed.">				+ (left == null ? &quot;null&quot; : left.val.toString())</span>
+				+ &quot;; [R]: &quot;
+<span class="nc bnc" id="L38" title="All 2 branches missed.">				+ (right == null ? &quot;null&quot; : right.val.toString());</span>
+		}
+	}
+
+	final Comparator&lt;T&gt; cmp;
+<span class="fc" id="L43">	Node root = null;</span>
+<span class="fc" id="L44">	int count = 0;</span>
+
+	/**
+	 * Constructs a new tree.
+	 * @param cmp A comparator determining the ordering of the tree.
+	 */
+	public Tree(Comparator&lt;T&gt; cmp)
+<span class="fc" id="L51">	{</span>
+<span class="fc" id="L52">		this.cmp = cmp;</span>
+<span class="fc" id="L53">	}</span>
+
+	public boolean isEmpty()
+	{
+<span class="fc bfc" id="L57" title="All 2 branches covered.">		return size() == 0;</span>
+	}
+
+	public int size()
+	{
+<span class="fc" id="L62">		return this.count;</span>
+	}
+
+	/**
+	 * Delete a single node containing an equal item from the tree.
+	 */
+	public T delete(T item)
+	{
+<span class="fc" id="L70">		return delete(find(item));</span>
+	}
+
+	/**
+	 * Delete a single node from the tree.
+	 */
+	public T delete(Node node)
+	{
+<span class="fc bfc" id="L78" title="All 2 branches covered.">		if (node == null)</span>
+<span class="fc" id="L79">			return null;</span>
+
+<span class="fc" id="L81">		count--;</span>
+
+<span class="fc bfc" id="L83" title="All 4 branches covered.">		if (node.left != null &amp;&amp; node.right != null)</span>
+<span class="fc" id="L84">			swap(next(node), node);</span>
+
+<span class="fc bfc" id="L86" title="All 2 branches covered.">		Node child = node.left == null ? node.right : node.left;</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">		if (root == node)</span>
+<span class="fc" id="L88">			root = child;</span>
+
+<span class="fc bfc" id="L90" title="All 2 branches covered.">		if (node.ancestor != null)</span>
+		{
+<span class="fc bfc" id="L92" title="All 2 branches covered.">			if (node.ancestor.left == node)</span>
+<span class="fc" id="L93">				node.ancestor.left = child;</span>
+			else
+<span class="fc" id="L95">				node.ancestor.right = child;</span>
+		}
+
+<span class="fc bfc" id="L98" title="All 2 branches covered.">		if (child != null)</span>
+		{
+<span class="fc" id="L100">			child.ancestor = node.ancestor;</span>
+<span class="fc" id="L101">			rebalance(child);</span>
+		}
+		else
+<span class="fc" id="L104">			rebalance(node.ancestor);</span>
+
+<span class="fc" id="L106">		node.ancestor = null;</span>
+<span class="fc" id="L107">		node.left = null;</span>
+<span class="fc" id="L108">		node.right = null;</span>
+<span class="fc" id="L109">		return node.value();</span>
+	}
+
+	/**
+	 * Add an item to the tree.
+	 * @return An object representing the node which can be used for deletion.
+	 */
+	public Node add(T item)
+	{
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">		if (item == null)</span>
+<span class="nc" id="L119">			return null;</span>
+
+<span class="fc" id="L121">		Node node = new Node(item);</span>
+<span class="fc" id="L122">		count++;</span>
+
+<span class="fc bfc" id="L124" title="All 2 branches covered.">		if (root == null)</span>
+		{
+<span class="fc" id="L126">			root = node;</span>
+<span class="fc" id="L127">			return node;</span>
+		}
+
+<span class="fc" id="L130">		Node previous = null;</span>
+<span class="fc" id="L131">		Node current = root;</span>
+<span class="fc" id="L132">		int comparison = 0;</span>
+
+<span class="fc bfc" id="L134" title="All 2 branches covered.">		while (current != null)</span>
+		{
+<span class="fc" id="L136">			previous = current;</span>
+<span class="fc" id="L137">			comparison = cmp.compare(item, current.value());</span>
+
+<span class="fc bfc" id="L139" title="All 2 branches covered.">			if (comparison &lt;= 0)</span>
+<span class="fc" id="L140">				current = current.left;</span>
+			else
+<span class="fc" id="L142">				current = current.right;</span>
+		}
+
+<span class="fc bfc" id="L145" title="All 2 branches covered.">		if (comparison &lt;= 0)</span>
+<span class="fc" id="L146">			previous.left = node;</span>
+		else
+<span class="fc" id="L148">			previous.right = node;</span>
+
+<span class="fc" id="L150">		node.ancestor = previous;</span>
+
+<span class="fc" id="L152">		rebalance(node);</span>
+
+<span class="fc" id="L154">		return node;</span>
+	}
+
+	void rebalance(Node n)
+	{
+<span class="fc bfc" id="L159" title="All 2 branches covered.">		while (n != null)</span>
+		{
+<span class="fc" id="L161">			updateDepth(n);</span>
+
+<span class="fc bfc" id="L163" title="All 2 branches covered.">			if (Math.abs(depth(n.right) - depth(n.left)) &lt; 2)</span>
+			{
+<span class="fc" id="L165">				n = n.ancestor;</span>
+<span class="fc" id="L166">				continue;</span>
+			}
+
+<span class="fc bfc" id="L169" title="All 2 branches covered.">			if (depth(n.right) &gt; depth(n.left))</span>
+			{
+<span class="fc bfc" id="L171" title="All 2 branches covered.">				if (depth(n.right.right) &lt; depth(n.right.left))</span>
+<span class="fc" id="L172">					cwRotate(n.right);</span>
+
+<span class="fc" id="L174">				ccwRotate(n);</span>
+			}
+			else
+			{
+<span class="fc bfc" id="L178" title="All 2 branches covered.">				if (depth(n.left.right) &gt; depth(n.left.left))</span>
+<span class="fc" id="L179">					ccwRotate(n.left);</span>
+
+<span class="fc" id="L181">				cwRotate(n);</span>
+			}
+
+<span class="fc" id="L184">			n = n.ancestor;</span>
+		}
+<span class="fc" id="L186">	}</span>
+
+	int depth(Node n)
+	{
+<span class="fc bfc" id="L190" title="All 2 branches covered.">		if (n == null)</span>
+<span class="fc" id="L191">			return 0;</span>
+
+<span class="fc" id="L193">		return n.depth;</span>
+	}
+
+	void updateDepth(Node n)
+	{
+<span class="fc" id="L198">		n.depth = Math.max(depth(n.left), depth(n.right)) + 1;</span>
+<span class="fc" id="L199">	}</span>
+
+	void cwRotate(Node node)
+	{
+<span class="fc" id="L203">		Node child = node.left;</span>
+<span class="fc" id="L204">		Node mover = child.right;</span>
+<span class="fc" id="L205">		Node parent = node.ancestor;</span>
+
+<span class="fc" id="L207">		child.right = node;</span>
+<span class="fc" id="L208">		node.left = mover;</span>
+
+<span class="fc bfc" id="L210" title="All 2 branches covered.">		if (root == node)</span>
+		{
+<span class="fc" id="L212">			root = child;</span>
+		}
+		else
+		{
+<span class="fc bfc" id="L216" title="All 2 branches covered.">			if (parent.left == node)</span>
+<span class="fc" id="L217">				parent.left = child;</span>
+			else
+<span class="fc" id="L219">				parent.right = child;</span>
+		}
+
+<span class="fc" id="L222">		child.ancestor = parent;</span>
+<span class="fc" id="L223">		node.ancestor = child;</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">		if (mover != null)</span>
+<span class="fc" id="L225">			mover.ancestor = node;</span>
+
+<span class="fc" id="L227">		updateDepth(node);</span>
+<span class="fc" id="L228">		updateDepth(child);</span>
+<span class="fc" id="L229">	}</span>
+
+	void ccwRotate(Node node)
+	{
+<span class="fc" id="L233">		Node child = node.right;</span>
+<span class="fc" id="L234">		Node mover = child.left;</span>
+<span class="fc" id="L235">		Node parent = node.ancestor;</span>
+
+<span class="fc" id="L237">		child.left = node;</span>
+<span class="fc" id="L238">		node.right = mover;</span>
+
+<span class="fc bfc" id="L240" title="All 2 branches covered.">		if (root == node)</span>
+		{
+<span class="fc" id="L242">			root = child;</span>
+		}
+		else
+		{
+<span class="fc bfc" id="L246" title="All 2 branches covered.">			if (parent.left == node)</span>
+<span class="fc" id="L247">				parent.left = child;</span>
+			else
+<span class="fc" id="L249">				parent.right = child;</span>
+		}
+
+<span class="fc" id="L252">		child.ancestor = parent;</span>
+<span class="fc" id="L253">		node.ancestor = child;</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">		if (mover != null)</span>
+<span class="fc" id="L255">			mover.ancestor = node;</span>
+
+<span class="fc" id="L257">		updateDepth(node);</span>
+<span class="fc" id="L258">		updateDepth(child);</span>
+<span class="fc" id="L259">	}</span>
+
+	/**
+	 * Returns the smallest contained item that is larger than the parameter.
+	 */
+	public Node next(Node node)
+	{
+<span class="fc" id="L266">		return next(node.value());</span>
+	}
+
+	/**
+	 * Returns the smallest contained item that is larger than the parameter.
+	 */
+	public Node next(T item)
+	{
+<span class="fc" id="L274">		Node result = null;</span>
+<span class="fc" id="L275">		Node current = root;</span>
+
+<span class="fc bfc" id="L277" title="All 2 branches covered.">		while (current != null)</span>
+		{
+<span class="fc" id="L279">			int comparison = cmp.compare(item, current.value());</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">			if (comparison == -1)</span>
+			{
+<span class="fc" id="L282">				result = current;</span>
+<span class="fc" id="L283">				current = current.left;</span>
+			}
+			else
+			{
+<span class="fc" id="L287">				current = current.right;</span>
+			}
+<span class="fc" id="L289">		}</span>
+
+<span class="fc" id="L291">		return result;</span>
+	}
+
+	/**
+	 * Returns the largest contained item that is smaller than the parameter.
+	 */
+	public Node previous(Node node)
+	{
+<span class="nc" id="L299">		return previous(node.value());</span>
+	}
+
+	/**
+	 * Returns the largest contained item that is smaller than the parameter.
+	 */
+	public Node previous(T item)
+	{
+<span class="fc" id="L307">		Node result = null;</span>
+<span class="fc" id="L308">		Node current = root;</span>
+
+<span class="fc bfc" id="L310" title="All 2 branches covered.">		while (current != null)</span>
+		{
+<span class="fc" id="L312">			int comparison = cmp.compare(item, current.value());</span>
+<span class="fc bfc" id="L313" title="All 2 branches covered.">			if (comparison == 1)</span>
+			{
+<span class="fc" id="L315">				result = current;</span>
+<span class="fc" id="L316">				current = current.right;</span>
+			}
+			else
+			{
+<span class="fc" id="L320">				current = current.left;</span>
+			}
+<span class="fc" id="L322">		}</span>
+
+<span class="fc" id="L324">		return result;</span>
+	}
+
+	/**
+	 * Returns the greatest item smaller than the parameter, or an item which equals it.
+	 */
+	public Node floor(T item)
+	{
+<span class="fc" id="L332">		Node result = null;</span>
+<span class="fc" id="L333">		Node current = root;</span>
+
+<span class="fc bfc" id="L335" title="All 2 branches covered.">		while (current != null)</span>
+		{
+<span class="fc" id="L337">			int comparison = cmp.compare(item, current.value());</span>
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">			if (comparison == 0)</span>
+<span class="nc" id="L339">				return current;</span>
+
+<span class="fc bfc" id="L341" title="All 2 branches covered.">			if (comparison == 1)</span>
+			{
+<span class="fc" id="L343">				result = current;</span>
+<span class="fc" id="L344">				current = current.right;</span>
+			}
+			else
+			{
+<span class="fc" id="L348">				current = current.left;</span>
+			}
+<span class="fc" id="L350">		}</span>
+
+<span class="fc" id="L352">		return result;</span>
+	}
+
+	void forEachNode(Node n, ICallback&lt;T&gt; fn)
+	{
+<span class="fc bfc" id="L357" title="All 2 branches covered.">		if (n == null)</span>
+<span class="fc" id="L358">			return;</span>
+
+<span class="fc" id="L360">		forEachNode(n.left, fn);</span>
+<span class="fc" id="L361">		fn.operation(n.value());</span>
+<span class="fc" id="L362">		forEachNode(n.right, fn);</span>
+<span class="fc" id="L363">	}</span>
+
+	public void forEach(ICallback&lt;T&gt; fn)
+	{
+<span class="fc" id="L367">		forEachNode(root, fn);</span>
+<span class="fc" id="L368">	}</span>
+
+	void checkAncestry(Node n)
+	{
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">		if (n == null)</span>
+<span class="nc" id="L373">			return;</span>
+
+<span class="fc bfc" id="L375" title="All 2 branches covered.">		if (n.left != null)</span>
+		{
+<span class="pc bpc" id="L377" title="1 of 2 branches missed.">			if (n.left.ancestor != n)</span>
+<span class="nc" id="L378">				throw new RuntimeException(&quot;Node &quot; + n.left.value() + &quot; has incorrect ancestor &quot; + n.left.ancestor.value());</span>
+<span class="fc" id="L379">			checkAncestry(n.left);</span>
+		}
+<span class="fc bfc" id="L381" title="All 2 branches covered.">		if (n.right != null)</span>
+		{
+<span class="pc bpc" id="L383" title="1 of 2 branches missed.">			if (n.right.ancestor != n)</span>
+<span class="nc" id="L384">				throw new RuntimeException(&quot;Node &quot; + n.right.value() + &quot; has incorrect ancestor &quot; + n.right.ancestor.value());</span>
+<span class="fc" id="L385">			checkAncestry(n.right);</span>
+		}
+<span class="fc" id="L387">	}</span>
+
+	void checkLeft(Node n, T value)
+	{
+<span class="fc bfc" id="L391" title="All 2 branches covered.">		if (n == null)</span>
+<span class="fc" id="L392">			return;</span>
+
+<span class="pc bpc" id="L394" title="1 of 2 branches missed.">		if (cmp.compare(n.value(), value) == 1)</span>
+<span class="nc" id="L395">			throw new RuntimeException(&quot;Left subtree of &quot; + value.toString() + &quot; has a larger item.&quot;);</span>
+
+<span class="fc" id="L397">		checkLeft(n.left, value);</span>
+<span class="fc" id="L398">		checkLeft(n.right, value);</span>
+<span class="fc" id="L399">	}</span>
+
+	void checkRight(Node n, T value)
+	{
+<span class="fc bfc" id="L403" title="All 2 branches covered.">		if (n == null)</span>
+<span class="fc" id="L404">			return;</span>
+
+<span class="pc bpc" id="L406" title="1 of 2 branches missed.">		if (cmp.compare(value, n.value()) != -1)</span>
+<span class="nc" id="L407">			throw new RuntimeException(&quot;Right subtree of &quot; + value.toString() + &quot; has an equal or smaller item.&quot;);</span>
+
+<span class="fc" id="L409">		checkRight(n.left, value);</span>
+<span class="fc" id="L410">		checkRight(n.right, value);</span>
+<span class="fc" id="L411">	}</span>
+
+	void checkOrdered(Node n)
+	{
+<span class="fc bfc" id="L415" title="All 2 branches covered.">		if (n == null)</span>
+<span class="fc" id="L416">			return;</span>
+
+<span class="fc" id="L418">		checkLeft(n.left, n.value());</span>
+<span class="fc" id="L419">		checkRight(n.right, n.value());</span>
+
+<span class="fc" id="L421">		checkOrdered(n.left);</span>
+<span class="fc" id="L422">		checkOrdered(n.right);</span>
+<span class="fc" id="L423">	}</span>
+
+	public void validate()
+	{
+<span class="fc" id="L427">		checkOrdered(root);</span>
+<span class="fc" id="L428">		checkAncestry(root);</span>
+<span class="fc" id="L429">	}</span>
+
+	public Node find(T item)
+	{
+<span class="fc" id="L433">		Node current = root;</span>
+
+<span class="fc bfc" id="L435" title="All 2 branches covered.">		while (current != null)</span>
+		{
+<span class="fc" id="L437">			int comparison = cmp.compare(item, current.value());</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">			if (comparison == 0)</span>
+<span class="fc" id="L439">				return current;</span>
+
+<span class="fc bfc" id="L441" title="All 2 branches covered.">			if (comparison == -1)</span>
+<span class="fc" id="L442">				current = current.left;</span>
+			else
+<span class="fc" id="L444">				current = current.right;</span>
+<span class="fc" id="L445">		}</span>
+
+<span class="fc" id="L447">		return null;</span>
+	}
+
+	void swap(Node a, Node b)
+	{
+<span class="pc bpc" id="L452" title="2 of 4 branches missed.">		if (a == null || b == null)</span>
+<span class="nc" id="L453">			throw new IllegalArgumentException();</span>
+
+<span class="fc" id="L455">		int depth = a.depth;</span>
+<span class="fc" id="L456">		a.depth = b.depth;</span>
+<span class="fc" id="L457">		b.depth = depth;</span>
+
+<span class="fc" id="L459">		Node aLeft = a.left;</span>
+<span class="fc" id="L460">		Node aRight = a.right;</span>
+<span class="fc" id="L461">		Node aAnc = a.ancestor;</span>
+
+<span class="fc" id="L463">		Node bLeft = b.left;</span>
+<span class="fc" id="L464">		Node bRight = b.right;</span>
+<span class="fc" id="L465">		Node bAnc = b.ancestor;</span>
+
+<span class="pc bpc" id="L467" title="1 of 2 branches missed.">		if (aAnc != null)</span>
+		{
+<span class="fc bfc" id="L469" title="All 2 branches covered.">			if (aAnc.left == a)</span>
+<span class="fc" id="L470">				aAnc.left = b;</span>
+<span class="pc bpc" id="L471" title="1 of 2 branches missed.">			else if (aAnc.right == a)</span>
+<span class="fc" id="L472">				aAnc.right = b;</span>
+		}
+
+<span class="fc bfc" id="L475" title="All 2 branches covered.">		if (bAnc != null)</span>
+		{
+<span class="fc bfc" id="L477" title="All 2 branches covered.">			if (bAnc.left == b)</span>
+<span class="fc" id="L478">				bAnc.left = a;</span>
+<span class="pc bpc" id="L479" title="1 of 2 branches missed.">			else if (bAnc.right == b)</span>
+<span class="fc" id="L480">				bAnc.right = a;</span>
+		}
+
+<span class="pc bpc" id="L483" title="1 of 2 branches missed.">		if (aLeft != null)</span>
+<span class="nc" id="L484">			aLeft.ancestor = b;</span>
+<span class="fc bfc" id="L485" title="All 2 branches covered.">		if (aRight != null)</span>
+<span class="fc" id="L486">			aRight.ancestor = b;</span>
+
+<span class="pc bpc" id="L488" title="1 of 2 branches missed.">		if (bLeft != null)</span>
+<span class="fc" id="L489">			bLeft.ancestor = a;</span>
+<span class="pc bpc" id="L490" title="1 of 2 branches missed.">		if (bRight != null)</span>
+<span class="fc" id="L491">			bRight.ancestor = a;</span>
+
+<span class="pc bpc" id="L493" title="1 of 2 branches missed.">		if (root == a)</span>
+		{
+<span class="nc" id="L495">			root = b;</span>
+		}
+<span class="fc bfc" id="L497" title="All 2 branches covered.">		else if (root == b)</span>
+		{
+<span class="fc" id="L499">			root = a;</span>
+		}
+
+<span class="pc bpc" id="L502" title="1 of 2 branches missed.">		a.left = bLeft == a ? b : bLeft;</span>
+<span class="fc bfc" id="L503" title="All 2 branches covered.">		a.right = bRight == a ? b : bRight;</span>
+<span class="pc bpc" id="L504" title="1 of 2 branches missed.">		a.ancestor = bAnc == a ? b : bAnc;</span>
+
+<span class="pc bpc" id="L506" title="1 of 2 branches missed.">		b.left = aLeft == b ? a : aLeft;</span>
+<span class="pc bpc" id="L507" title="1 of 2 branches missed.">		b.right = aRight == b ? a : aRight;</span>
+<span class="fc bfc" id="L508" title="All 2 branches covered.">		b.ancestor = aAnc == b ? a : aAnc;</span>
+<span class="fc" id="L509">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
