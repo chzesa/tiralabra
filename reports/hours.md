@@ -17,3 +17,8 @@
 06.8.|2h|Debugging, docs
 12.8.|2h|
 13.8.|14h|Implementing dataset generation, integrating custom data structures
+16.8.|3h|tree balancing
+17.8.|2h|
+18.8.|1h|
+19.8.|6h|investigating edge cases
+20.8.|6h|=
