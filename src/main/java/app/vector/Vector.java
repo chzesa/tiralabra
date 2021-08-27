@@ -55,6 +55,11 @@ public class Vector
 		return distance(this, other) < PRECISION;
 	}
 
+	public boolean exact(Vector other)
+	{
+		return x == other.x && y == other.y;
+	}
+
 	@Override
 	public String toString()
 	{
