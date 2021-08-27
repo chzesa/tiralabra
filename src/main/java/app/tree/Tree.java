@@ -81,7 +81,7 @@ public class Tree<T>
 		count--;
 
 		if (node.left != null && node.right != null)
-			swap(next(node), node);
+			swap(node, next(node));
 
 		Node child = node.left == null ? node.right : node.left;
 		if (root == node)
@@ -392,7 +392,7 @@ public class Tree<T>
 			return;
 
 		if (cmp.compare(n.value(), value) == 1)
-			throw new RuntimeException("Left subtree of " + value.toString() + " has a larger item.");
+			throw new RuntimeException("Left subtree of " + value.toString() + " has a larger item " + n.value().toString());
 
 		checkLeft(n.left, value);
 		checkLeft(n.right, value);
@@ -404,7 +404,7 @@ public class Tree<T>
 			return;
 
 		if (cmp.compare(value, n.value()) != -1)
-			throw new RuntimeException("Right subtree of " + value.toString() + " has an equal or smaller item.");
+			throw new RuntimeException("Right subtree of \n\t" + value.toString() + "\nhas an equal or smaller item\n\t" + n.value().toString());
 
 		checkRight(n.left, value);
 		checkRight(n.right, value);
