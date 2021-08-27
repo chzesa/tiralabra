@@ -61,9 +61,64 @@ public class Utils
 		return (x - a) * (x - a) / (2.0 * (b - directrix)) + (b + directrix) / 2.0;
 	}
 
+
 	public static Vector parabolaPt(Vector focus, double directrix, double x)
 	{
 		return new Vector(x, parabolaY(focus, directrix, x));
+	}
+
+	/**
+	 * Finds the intersection point of three parabola, solving p for the system
+	 * y = (i.x - p.x)^2 + (i.y - p.y)^2
+	 * y = (j.x - p.x)^2 + (j.y - p.y)^2
+	 * y = (l.x - p.x)^2 + (k.y - p.y)^2
+	 * @param i Focus of a parabola
+	 * @param j Focus of a parabola
+	 * @param k Focus of a parabola
+	 */
+	public static Vector intersection(Vector i, Vector j, Vector k)
+	{
+		double a, b, c, d, e, f;
+		a = i.x;
+		b = i.y;
+
+		c = j.x;
+		d = j.y;
+
+		e = k.x;
+		f = k.y;
+
+		// No intersection if the points are collinear
+		if (i.sub(j).normalize().equals(j.sub(k).normalize()) || i.sub(j).normalize().equals(j.sub(k).normalize().neg()))
+			return null;
+
+		// i, j bisector is vertical
+		if (Math.abs(b - d) < Vector.PRECISION)
+			return new Vector(i.x, intersectionLinePoint(j, k, i.x));
+
+		// j, k bisector is vertical
+		if (Math.abs(f - d) < Vector.PRECISION)
+			return new Vector(k.x, intersectionLinePoint(i, j, k.x));
+
+		double x = (a*a*(d-f) + b*b*(d-f) + b*(-c*c - d*d + e*e + f*f) + c*c*f + d*d*f - d*e*e - d*f*f)
+			/ (  2.0 * (a * (d - f) + b * (e - c) + c*f - d*e ) );
+
+		double y = intersectionLinePoint(i, j, x);
+
+		return new Vector(x, y);
+	}
+
+	static double intersectionLinePoint(Vector i, Vector j, double x)
+	{
+		double a, b, c, d;
+		a = i.x;
+		b = i.y;
+
+		c = j.x;
+		d = j.y;
+
+		return (a*a + b*b - c*c - d*d + 2*x*(c-a))
+			/ (2 * (b-d));
 	}
 
 	/**
