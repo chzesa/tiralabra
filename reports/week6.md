@@ -1,0 +1,1 @@
+Inspecting the tree state right before and after the sweep line update occasionally (frequently with larger inputs) shows that the tree becomes unordered as a result of updating the sweepline. I suspect this is an issue with floating point math, but I'm not certain.
