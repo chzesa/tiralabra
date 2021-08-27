@@ -185,7 +185,7 @@ public class Fortune
 		Vector point = arc.circleEvent();
 		if (point != null)
 		{
-			print("Detected circle event of " + arc.site + " at " + point);
+			print("Detected circle event at " + point + " for " + arc.site);
 			arc.event = queue.push(new Event(point, arc.site, node));
 		}
 	}
