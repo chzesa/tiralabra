@@ -352,6 +352,7 @@ public class Fortune
 		if (!queue.isEmpty())
 		{
 			Event e = queue.pop();
+			print("Setting EP to: " + e.point().toString() + " site ? " + e.isSiteEvent());
 			beachCmp.ep = e.point();
 			if (e.isSiteEvent())
 			{
