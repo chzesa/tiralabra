@@ -35,7 +35,7 @@ class QueueCompare implements Comparator<Event>
 	}
 }
 
-class BeachlineCompare implements Comparator<ISortable>
+class BeachlineCompare implements Comparator<Arc>
 {
 	public Vector ep = new Vector(0, 0);
 
@@ -54,7 +54,7 @@ class BeachlineCompare implements Comparator<ISortable>
 	}
 
 	@Override
-	public int compare(ISortable a, ISortable b)
+	public int compare(Arc a, Arc b)
 	{
 		// Test in case the value is at negative infinity.
 		if (a == b)
@@ -87,38 +87,11 @@ class BeachlineCompare implements Comparator<ISortable>
 	}
 }
 
-class PointQuery implements ISortable
-{
-	final Vector point;
-	final Vector site;
-
-	PointQuery(Vector point, Vector site)
-	{
-		this.point = point;
-		this.site = site;
-	}
-
-	public Vector left(double y)
-	{
-		return point;
-	}
-
-	public Vector right(double y)
-	{
-		return point;
-	}
-
-	public Vector site()
-	{
-		return site;
-	}
-}
-
 public class Fortune
 {
 	BeachlineCompare beachCmp = new BeachlineCompare();
 	public PriorityQueue<Event> queue = new PriorityQueue<>(new QueueCompare());
-	public Tree<ISortable> beach = new Tree<>(beachCmp);
+	public Tree<Arc> beach = null;
 	ArrayList<Edge> edges = new ArrayList<>();
 	public boolean debug = false;
 	int limit;
@@ -171,9 +144,9 @@ public class Fortune
 		limit = sites.length * 1000;
 	}
 
-	void detectEvent(Tree<ISortable>.Node node)
+	void detectEvent(Tree<Arc>.Node node)
 	{
-		Arc arc = (Arc) node.value();
+		Arc arc = node.value();
 		Vector point = arc.circleEvent();
 		if (point != null)
 		{
@@ -198,13 +171,33 @@ public class Fortune
 		Ray right = new Ray(isect, Utils.bisector(site, arc.site));
 		return new Boundary[] { new Boundary(left, arc.site, site), new Boundary(right, site, arc.site) };
 	}
+
+	Tree<Arc>.Node findArc(Vector point)
+	{
+		Tree<Arc>.Node result = null;
+		Tree<Arc>.Node current = beach.root();
+
+		while(current != null)
+		{
+			Vector end = current.value().left(point.y);
+			if (point.x < end.x)
+				current = current.left();
+			else
+			{
+				result = current;
+				current = current.right();
+			}
+		}
+
+		return result;
+	}
 	
 	void siteEvent(Event event)
 	{
 		Vector site = event.site();
-		if (beach.isEmpty())
+		if (beach == null)
 		{
-			beach.add(new Arc(null, site, null));
+			beach = new Tree(beachCmp, new Arc(null, site, null));
 			return;
 		}
 
@@ -212,7 +205,8 @@ public class Fortune
 
 		// Set the site x-coordinate at positive infinity in case the event point is at the
 		// exact point of the left edge of the arc it's on.
-		Arc arc = (Arc) beach.floor(new PointQuery(site, site)).value();
+		Tree<Arc>.Node node = findArc(site);
+		Arc arc = node.value();
 
 		// if the arc defines a circle event it's a false alarm. Remove event from qeueue
 		removeEvent(arc);
@@ -220,7 +214,6 @@ public class Fortune
 		print("Removing:\n\t" + border(arc, sweepLine()) + " | " + arc);
 
 		// split the arc into new sections
-		beach.delete(arc);
 
 		Boundary[] bounds = generateBoundaries(arc, site);
 		Boundary left = bounds[0];
@@ -228,31 +221,33 @@ public class Fortune
 
 		if (Math.abs(arc.site.y - site.y) < Vector.PRECISION && arc.right == null)
 		{
-			Arc leftArc = new Arc(arc.left, arc.site, left);
 			Arc newArc = new Arc(left, site, null);
-			detectEvent(beach.add(leftArc));
-			detectEvent(beach.add(newArc));
+			arc = new Arc(arc.left, arc.site, left);
+			node = beach.replace(node, arc);
+
+			detectEvent(node);
+			detectEvent(beach.addNext(node, newArc));
 			return;
 		}
 
 		Arc leftArc = new Arc(arc.left, arc.site, left);
-		Arc newArc = new Arc(left, site, right);
 		Arc rightArc = new Arc(right, arc.site, arc.right);
+		arc = new Arc(left, site, right);
 
 		print("Adding:\n\t"
 			+ "left  " + border(leftArc, sweepLine()) + " | " + leftArc
 			+ "\n\t"
-			+ "mid   " + border(newArc, sweepLine()) + " | " + newArc
+			+ "mid   " + border(arc, sweepLine()) + " | " + arc
 			+ "\n\t"
 			+ "right " + border(rightArc, sweepLine()) + " | " + rightArc
 		);
 
-		beach.add(newArc);
-		detectEvent(beach.add(leftArc));
-		detectEvent(beach.add(rightArc));
+		node = beach.replace(node, arc);
+		detectEvent(beach.addPrevious(node, leftArc));
+		detectEvent(beach.addNext(node, rightArc));
 
 		check(leftArc, sweepLine());
-		check(newArc, sweepLine());
+		check(arc, sweepLine());
 		check(rightArc, sweepLine());
 	}
 
@@ -282,13 +277,15 @@ public class Fortune
 		Vector circlePoint = Utils.parabolaPt(site, sweepLine(), point.x);
 
 		// Find and remove the arc being removed and its adjacent arcs
-		Tree<ISortable>.Node node = e.arc;
-		Arc arc = (Arc) node.value();
-		node = beach.previous(arc);
-		Arc larc = node == null ? null : (Arc) node.value();
-		node = beach.next(arc);
-		Arc rarc = node == null ? null : (Arc) node.value();
+		Tree<Arc>.Node lNode, node, rNode;
 
+		node = e.arc;
+		lNode = node.previous();
+		rNode = node.next();
+
+		Arc arc = node.value();
+		Arc larc = lNode.value();
+		Arc rarc = rNode.value();
 
 		print("Removing:\n\t"
 			+ "left  " + border(larc, sweepLine()) + " | " + larc
@@ -298,10 +295,7 @@ public class Fortune
 			+ "right " + border(rarc, sweepLine()) + " | " + rarc
 		);
 
-		beach.delete(arc);
-		beach.delete(larc);
-		beach.delete(rarc);
-
+		beach.delete(node);
 		// Remove all events involving the arc including any caused by its boundaries
 		removeEvent(larc);
 		removeEvent(rarc);
@@ -333,8 +327,11 @@ public class Fortune
 			+ "with bisector " + middle.ray
 		);
 
-		detectEvent(beach.add(left));
-		detectEvent(beach.add(right));
+		lNode = beach.replace(lNode, left);
+		rNode = beach.replace(rNode, right);
+
+		detectEvent(lNode);
+		detectEvent(rNode);
 
 		// add edges of removed arc to result
 		edges.add(new Edge(arc.left.ray.origin, circlePoint));
@@ -423,12 +420,13 @@ public class Fortune
 
 		ArrayList<Edge> infEdges = new ArrayList<>();
 
-		beach.forEach(is ->
-		{
-			Arc arc = (Arc) is;
-			if (arc.left != null)
-				infEdges.add(new Edge(arc.left.ray.origin, arc.left.ray.direction));
-		});
+		if (beach != null)
+			beach.forEach(is ->
+			{
+				Arc arc = (Arc) is;
+				if (arc.left != null)
+					infEdges.add(new Edge(arc.left.ray.origin, arc.left.ray.direction));
+			});
 
 		return new Result(resEdges, infEdges);
 	}

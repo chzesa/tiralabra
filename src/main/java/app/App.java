@@ -474,6 +474,9 @@ public class App
 	void printInfo()
 	{
 		processResult();
+		if (fortune.beach == null)
+			return;
+
 		fortune.beach.forEach(v ->
 		{
 			Arc arc = (Arc) v;
@@ -566,30 +569,36 @@ public class App
 			glClear(GL_COLOR_BUFFER_BIT);
 			setZoomFactor(zoomFactor);
 
-			setColor(0.0f, 0.0f, 0.0f, 1.0f);
-			drawLines(new float[] {(float) topLeft.x, (float) cursorPos, (float) bottomRight.x, (float) cursorPos});
-
-			setColor(1.0f, 0.0f, 0.0f, 1.0f);
-			drawBeachline();
-
-			// setColor(1.0f, 0.0f, 0.0f, 0.2f);
-			// drawAllParabolas();
-
-			// setColor(0.0f, 0.0f, 0.0f, 0.1f);
-			// drawBeachlineVerticals();
-
 			setColor(1.0f, 0.0f, 0.0f, 1.0f);
 			drawPoints(coords);
 
-			setColor(0.0f, 0.0f, 1.0f, 1.0f);
-			drawQueuedCircleEvents();
-
 			setColor(0.0f, 0.0f, 0.0f, 1.0f);
-			drawLines(edges);
+			drawLines(new float[] {(float) topLeft.x, (float) cursorPos, (float) bottomRight.x, (float) cursorPos});
 
-			setColor(0.0f, 0.0f, 0.0f, 0.3f);
-			drawLines(rays);
-			// drawPoints(rayOrigins);
+			if (fortune.beach != null)
+			{
+				
+				setColor(1.0f, 0.0f, 0.0f, 1.0f);
+				drawBeachline();
+
+				// setColor(1.0f, 0.0f, 0.0f, 0.2f);
+				// drawAllParabolas();
+
+				// setColor(0.0f, 0.0f, 0.0f, 0.1f);
+				// drawBeachlineVerticals();
+
+				
+
+				setColor(0.0f, 0.0f, 1.0f, 1.0f);
+				drawQueuedCircleEvents();
+
+				setColor(0.0f, 0.0f, 0.0f, 1.0f);
+				drawLines(edges);
+
+				setColor(0.0f, 0.0f, 0.0f, 0.3f);
+				drawLines(rays);
+				// drawPoints(rayOrigins);	
+			}
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();

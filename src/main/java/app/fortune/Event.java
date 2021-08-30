@@ -7,7 +7,7 @@ public class Event
 {
 	private final Vector pt;
 	private final Vector s;
-	final Tree<ISortable>.Node arc;
+	final Tree<Arc>.Node arc;
 
 	Event(Vector site)
 	{
@@ -16,7 +16,7 @@ public class Event
 		this.arc = null;
 	}
 
-	Event(Vector point, Vector site, Tree<ISortable>.Node arc)
+	Event(Vector point, Vector site, Tree<Arc>.Node arc)
 	{
 		this.pt = point;
 		this.s = site;

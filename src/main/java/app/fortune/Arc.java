@@ -8,7 +8,7 @@ import app.pq.*;
  * If two adjacent arcs have the same primary sort value, at least one of them is vanishing
  * from the beachline, and multiple sites are on the voronoi circle around the event point.
  */
-public class Arc implements ISortable
+public class Arc
 {
 	public final Boundary left;
 	public final Boundary right;

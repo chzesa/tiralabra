@@ -16,6 +16,9 @@ public class Tree<T>
 		Node left = null;
 		Node right = null;
 
+		Node next = null;
+		Node previous = null;
+
 		int depth = 0;
 
 		Node(T value)
@@ -37,19 +40,56 @@ public class Tree<T>
 				+ "; [R]: "
 				+ (right == null ? "null" : right.val.toString());
 		}
+
+		public Node next()
+		{
+			return next;
+		}
+
+		public Node previous()
+		{
+			return previous;
+		}
+
+		public Node left()
+		{
+			return left;
+		}
+
+		public Node right()
+		{
+			return right;
+		}
+
+		void reset()
+		{
+			ancestor = null;
+			left = null;
+			right = null;
+			next = null;
+			previous = null;
+			depth = 0;
+		}
 	}
 
 	final Comparator<T> cmp;
 	Node root = null;
 	int count = 0;
 
+	public Node root()
+	{
+		return root;
+	}
+
 	/**
 	 * Constructs a new tree.
 	 * @param cmp A comparator determining the ordering of the tree.
 	 */
-	public Tree(Comparator<T> cmp)
+	public Tree(Comparator<T> cmp, T item)
 	{
 		this.cmp = cmp;
+		this.root = new Node(item);
+		this.count = 1;
 	}
 
 	public boolean isEmpty()
@@ -62,12 +102,65 @@ public class Tree<T>
 		return this.count;
 	}
 
-	/**
-	 * Delete a single node containing an equal item from the tree.
-	 */
-	public T delete(T item)
+	public Node replace(Node n, T item)
 	{
-		return delete(find(item));
+		Node replacement = new Node(item);
+		swap(n, replacement);
+		setLinks(n.previous(), replacement, n.next());
+		n.reset();
+		return replacement;
+	}
+
+	public Node addPrevious(Node n, T item)
+	{
+		Node added = new Node(item);
+		setLinks(n.previous(), added, n);
+
+		Node parent = n.left;
+		if (parent == null)
+		{
+			parent = n;
+			parent.left = added;
+		}
+		else
+		{
+			while(parent.right != null)
+				parent = parent.right;
+
+			parent.right = added;
+		}
+
+		added.ancestor = parent;
+
+		count++;
+		rebalance(added);
+		return added;
+	}
+
+	public Node addNext(Node n, T item)
+	{
+		Node added = new Node(item);
+		setLinks(n, added, n.next());
+
+		Node parent = n.right;
+		if (parent == null)
+		{
+			parent = n;
+			parent.right = added;
+		}
+		else
+		{
+			while(parent.left != null)
+				parent = parent.left;
+
+			parent.left = added;
+		}
+
+		added.ancestor = parent;
+
+		count++;
+		rebalance(added);
+		return added;
 	}
 
 	/**
@@ -81,7 +174,7 @@ public class Tree<T>
 		count--;
 
 		if (node.left != null && node.right != null)
-			swap(node, next(node));
+			swap(node, node.next());
 
 		Node child = node.left == null ? node.right : node.left;
 		if (root == node)
@@ -101,57 +194,14 @@ public class Tree<T>
 			rebalance(child);
 		}
 		else
+		{
 			rebalance(node.ancestor);
+		}
 
-		node.ancestor = null;
-		node.left = null;
-		node.right = null;
+		setLinks(node.previous, null, node.next);
+
+		node.reset();
 		return node.value();
-	}
-
-	/**
-	 * Add an item to the tree.
-	 * @return An object representing the node which can be used for deletion.
-	 */
-	public Node add(T item)
-	{
-		if (item == null)
-			return null;
-
-		Node node = new Node(item);
-		count++;
-
-		if (root == null)
-		{
-			root = node;
-			return node;
-		}
-
-		Node previous = null;
-		Node current = root;
-		int comparison = 0;
-
-		while (current != null)
-		{
-			previous = current;
-			comparison = cmp.compare(item, current.value());
-
-			if (comparison <= 0)
-				current = current.left;
-			else
-				current = current.right;
-		}
-
-		if (comparison <= 0)
-			previous.left = node;
-		else
-			previous.right = node;
-
-		node.ancestor = previous;
-
-		rebalance(node);
-
-		return node;
 	}
 
 	void rebalance(Node n)
@@ -258,100 +308,6 @@ public class Tree<T>
 		updateDepth(child);
 	}
 
-	/**
-	 * Returns the smallest contained item that is larger than the parameter.
-	 */
-	public Node next(Node node)
-	{
-		return next(node.value());
-	}
-
-	/**
-	 * Returns the smallest contained item that is larger than the parameter.
-	 */
-	public Node next(T item)
-	{
-		Node result = null;
-		Node current = root;
-
-		while (current != null)
-		{
-			int comparison = cmp.compare(item, current.value());
-			if (comparison == -1)
-			{
-				result = current;
-				current = current.left;
-			}
-			else
-			{
-				current = current.right;
-			}
-		}
-
-		return result;
-	}
-
-	/**
-	 * Returns the largest contained item that is smaller than the parameter.
-	 */
-	public Node previous(Node node)
-	{
-		return previous(node.value());
-	}
-
-	/**
-	 * Returns the largest contained item that is smaller than the parameter.
-	 */
-	public Node previous(T item)
-	{
-		Node result = null;
-		Node current = root;
-
-		while (current != null)
-		{
-			int comparison = cmp.compare(item, current.value());
-			if (comparison == 1)
-			{
-				result = current;
-				current = current.right;
-			}
-			else
-			{
-				current = current.left;
-			}
-		}
-
-		return result;
-	}
-
-	/**
-	 * Returns the greatest item smaller than the parameter, or an item which equals it.
-	 */
-	public Node floor(T item)
-	{
-		Node result = null;
-		Node current = root;
-
-		while (current != null)
-		{
-			int comparison = cmp.compare(item, current.value());
-			if (comparison == 0)
-				return current;
-
-			if (comparison == 1)
-			{
-				result = current;
-				current = current.right;
-			}
-			else
-			{
-				current = current.left;
-			}
-		}
-
-		return result;
-	}
-
 	void forEachNode(Node n, ICallback<T> fn)
 	{
 		if (n == null)
@@ -360,6 +316,21 @@ public class Tree<T>
 		forEachNode(n.left, fn);
 		fn.operation(n.value());
 		forEachNode(n.right, fn);
+	}
+
+	void setLinks(Node left, Node mid, Node right)
+	{
+		if (left != null)
+			left.next = mid != null ? mid : right;
+
+		if (mid != null)
+		{
+			mid.previous = left;
+			mid.next = right;
+		}
+
+		if (right != null)
+			right.previous = mid != null ? mid : left;
 	}
 
 	public void forEach(ICallback<T> fn)
@@ -426,25 +397,6 @@ public class Tree<T>
 	{
 		checkOrdered(root);
 		checkAncestry(root);
-	}
-
-	public Node find(T item)
-	{
-		Node current = root;
-
-		while (current != null)
-		{
-			int comparison = cmp.compare(item, current.value());
-			if (comparison == 0)
-				return current;
-
-			if (comparison == -1)
-				current = current.left;
-			else
-				current = current.right;
-		}
-
-		return null;
 	}
 
 	void swap(Node a, Node b)
