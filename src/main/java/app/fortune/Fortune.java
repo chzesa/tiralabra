@@ -245,10 +245,6 @@ public class Fortune
 		node = beach.replace(node, arc);
 		detectEvent(beach.addPrevious(node, leftArc));
 		detectEvent(beach.addNext(node, rightArc));
-
-		check(leftArc, sweepLine());
-		check(arc, sweepLine());
-		check(rightArc, sweepLine());
 	}
 
 	void circleEvent(Event e)
@@ -317,8 +313,6 @@ public class Fortune
 		// add edges of removed arc to result
 		edges.add(new Edge(arc.left.ray.origin, circlePoint));
 		edges.add(new Edge(arc.right.ray.origin, circlePoint));
-		check(left, sweepLine());
-		check(right, sweepLine());
 	}
 
 	/**
