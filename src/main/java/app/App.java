@@ -38,6 +38,7 @@ public class App
 	boolean regenerate = true;
 	boolean auto = true;
 	boolean next = false;
+	boolean pause = false;
 	float zoomFactor = 1.0f;
 	float[] edges;
 	float[] rays;
@@ -122,6 +123,8 @@ public class App
 				debug = !debug;
 			if (key == GLFW_KEY_N && action == GLFW_RELEASE)
 				next = true;
+			if (key == GLFW_KEY_P && action == GLFW_RELEASE)
+				pause = !pause;
 			if (key == GLFW_KEY_V && action == GLFW_RELEASE)
 			{
 				try
@@ -529,7 +532,7 @@ public class App
 			}
 
 			fortune.debug = debug;
-			if (cursorMoved)
+			if (cursorMoved && !pause)
 			{
 				cursorMoved = false;
 				Vector cPos = screenPointToWorldPoint(
