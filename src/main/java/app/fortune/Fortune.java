@@ -251,25 +251,6 @@ public class Fortune
 		check(rightArc, sweepLine());
 	}
 
-	String border(Arc a, double y)
-	{
-		return String.format("%.3f", a.left(y).x) + " ; " + String.format("%.3f", a.right(y).x);
-	}
-
-	void check(Arc a, double y)
-	{
-		double left = a.left(y).x;
-		double right = a.right(y).x;
-		if (Math.abs(left - right) > Vector.PRECISION && right < left)
-			throw new Error(beachCmp.ep + "\n\t" + border(a, y) + " | " + a.toString());
-	}
-
-	void print(String s)
-	{
-		if (debug)
-			System.out.println(s);
-	}
-
 	void circleEvent(Event e)
 	{
 		Vector point = e.point();
@@ -429,5 +410,24 @@ public class Fortune
 			});
 
 		return new Result(resEdges, infEdges);
+	}
+
+	String border(Arc a, double y)
+	{
+		return String.format("%.3f", a.left(y).x) + " ; " + String.format("%.3f", a.right(y).x);
+	}
+
+	void check(Arc a, double y)
+	{
+		double left = a.left(y).x;
+		double right = a.right(y).x;
+		if (Math.abs(left - right) > Vector.PRECISION && right < left)
+			throw new Error(beachCmp.ep + "\n\t" + border(a, y) + " | " + a.toString());
+	}
+
+	void print(String s)
+	{
+		if (debug)
+			System.out.println(s);
 	}
 }
