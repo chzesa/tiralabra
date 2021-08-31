@@ -272,19 +272,6 @@ public class App
 			coords[i * 2 + 1] = (float) site.y;
 			i++;
 		}
-
-		try
-		{
-			Validator valid = new Validator(sites, new Fortune(sites).processAll());
-			if (!valid.result())
-				System.out.println("Incorrect voronoi diagram generated from dataset.");
-		}
-		catch (Error e)
-		{
-			System.out.println("Error processing the generated list of sites.");
-			System.out.println(e);
-			e.printStackTrace();
-		}
 	}
 
 	void print(String s)
