@@ -40,6 +40,7 @@ public class App
 	boolean next = false;
 	boolean pause = false;
 	float zoomFactor = 1.0f;
+	Generator gen;
 	float[] edges;
 	float[] rays;
 	float[] coords;
@@ -47,31 +48,9 @@ public class App
 	Vector topLeft = screenPointToWorldPoint(new Vector(0, 0));
 	Vector bottomRight = screenPointToWorldPoint(new Vector(1, 1));
 
-	App()
+	App(Generator gen)
 	{
-		
-	}
-
-	App(List<Vector> sites)
-	{
-		this.sites = sites;
-		this.regenerate = false;
-		this.auto = false;
-		extractSiteCoords();
-		fortune = new Fortune(sites);
-	}
-
-	App(Vector[] arr)
-	{
-		List<Vector> sites = new ArrayList<>();
-		for (int i = 0; i < arr.length; i++)
-			sites.add(arr[i]);
-
-		this.sites = sites;
-		this.regenerate = false;
-		this.auto = false;
-		extractSiteCoords();
-		fortune = new Fortune(sites);
+		this.gen = gen;
 	}
 
 	public void run()
@@ -281,19 +260,6 @@ public class App
 		}
 
 		drawLines(coords);
-	}
-
-	static List<Vector> genSites(int count)
-	{
-		Random rand = new Random();
-		List<Vector> ret = new ArrayList<>();
-		while (count-- > 0)
-			ret.add(new Vector(
-				rand.nextDouble() * 0.9f + 0.05f,
-				rand.nextDouble() * 0.9f + 0.05f
-			));
-
-		return ret;
 	}
 
 	void extractSiteCoords()
@@ -506,7 +472,9 @@ public class App
 			if (regenerate)
 			{
 				regenerate = false;
-				sites = genSites(numSites);
+				sites = gen.next();
+				if (sites == null)
+					sites = gen.next(numSites, 0.05, 0.95, 0.05, 0.95);
 				extractSiteCoords();
 				fortune = new Fortune(sites);
 			}
@@ -605,75 +573,18 @@ public class App
 		}
 	}
 
-	static void genOkData(int count, int numSites)
-	{
-		List<List<Vector>> res = new ArrayList<>();
-
-		while (count > 0)
-		{
-			List<Vector> sites = genSites(numSites);
-			try
-			{
-				Validator valid = new Validator(sites, new Fortune(sites).processAll());
-				if (valid.result())
-				{
-					res.add(sites);
-					count--;
-				}
-				else
-				{
-					System.out.println("Invalid result");
-				}
-			}
-			catch (Exception e)
-			{
-				System.out.println(e);
-			}
-		}
-
-		FileHandler.write(Parse.toStringll(res), "ok_data.txt");
-	}
-
-	static void genBadData(int count, int numSites)
-	{
-		List<List<Vector>> res = new ArrayList<>();
-
-		while (count > 0)
-		{
-			List<Vector> sites = genSites(numSites);
-			try
-			{
-				Validator valid = new Validator(sites, new Fortune(sites).processAll());
-				if (!valid.result())
-				{
-					res.add(sites);
-					count--;
-				}
-
-			}
-			catch (Exception e)
-			{
-				res.add(sites);
-				count--;
-			}
-		}
-
-		FileHandler.write(Parse.toStringll(res), "bad_data.txt");
-	}
-
 	public static void main(String[] args)
 	{
-		App app;
-		if (args.length == 0)
-			app = new App();
-		else
+		Config conf = new Config(args);
+
+		if (conf.bench)
 		{
-			String s = "";
-			for (int i = 0; i < args.length; i++)
-				s += args[i] + " ";
-			app = new App(Parse.fromStringl(s));
+			Benchmark.run(conf);
+			return;
 		}
 
+		App app = new App(new Generator(conf.input, conf.seed));
+		app.numSites = conf.sites;
 		app.run();
 	}
 }
