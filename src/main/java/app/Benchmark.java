@@ -51,7 +51,7 @@ class Benchmark
 		col("time");
 		System.out.println("");
 
-		long[] totals = new long[conf.pows];
+		long[] totals = new long[conf.pows + 1];
 
 		for (int i = 1; i <= conf.pows; i++)
 		{
