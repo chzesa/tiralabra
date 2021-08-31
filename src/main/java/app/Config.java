@@ -21,6 +21,7 @@ class Config
 			case "-b":
 			{
 				bench = true;
+				param = '\0';
 				break;
 			}
 			case "-c":
