@@ -71,9 +71,9 @@ handleCircleEvent(event):
 
 The priority queue is implemented as a heap with an array, with the successors of node at index `i` being located at `i * 2` and `i * 2 + 1`. The values are stored as references, and the object's index is stored inside the reference. When nodes are swapped in the table their current indices are updated, so the data structure supports deletions via references. Each item in the structure contains the associated data as well as an index so the storage of a single item is constant.
 
-When deleting a node, it is first swapped with the last element in the table and then popped off. The swapped element is then either raised or lowered to maintain the heap's invariant. This correction is bounded by the maximum number of swaps between the node's predecessors or successors and therefore runs in O(log n) time.
+When deleting a node, it is first swapped with the last element in the table and then popped off. The swapped element is then either raised or lowered to maintain the heap's invariant. This correction is bounded by the maximum number of swaps between the node's predecessors or successors and therefore runs in `O(log n)` time.
 
-The operations on the queue have O(log n) runtime and it uses O(n) storage.
+The operations on the queue have` O(log n)` runtime and it uses `O(n)` storage.
 
 ### Tree
 
@@ -81,33 +81,33 @@ The tree is a variant of an AVL tree, and is balanced after each insertion and d
 
 Each node in the tree stores references to its ancestor; left and right child nodes; next and previous nodes in order; its depth for rebalancing and the stored value, so the storage requirement of a single node is constant.
 
-Addition is done by traversing to the leftmost descendant of the referenced node's right subtree, and the new node is added as the left child of that descendant for inserting a node next to an existing one (and vice versa for inserting previous to). Given that the tree is balanced, the traversal down to a leaf node, and traversal up to a root to rebalance it, are bound by the tree's height which is log n as per the invariant of an AVL tree.
+Addition is done by traversing to the leftmost descendant of the referenced node's right subtree, and the new node is added as the left child of that descendant for inserting a node next to an existing one (and vice versa for inserting previous to). Given that the tree is balanced, the traversal down to a leaf node, and traversal up to a root to rebalance it, are bound by the tree's height which is `log n` as per the invariant of an AVL tree.
 
 Deletion works as normal, swapping the node with its next one if it has two children, and the node's child being raised in its place before the tree is rebalanced.
 
-Therefore, the operations on the tree have O(log n) runtime and using O(n) storage.
+Therefore, the operations on the tree have `O(log n)` runtime and using `O(n)` storage.
 
 ### Runtime
 
-The algorithm first inserts each point into the priority queue taking O(n log n) time.
+The algorithm first inserts each point into the priority queue taking `O(n log n)` time.
 
-Given that the graph of a voronoi diagram is connected, and each point in the input generates a single face, the number of vertices has an upper bound linear to the number of faces as per Euler's theorem. Since vertices are handled as circle events the primary loop is bounded by O(n).
+Given that the graph of a voronoi diagram is connected, and each point in the input generates a single face, the number of vertices has an upper bound linear to the number of faces as per Euler's theorem. Since vertices are handled as circle events the primary loop is bounded by `O(n)`.
 
-The handleSiteEvent function first searches the tree for an arc directly above the new site. This is implemented by traversing the tree down from its root until a node without children is found so the operation takes O(log n) time.
+The handleSiteEvent function first searches the tree for an arc directly above the new site. This is implemented by traversing the tree down from its root until a node without children is found so the operation takes `O(log n)` time.
 
-Generating the new arcs and detecting the intersection in detectEvent take constant time, while the function performs a constant number of operations on O(log n) data structures.
+In the handleCircleEvent function, generating the new arcs and detecting the intersection in detectEvent take constant time, while the function performs a constant number of operations on `O(log n)` data structures.
 
-Generating the merged arcs in the handleCircleEvent function takes constant time, while the function otherwise performs a constant number of operations on O(log n) data structures, so the function's runtime is likewise O(log n).
+Generating the merged arcs in the handleCircleEvent function takes constant time, while the function otherwise performs a constant number of operations on `O(log n)` data structures, so the function's runtime is likewise `O(log n)`.
 
-In total, the above analysis yields an overall runtime of O(n log n).
+In total, the above analysis yields an overall runtime of `O(n log n)`.
 
 ### Storage
 
 As a reminder, each element in the tree and priority queue structures requires a constant amount of storage.
 
-Since out of the two event types only site events increase the amount of storage used - with each site event generating two new arcs on the beachline and two potential events - the maximal storage requirement is reached when all site events are handled but no circle events have occurred. Taking into account that each arc in the beachline has a potential event associated with it, the maximum size of the beachline and the queue is 2n - 1. Additionally, each arc stores two boundaries, and each boundary is shared by two arcs, the maximum number of boundaries is 2n - 1.
+Since out of the two event types only site events increase the amount of storage used - with each site event generating two new arcs on the beachline and two potential events - the maximal storage requirement is reached when all site events are handled but no circle events have occurred. Taking into account that each arc in the beachline has a potential event associated with it, the maximum size of the beachline and the queue is `2n - 1`. Additionally, each arc stores two boundaries, and each boundary is shared by two arcs, the maximum number of boundaries is `2n - 1`.
 
-Therefore, the algorithm has a O(n) storage bound.
+Therefore, the algorithm has a `O(n)` storage bound.
 
 ## Deficiencies and potential improvements
 
