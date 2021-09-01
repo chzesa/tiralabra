@@ -116,6 +116,24 @@ public class Fortune
 		return new Boundary[] { new Boundary(left, arc.site, site), new Boundary(right, site, arc.site) };
 	}
 
+	Boundary generateMergedBoundary(Arc left, Arc mid, Arc right, Vector origin)
+	{
+		Vector direction = mid.left.ray.direction
+			.add(mid.right.ray.direction)
+			.normalize();
+
+		Vector bisector = Utils.bisector(left.site, right.site);
+
+		if (Vector.dot(direction, bisector) < 0)
+			bisector = bisector.neg();
+
+		return new Boundary(
+			new Ray(origin, bisector),
+			left.site,
+			right.site
+		);
+	}
+
 	Tree<Arc>.Node findArc(Vector point)
 	{
 		Tree<Arc>.Node result = null;
@@ -203,21 +221,7 @@ public class Fortune
 		removeEvent(rarc);
 
 		// rebuild the left and right arcs surrounding the removed arc
-		Vector direction = arc.left.ray.direction.normalize()
-			.add(arc.right.ray.direction.normalize())
-			.normalize();
-
-		Vector bisector = Utils.bisector(larc.site, rarc.site);
-
-		if (Vector.dot(direction, bisector) < 0)
-			bisector = bisector.neg();
-
-		Boundary middle = new Boundary(
-			new Ray(circlePoint, bisector),
-			larc.site,
-			rarc.site
-		);
-
+		Boundary middle = generateMergedBoundary(larc, arc, rarc, circlePoint);
 		Arc left = new Arc(larc.left, larc.site, middle);
 		Arc right = new Arc(middle, rarc.site, rarc.right);
 
