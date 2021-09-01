@@ -178,6 +178,8 @@ public class Fortune
 		Boundary left = bounds[0];
 		Boundary right = bounds[1];
 
+		// Detect a degenerate case at the beginning of the algorithm with two or more
+		// sites which are horizontally parallel.
 		if (Math.abs(arc.site.y - site.y) < Vector.PRECISION && arc.right == null)
 		{
 			Arc newArc = new Arc(left, site, null);
@@ -255,6 +257,9 @@ public class Fortune
 		return !queue.isEmpty();
 	}
 
+	/**
+	 * Processes all event points before the y coordinate.
+	 */
 	public Result processTo(double y)
 	{
 		while (!queue.isEmpty())
@@ -278,6 +283,9 @@ public class Fortune
 		return result();
 	}
 
+	/**
+	 * Returns the next event in the queue if any.
+	 */
 	public Vector peek()
 	{
 		if (!queue.isEmpty())
@@ -285,11 +293,19 @@ public class Fortune
 		return null;
 	}
 
+	/**
+	 * Returns the height of the sweep line
+	 */
 	public double sweepLine()
 	{
 		return eventPoint.y;
 	}
 
+	/**
+	 * For visualization purposes.
+	 * Set the sweepline height for the algorithm if it is between the current height and the
+	 * y-coordinate of the next event point.
+	 */
 	public void setSweepline(double y)
 	{
 		if (queue.isEmpty() ||
