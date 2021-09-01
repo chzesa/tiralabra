@@ -492,13 +492,12 @@ public class App
 				printInfo();
 			}
 
-			if (auto)
+			if (auto && !pause)
 			{
-				cursorMoved = true;
 				cursorY += 2.0f;
 			}
 
-			if (cursorMoved && !pause)
+			if ((cursorMoved || auto) && !pause)
 			{
 				cursorMoved = false;
 				Vector cPos = screenPointToWorldPoint(
