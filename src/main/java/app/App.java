@@ -140,6 +140,12 @@ public class App
 				numSites = 9;
 			if (key == GLFW_KEY_0 && action == GLFW_RELEASE)
 				numSites = 10;
+
+			if (key == GLFW_KEY_EQUAL && action == GLFW_RELEASE)
+				numSites *= 10;
+
+			if (key == GLFW_KEY_MINUS && action == GLFW_RELEASE)
+				numSites /= 10;
 		});
 
 		glfwSetCursorPosCallback(window, (window, x, y) ->
