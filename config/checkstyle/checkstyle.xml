@@ -19,7 +19,9 @@
 		<module name="RightCurly">
 			<property name="option" value="alone"/>
 		</module>
-		<module name='AvoidNestedBlocks' />
+		<module name='AvoidNestedBlocks' >
+			<property name="allowInSwitchCase" value="true"/>
+		</module>
 		<module name='NestedIfDepth'>
 		  <property name='max' value='2'/>
 		</module>

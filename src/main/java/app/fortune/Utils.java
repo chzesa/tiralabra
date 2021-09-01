@@ -100,8 +100,8 @@ public class Utils
 		if (Math.abs(f - d) < Vector.PRECISION)
 			return new Vector(k.x, intersectionLinePoint(i, j, k.x));
 
-		double x = (a*a*(d-f) + b*b*(d-f) + b*(-c*c - d*d + e*e + f*f) + c*c*f + d*d*f - d*e*e - d*f*f)
-			/ (  2.0 * (a * (d - f) + b * (e - c) + c*f - d*e ) );
+		double x = (a * a * (d - f) + b * b * (d - f) + b * (-c * c - d * d + e * e + f * f) + c * c * f + d * d * f - d * e * e - d * f * f)
+			/ (2.0 * (a * (d - f) + b * (e - c) + c * f - d * e));
 
 		double y = intersectionLinePoint(i, j, x);
 
@@ -117,8 +117,8 @@ public class Utils
 		c = j.x;
 		d = j.y;
 
-		return (a*a + b*b - c*c - d*d + 2*x*(c-a))
-			/ (2 * (b-d));
+		return (a * a + b * b - c * c - d * d + 2 * x * (c - a))
+			/ (2 * (b - d));
 	}
 
 	/**

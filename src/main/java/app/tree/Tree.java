@@ -124,7 +124,7 @@ public class Tree<T>
 		}
 		else
 		{
-			while(parent.right != null)
+			while (parent.right != null)
 				parent = parent.right;
 
 			parent.right = added;
@@ -150,7 +150,7 @@ public class Tree<T>
 		}
 		else
 		{
-			while(parent.left != null)
+			while (parent.left != null)
 				parent = parent.left;
 
 			parent.left = added;

@@ -8,7 +8,7 @@ class Benchmark
 	{
 		String ret = "";
 		int pad = width - prefix.length() - suffix.length() - Integer.toString(value).length();
-		while(pad-- > 0)
+		while (pad-- > 0)
 			ret += " ";
 
 		ret += prefix + value + suffix;
@@ -19,7 +19,7 @@ class Benchmark
 	{
 		String ret = "";
 		int pad = width - prefix.length();
-		while(pad-- > 0)
+		while (pad-- > 0)
 			ret += " ";
 
 		ret += prefix;
@@ -55,12 +55,12 @@ class Benchmark
 
 		for (int i = 1; i <= conf.pows; i++)
 		{
-			int n = (int)Math.pow(10, i);
+			int n = (int) Math.pow(10, i);
 			for (int j = 0; j < conf.reps; j++)
 			{
 				long result = test(n, gen);
 				totals[i] += result;
-				printResult(n, j + 1, (int)(result/1000000.0));
+				printResult(n, j + 1, (int) (result / 1000000.0));
 			}
 		}
 
@@ -70,8 +70,8 @@ class Benchmark
 		System.out.println("");
 		for (int i = 1; i <= conf.pows; i++)
 		{
-			col("", (int)Math.pow(10, i), "");
-			col("", (int)((double)totals[i] / conf.reps / 1000000.0), "ms");
+			col("", (int) Math.pow(10, i), "");
+			col("", (int) ((double) totals[i] / conf.reps / 1000000.0), "ms");
 			System.out.println("");
 		}
 	}

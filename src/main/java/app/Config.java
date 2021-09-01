@@ -11,68 +11,58 @@ class Config
 	String file = null;
 	String outFile = null;
 
+	private void handleParam(char param, String s)
+	{
+		switch (param)
+		{
+			case 'c':
+			{
+				sites = Integer.parseInt(s);
+				break;
+			}
+			case 'p':
+			{
+				pows = Integer.parseInt(s);
+				break;
+			}
+			case 'r':
+			{
+				reps = Integer.parseInt(s);
+				break;
+			}
+			case 's':
+			{
+				seed = Integer.parseInt(s);
+				break;
+			}
+		}
+	}
+
+	private char readParam(char param, String s)
+	{
+		switch (s)
+		{
+			case "-b":
+			{
+				bench = true;
+				return '\0';
+			}
+			case "-c": return 'c';
+			case "-p": return 'p';
+			case "-r": return 'r';
+			case "-s": return 's';
+			default:
+			{
+				handleParam(param, s);
+				return '\0';
+			}
+		}
+	}
+
 	Config(String[] args)
 	{
 		char param = '\0';
 		for (int i = 0; i < args.length; i++)
-		{
-			switch (args[i])
-			{
-			case "-b":
-			{
-				bench = true;
-				param = '\0';
-				break;
-			}
-			case "-c":
-			{
-				param = 'c';
-				break;
-			}
-			case "-p":
-			{
-				param = 'p';
-				break;
-			}
-			case "-r":
-			{
-				param = 'r';
-				break;
-			}
-			case "-s":
-			{
-				param = 's';
-				break;
-			}
-			default:
-			{
-				switch(param)
-				{
-				case 'c':
-				{
-					sites = Integer.parseInt(args[i]);
-					break;
-				}
-				case 'p':
-				{
-					pows = Integer.parseInt(args[i]);
-					break;
-				}
-				case 'r':
-				{
-					reps = Integer.parseInt(args[i]);
-					break;
-				}
-				case 's':
-				{
-					seed = Integer.parseInt(args[i]);
-					break;
-				}
-				}
-
-				param = '\0';
-			}
-			}
-		}
+			param = readParam(param, args[i]);
 	}
 }

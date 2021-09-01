@@ -177,7 +177,7 @@ public class Fortune
 		Tree<Arc>.Node result = null;
 		Tree<Arc>.Node current = beach.root();
 
-		while(current != null)
+		while (current != null)
 		{
 			Vector end = current.value().left(point.y);
 			if (point.x < end.x)
