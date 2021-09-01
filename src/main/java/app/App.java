@@ -498,7 +498,6 @@ public class App
 				cursorY += 2.0f;
 			}
 
-			fortune.debug = debug;
 			if (cursorMoved && !pause)
 			{
 				cursorMoved = false;

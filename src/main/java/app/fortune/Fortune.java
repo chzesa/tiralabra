@@ -41,7 +41,6 @@ public class Fortune
 	public PriorityQueue<Event> queue = new PriorityQueue<>(new QueueCompare());
 	public Tree<Arc> beach = null;
 	ArrayList<Edge> edges = new ArrayList<>();
-	public boolean debug = false;
 	int limit;
 
 	public class Result
@@ -97,10 +96,7 @@ public class Fortune
 		Arc arc = node.value();
 		Vector point = arc.circleEvent();
 		if (point != null)
-		{
-			print("Detected circle event at " + point + " for " + arc.site);
 			arc.event = queue.push(new Event(point, arc.site, node));
-		}
 	}
 
 	void removeEvent(Arc arc)
@@ -159,10 +155,7 @@ public class Fortune
 		// if the arc defines a circle event it's a false alarm. Remove event from qeueue
 		removeEvent(arc);
 
-		print("Removing:\n\t" + border(arc, sweepLine()) + " | " + arc);
-
 		// split the arc into new sections
-
 		Boundary[] bounds = generateBoundaries(arc, site);
 		Boundary left = bounds[0];
 		Boundary right = bounds[1];
@@ -181,14 +174,6 @@ public class Fortune
 		Arc leftArc = new Arc(arc.left, arc.site, left);
 		Arc rightArc = new Arc(right, arc.site, arc.right);
 		arc = new Arc(left, site, right);
-
-		print("Adding:\n\t"
-			+ "left  " + border(leftArc, sweepLine()) + " | " + leftArc
-			+ "\n\t"
-			+ "mid   " + border(arc, sweepLine()) + " | " + arc
-			+ "\n\t"
-			+ "right " + border(rightArc, sweepLine()) + " | " + rightArc
-		);
 
 		node = beach.replace(node, arc);
 		detectEvent(beach.addPrevious(node, leftArc));
@@ -211,14 +196,6 @@ public class Fortune
 		Arc arc = node.value();
 		Arc larc = lNode.value();
 		Arc rarc = rNode.value();
-
-		print("Removing:\n\t"
-			+ "left  " + border(larc, sweepLine()) + " | " + larc
-			+ "\n\t"
-			+ "mid   " + border(arc, sweepLine()) + " | " + arc
-			+ "\n\t"
-			+ "right " + border(rarc, sweepLine()) + " | " + rarc
-		);
 
 		beach.delete(node);
 		// Remove all events involving the arc including any caused by its boundaries
@@ -244,14 +221,6 @@ public class Fortune
 		Arc left = new Arc(larc.left, larc.site, middle);
 		Arc right = new Arc(middle, rarc.site, rarc.right);
 
-		print("Adding:\n\t"
-			+ "left  " + border(left, sweepLine()) + " | " + left
-			+ "\n\t"
-			+ "right " + border(right, sweepLine()) + " | " + right
-			+ "\n\t"
-			+ "with bisector " + middle.ray
-		);
-
 		lNode = beach.replace(lNode, left);
 		rNode = beach.replace(rNode, right);
 
@@ -272,18 +241,11 @@ public class Fortune
 		if (!queue.isEmpty())
 		{
 			Event e = queue.pop();
-			print("Setting EP to: " + e.point().toString() + " site ? " + e.isSiteEvent());
 			eventPoint = e.point();
 			if (e.isSiteEvent())
-			{
-				print("Site event " + e.point());
 				siteEvent(e);
-			}
 			else
-			{
-				print("Circle event " + e.point() + " of " + e.site());
 				circleEvent(e);
-			}
 		}
 
 		return !queue.isEmpty();
@@ -352,24 +314,5 @@ public class Fortune
 			});
 
 		return new Result(resEdges, infEdges);
-	}
-
-	String border(Arc a, double y)
-	{
-		return String.format("%.3f", a.left(y).x) + " ; " + String.format("%.3f", a.right(y).x);
-	}
-
-	void check(Arc a, double y)
-	{
-		double left = a.left(y).x;
-		double right = a.right(y).x;
-		if (Math.abs(left - right) > Vector.PRECISION && right < left)
-			throw new Error(eventPoint + "\n\t" + border(a, y) + " | " + a.toString());
-	}
-
-	void print(String s)
-	{
-		if (debug)
-			System.out.println(s);
 	}
 }
