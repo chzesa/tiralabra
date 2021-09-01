@@ -72,24 +72,27 @@ public class Tree<T>
 		}
 	}
 
-	final Comparator<T> cmp;
 	Node root = null;
 	int count = 0;
+
+	/**
+	 * Constructs a new tree.
+	 * @param item The root node of the tree
+	 */
+	public Tree(T item)
+	{
+		this.root = new Node(item);
+		this.count = 1;
+	}
 
 	public Node root()
 	{
 		return root;
 	}
 
-	/**
-	 * Constructs a new tree.
-	 * @param cmp A comparator determining the ordering of the tree.
-	 */
-	public Tree(Comparator<T> cmp, T item)
+	public int size()
 	{
-		this.cmp = cmp;
-		this.root = new Node(item);
-		this.count = 1;
+		return this.count;
 	}
 
 	public boolean isEmpty()
@@ -97,9 +100,9 @@ public class Tree<T>
 		return size() == 0;
 	}
 
-	public int size()
+	public void forEach(ICallback<T> fn)
 	{
-		return this.count;
+		forEachNode(root, fn);
 	}
 
 	public Node replace(Node n, T item)
@@ -308,16 +311,6 @@ public class Tree<T>
 		updateDepth(child);
 	}
 
-	void forEachNode(Node n, ICallback<T> fn)
-	{
-		if (n == null)
-			return;
-
-		forEachNode(n.left, fn);
-		fn.operation(n.value());
-		forEachNode(n.right, fn);
-	}
-
 	void setLinks(Node left, Node mid, Node right)
 	{
 		if (left != null)
@@ -333,77 +326,8 @@ public class Tree<T>
 			right.previous = mid != null ? mid : left;
 	}
 
-	public void forEach(ICallback<T> fn)
-	{
-		forEachNode(root, fn);
-	}
-
-	void checkAncestry(Node n)
-	{
-		if (n == null)
-			return;
-
-		if (n.left != null)
-		{
-			if (n.left.ancestor != n)
-				throw new RuntimeException("Node " + n.left.value() + " has incorrect ancestor " + n.left.ancestor.value());
-			checkAncestry(n.left);
-		}
-		if (n.right != null)
-		{
-			if (n.right.ancestor != n)
-				throw new RuntimeException("Node " + n.right.value() + " has incorrect ancestor " + n.right.ancestor.value());
-			checkAncestry(n.right);
-		}
-	}
-
-	void checkLeft(Node n, T value)
-	{
-		if (n == null)
-			return;
-
-		if (cmp.compare(n.value(), value) == 1)
-			throw new RuntimeException("Left subtree of " + value.toString() + " has a larger item " + n.value().toString());
-
-		checkLeft(n.left, value);
-		checkLeft(n.right, value);
-	}
-
-	void checkRight(Node n, T value)
-	{
-		if (n == null)
-			return;
-
-		if (cmp.compare(value, n.value()) != -1)
-			throw new RuntimeException("Right subtree of \n\t" + value.toString() + "\nhas an equal or smaller item\n\t" + n.value().toString());
-
-		checkRight(n.left, value);
-		checkRight(n.right, value);
-	}
-
-	void checkOrdered(Node n)
-	{
-		if (n == null)
-			return;
-
-		checkLeft(n.left, n.value());
-		checkRight(n.right, n.value());
-
-		checkOrdered(n.left);
-		checkOrdered(n.right);
-	}
-
-	public void validate()
-	{
-		checkOrdered(root);
-		checkAncestry(root);
-	}
-
 	void swap(Node a, Node b)
 	{
-		if (a == null || b == null)
-			throw new IllegalArgumentException();
-
 		int depth = a.depth;
 		a.depth = b.depth;
 		b.depth = depth;
@@ -458,5 +382,15 @@ public class Tree<T>
 		b.left = aLeft == b ? a : aLeft;
 		b.right = aRight == b ? a : aRight;
 		b.ancestor = aAnc == b ? a : aAnc;
+	}
+
+	void forEachNode(Node n, ICallback<T> fn)
+	{
+		if (n == null)
+			return;
+
+		forEachNode(n.left, fn);
+		fn.operation(n.value());
+		forEachNode(n.right, fn);
 	}
 }

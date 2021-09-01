@@ -35,61 +35,9 @@ class QueueCompare implements Comparator<Event>
 	}
 }
 
-class BeachlineCompare implements Comparator<Arc>
-{
-	public Vector ep = new Vector(0, 0);
-
-	boolean equals(double a, double b)
-	{
-		return Math.abs(a - b) < Vector.PRECISION;
-	}
-
-	static double angle(Vector vec)
-	{
-		Vector down = new Vector(0, -1);
-		double angle = Vector.angle(vec, down);
-		if (angle < 0)
-			angle += 2 * Math.PI;
-		return angle;
-	}
-
-	@Override
-	public int compare(Arc a, Arc b)
-	{
-		// Test in case the value is at negative infinity.
-		if (a == b)
-			return 0;
-
-		double aP = a.left(ep.y).x;
-		double bP = b.left(ep.y).x;
-
-		if (equals(aP, bP))
-		{
-			double aS = a.right(ep.y).x;
-			double bS = b.right(ep.y).x;
-			if (equals(aS, bS))
-			{
-				Vector vA = a.site().sub(ep);
-				Vector vB = b.site().sub(ep);
-				double angleA = angle(vA);
-				double angleB = angle(vB);
-
-				if (equals(angleA, angleB))
-					return 0;
-
-				return Double.compare(angleA, angleB);
-			}
-
-			return Double.compare(aS, bS);
-		}
-
-		return Double.compare(aP, bP);
-	}
-}
-
 public class Fortune
 {
-	BeachlineCompare beachCmp = new BeachlineCompare();
+	Vector eventPoint = new Vector(0, 0);
 	public PriorityQueue<Event> queue = new PriorityQueue<>(new QueueCompare());
 	public Tree<Arc> beach = null;
 	ArrayList<Edge> edges = new ArrayList<>();
@@ -197,7 +145,7 @@ public class Fortune
 		Vector site = event.site();
 		if (beach == null)
 		{
-			beach = new Tree(beachCmp, new Arc(null, site, null));
+			beach = new Tree(new Arc(null, site, null));
 			return;
 		}
 
@@ -325,7 +273,7 @@ public class Fortune
 		{
 			Event e = queue.pop();
 			print("Setting EP to: " + e.point().toString() + " site ? " + e.isSiteEvent());
-			beachCmp.ep = e.point();
+			eventPoint = e.point();
 			if (e.isSiteEvent())
 			{
 				print("Site event " + e.point());
@@ -373,14 +321,14 @@ public class Fortune
 
 	public double sweepLine()
 	{
-		return beachCmp.ep.y;
+		return eventPoint.y;
 	}
 
 	public void setSweepline(double y)
 	{
 		if (queue.isEmpty() ||
-			(y < beachCmp.ep.y && y > queue.peek().point().y))
-			beachCmp.ep = new Vector(beachCmp.ep.x, y);
+			(y < sweepLine() && y > queue.peek().point().y))
+			eventPoint = new Vector(sweepLine(), y);
 	}
 
 	/**
@@ -416,7 +364,7 @@ public class Fortune
 		double left = a.left(y).x;
 		double right = a.right(y).x;
 		if (Math.abs(left - right) > Vector.PRECISION && right < left)
-			throw new Error(beachCmp.ep + "\n\t" + border(a, y) + " | " + a.toString());
+			throw new Error(eventPoint + "\n\t" + border(a, y) + " | " + a.toString());
 	}
 
 	void print(String s)
