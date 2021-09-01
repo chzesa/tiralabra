@@ -31,16 +31,6 @@ public class Tree<T>
 			return val;
 		}
 
-		public String toString()
-		{
-			return "[ " + val.toString() + " ] [A]: "
-				+ (ancestor == null ? "null" : ancestor.val.toString())
-				+ "; [L]: "
-				+ (left == null ? "null" : left.val.toString())
-				+ "; [R]: "
-				+ (right == null ? "null" : right.val.toString());
-		}
-
 		public Node next()
 		{
 			return next;
