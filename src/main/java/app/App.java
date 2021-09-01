@@ -87,24 +87,27 @@ public class App
 
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) ->
 		{
-			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+			if (action != GLFW_RELEASE)
+				return;
+
+			if (key == GLFW_KEY_ESCAPE)
 				glfwSetWindowShouldClose(window, true);
-			if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_SPACE)
 			{
 				cursorMoved = true;
 				regenerate = true;
 			}
-			if (key == GLFW_KEY_A && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_A)
 				auto = !auto;
-			if (key == GLFW_KEY_S && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_S)
 				saveDataset();
-			if (key == GLFW_KEY_D && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_D)
 				debug = !debug;
-			if (key == GLFW_KEY_N && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_N)
 				next = true;
-			if (key == GLFW_KEY_P && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_P)
 				pause = !pause;
-			if (key == GLFW_KEY_V && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_V)
 			{
 				try
 				{
@@ -120,31 +123,31 @@ public class App
 					e.printStackTrace();
 				}
 			}
-			if (key == GLFW_KEY_1 && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_1)
 				numSites = 1;
-			if (key == GLFW_KEY_2 && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_2)
 				numSites = 2;
-			if (key == GLFW_KEY_3 && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_3)
 				numSites = 3;
-			if (key == GLFW_KEY_4 && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_4)
 				numSites = 4;
-			if (key == GLFW_KEY_5 && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_5)
 				numSites = 5;
-			if (key == GLFW_KEY_6 && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_6)
 				numSites = 6;
-			if (key == GLFW_KEY_7 && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_7)
 				numSites = 7;
-			if (key == GLFW_KEY_8 && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_8)
 				numSites = 8;
-			if (key == GLFW_KEY_9 && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_9)
 				numSites = 9;
-			if (key == GLFW_KEY_0 && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_0)
 				numSites = 10;
 
-			if (key == GLFW_KEY_EQUAL && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_EQUAL)
 				numSites *= 10;
 
-			if (key == GLFW_KEY_MINUS && action == GLFW_RELEASE)
+			if (key == GLFW_KEY_MINUS)
 				numSites /= 10;
 		});
 
