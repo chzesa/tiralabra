@@ -7,7 +7,7 @@ class Config
 	Integer pows = new Integer(6);
 	Integer reps = new Integer(5);
 	Integer sites = 20;
-	String input = null;
+	String input = "";
 	String file = null;
 	String outFile = null;
 
@@ -33,6 +33,12 @@ class Config
 			case 's':
 			{
 				seed = Integer.parseInt(s);
+				break;
+			}
+
+			default:
+			{
+				input += " " + s;
 				break;
 			}
 		}
