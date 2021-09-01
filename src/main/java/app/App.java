@@ -34,11 +34,14 @@ public class App
 
 	int numSites = 8;
 	List<Vector> sites;
+	Vector center = new Vector(0.5, 0.5);
 	Fortune fortune;
 	boolean regenerate = true;
 	boolean auto = true;
 	boolean next = false;
 	boolean pause = false;
+	boolean move = false;
+	Vector lastCursorPos = null;
 	float zoomFactor = 1.0f;
 	Generator gen;
 	float[] edges;
@@ -107,6 +110,8 @@ public class App
 				next = true;
 			if (key == GLFW_KEY_P)
 				pause = !pause;
+			if (key == GLFW_KEY_C)
+				center = new Vector(0.5, 0.5);
 			if (key == GLFW_KEY_V)
 			{
 				try
@@ -157,6 +162,15 @@ public class App
 			cursorX = x;
 			cursorY = y;
 			cursorMoved = true;
+		});
+
+		glfwSetMouseButtonCallback(window, (window, button, action, mods) ->
+		{
+			if (button != GLFW_MOUSE_BUTTON_3)
+				return;
+			if (action == GLFW_PRESS)
+				lastCursorPos = null;
+			move = action != GLFW_RELEASE;
 		});
 
 		glfwSetWindowSizeCallback(window, (window, width, height) ->
@@ -218,6 +232,11 @@ public class App
 
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_SCISSOR_TEST);
+	}
+
+	void setCenter(float x, float y)
+	{
+		glUniform2f(2, x, y);
 	}
 
 	void setColor(float r, float g, float b, float a)
@@ -428,9 +447,9 @@ public class App
 
 	Vector screenPointToWorldPoint(Vector p)
 	{
-		return p.sub(new Vector(0.5f, 0.5f))
+		return p.sub(new Vector(0.5, 0.5))
 			.scale(1.0f / zoomFactor)
-			.add(new Vector(0.5f, 0.5f));
+			.add(center);
 	}
 
 	void printInfo()
@@ -454,15 +473,35 @@ public class App
 	void loop()
 	{
 		double cursorPos = 0;
+		setCenter((float) center.x, (float) center.y);
 
 		while (!glfwWindowShouldClose(window))
 		{
+			Vector cPos = screenPointToWorldPoint(
+				new Vector(cursorX / windowX, 1.0 - cursorY / windowY)
+			);
+
 			topLeft = screenPointToWorldPoint(new Vector(0, 0));
 			bottomRight = screenPointToWorldPoint(new Vector(1, 1));
 			if (viewportChanged)
 			{
 				viewportChanged = false;
 				glViewport(0, 0, windowX, windowY);
+			}
+
+			if (move && cursorMoved)
+			{
+				if (lastCursorPos == null)
+				{
+					lastCursorPos = cPos;
+				}
+				else
+				{
+					center = center.add(cPos.sub(lastCursorPos));
+					lastCursorPos = cPos;
+				}
+
+				setCenter((float) center.x, (float) center.y);
 			}
 
 			if (regenerate)
@@ -478,7 +517,6 @@ public class App
 			if (next)
 			{
 				next = false;
-				cursorMoved = false;
 				try
 				{
 					fortune.process();
@@ -500,10 +538,6 @@ public class App
 			if ((cursorMoved || auto) && !pause)
 			{
 				cursorMoved = false;
-				Vector cPos = screenPointToWorldPoint(
-					new Vector(cursorX / windowX, 1.0 - cursorY / windowY)
-				);
-
 				if (cPos.y > cursorPos)
 					fortune = new Fortune(sites);
 
