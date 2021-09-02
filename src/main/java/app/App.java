@@ -505,7 +505,8 @@ public class App
 				}
 
 				setCenter((float) center.x, (float) center.y);
-			} else if (panOrigin != null)
+			}
+			else if (panOrigin != null)
 			{
 				panOrigin = null;
 			}
