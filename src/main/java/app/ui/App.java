@@ -621,7 +621,13 @@ public class App
 			return;
 		}
 
-		App app = new App(new Generator(conf.input, conf.seed));
+		App app;
+
+		if (conf.seed != null)
+			app = new App(new Generator(conf.input, conf.seed));
+		else
+			app = new App(new Generator(conf.input));
+
 		app.numSites = conf.sites;
 		app.run();
 	}

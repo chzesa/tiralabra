@@ -3,7 +3,7 @@ package app.ui;
 class Config
 {
 	boolean bench = false;
-	Integer seed = new Integer(938758);
+	Integer seed = null;
 	Integer pows = new Integer(6);
 	Integer reps = new Integer(5);
 	Integer sites = 20;
@@ -51,6 +51,8 @@ class Config
 			case "-b":
 			{
 				bench = true;
+				if (seed == null)
+					seed = new Integer(938758);
 				return '\0';
 			}
 			case "-c": return 'c';
