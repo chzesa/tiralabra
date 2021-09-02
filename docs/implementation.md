@@ -115,6 +115,8 @@ The algorithm outputs a list of rays and line segments. Typically the output is 
 
 Additionally, the output contains zero-length edges which are generated when multiple arcs vanish at a single event point. These could be ignored but they are not checked for currently.
 
+Instances involving two or more intial points being horizontally parallel, which causes all parabola on the beachline at that point to be degenerate, is not handled. Instead, the input is checked for this case and the first point is shifted upwards a very small amount.
+
 ## Sources
 
 https://en.wikipedia.org/wiki/Planar_graph#Euler's_formula
