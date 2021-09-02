@@ -41,7 +41,6 @@ public class Fortune
 	public PriorityQueue<Event> queue = new PriorityQueue<>(new QueueCompare());
 	public Tree<Arc> beach = null;
 	ArrayList<Edge> edges = new ArrayList<>();
-	ArrayList<Edge> rays = new ArrayList<>();
 
 	public class Result
 	{
@@ -80,12 +79,31 @@ public class Fortune
 	public Fortune(List<Vector> sites)
 	{
 		sites.forEach(site -> queue.push(new Event(site)));
+		checkInput();
 	}
 
+	/**
+	 * @param sites Array of seeds of the voronoi diagram.
+	 */
 	public Fortune(Vector[] sites)
 	{
 		for (int i = 0; i < sites.length; i++)
 			queue.push(new Event(sites[i]));
+		checkInput();
+	}
+
+	void checkInput()
+	{
+		if (queue.size() <= 1)
+			return;
+		Event e = queue.pop();
+		if (Math.abs(queue.peek().point().y - e.point().y) < Vector.PRECISION)
+		{
+			System.out.println("Corrected input.");
+			queue.push(new Event(new Vector(e.point().x, e.point().y + 4.0 * Vector.PRECISION)));
+		}
+		else
+			queue.push(e);
 	}
 
 	void detectEvent(Tree<Arc>.Node node)
@@ -174,19 +192,6 @@ public class Fortune
 		Boundary[] bounds = generateBoundaries(arc, site);
 		Boundary left = bounds[0];
 		Boundary right = bounds[1];
-
-		// Detect a degenerate case at the beginning of the algorithm with two or more
-		// sites which are horizontally parallel.
-		if (Math.abs(arc.site.y - site.y) < Vector.PRECISION && arc.right == null)
-		{
-			Arc newArc = new Arc(left, site, null);
-			arc = new Arc(arc.left, arc.site, left);
-			node = beach.replace(node, arc);
-
-			detectEvent(node);
-			detectEvent(beach.addNext(node, newArc));
-			return;
-		}
 
 		Arc leftArc = new Arc(arc.left, arc.site, left);
 		Arc rightArc = new Arc(right, arc.site, arc.right);
