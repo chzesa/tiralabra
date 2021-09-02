@@ -104,10 +104,7 @@ public class Fortune
 			return;
 		Event e = queue.pop();
 		if (Math.abs(queue.peek().point().y - e.point().y) < Vector.PRECISION)
-		{
-			System.out.println("Corrected input.");
 			queue.push(new Event(new Vector(e.point().x, e.point().y + 4.0 * Vector.PRECISION)));
-		}
 		else
 			queue.push(e);
 	}
