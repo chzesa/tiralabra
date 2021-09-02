@@ -15,11 +15,18 @@ public class Boundary
 		this.siteB = siteB;
 	}
 
+	/**
+	 * Origin of the ray representing the edge.
+	 */
 	public Vector begin()
 	{
 		return ray.origin;
 	}
 
+	/**
+	 * Determines the endpoint of the edge ray.
+	 * @param sweepline Current height of the sweepline for calculating the parabola.
+	 */
 	public Vector end(double sweepline)
 	{
 		Vector[] intersections = Utils.parabolaIntersection(siteA, siteB, sweepline);

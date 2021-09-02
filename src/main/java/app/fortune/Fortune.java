@@ -61,6 +61,10 @@ public class Fortune
 		}
 	}
 
+	/**
+	 * Used to represent an edge, either a line segment beginning at a and ending at b,
+	 * or a ray originating from a with direction b.
+	 */
 	public class Edge
 	{
 		public final Vector a;
@@ -98,7 +102,11 @@ public class Fortune
 		checkInput();
 	}
 
-	void checkInput()
+	/**
+	 * Check the first two points of the ordered input for points that are horizontally parallel.
+	 * If such points are found, the first is shifted upwards to circumvent a degenerate case.
+	 */
+	private void checkInput()
 	{
 		if (queue.size() <= 1)
 			return;
@@ -109,7 +117,7 @@ public class Fortune
 			queue.push(e);
 	}
 
-	void detectEvent(Tree<Arc>.Node node)
+	private void detectEvent(Tree<Arc>.Node node)
 	{
 		Arc arc = node.value();
 		Vector point = arc.circleEvent();
@@ -117,7 +125,7 @@ public class Fortune
 			arc.event = queue.push(new Event(point, arc.site, node));
 	}
 
-	void removeEvent(Arc arc)
+	private void removeEvent(Arc arc)
 	{
 		if (arc != null && arc.event != null)
 		{
@@ -126,7 +134,7 @@ public class Fortune
 		}
 	}
 
-	Boundary[] generateBoundaries(Arc arc, Vector site)
+	private Boundary[] generateBoundaries(Arc arc, Vector site)
 	{
 		Vector isect = Utils.parabolaPt(arc.site, site.y, site.x);
 		Ray left = new Ray(isect, Utils.bisector(arc.site, site));
@@ -134,7 +142,10 @@ public class Fortune
 		return new Boundary[] { new Boundary(left, arc.site, site), new Boundary(right, site, arc.site) };
 	}
 
-	Boundary generateMergedBoundary(Arc left, Arc mid, Arc right, Vector origin)
+	/**
+	 * Generates a boundary ray which continues from a circle event.
+	 */
+	private Boundary generateMergedBoundary(Arc left, Arc mid, Arc right, Vector origin)
 	{
 		Vector direction = mid.left.ray.direction
 			.add(mid.right.ray.direction)
@@ -152,7 +163,11 @@ public class Fortune
 		);
 	}
 
-	Tree<Arc>.Node findArc(Vector point)
+	/**
+	 * Finds the arc directly above the supplied point by traversing the tree representing the
+	 * beachline from its root.
+	 */
+	private Tree<Arc>.Node findArc(Vector point)
 	{
 		Tree<Arc>.Node result = null;
 		Tree<Arc>.Node current = beach.root();
@@ -196,13 +211,13 @@ public class Fortune
 		Boundary left = bounds[0];
 		Boundary right = bounds[1];
 
-		Arc leftArc = new Arc(arc.left, arc.site, left);
-		Arc rightArc = new Arc(right, arc.site, arc.right);
+		Arc larc = new Arc(arc.left, arc.site, left);
+		Arc rarc = new Arc(right, arc.site, arc.right);
 		arc = new Arc(left, site, right);
 
 		node = beach.replace(node, arc);
-		detectEvent(beach.addPrevious(node, leftArc));
-		detectEvent(beach.addNext(node, rightArc));
+		detectEvent(beach.addPrevious(node, larc));
+		detectEvent(beach.addNext(node, rarc));
 	}
 
 	void circleEvent(Event e)

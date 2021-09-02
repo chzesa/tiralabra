@@ -31,7 +31,7 @@ public class Validator
 		this.result = result;
 	}
 
-	static List<Vector> closestSites(Vector point, List<Vector> sites)
+	private static List<Vector> closestSites(Vector point, List<Vector> sites)
 	{
 		ArrayList<Vector> res = new ArrayList<>();
 		double dist = Double.POSITIVE_INFINITY;
@@ -54,7 +54,7 @@ public class Validator
 		return res;
 	}
 
-	static boolean validateRay(Fortune.Edge ray, List<Vector> sites)
+	private static boolean validateRay(Fortune.Edge ray, List<Vector> sites)
 	{
 		Vector half = ray.a.add(ray.b.normalize().scale(Math.max(ray.a.norm(), 1)));
 		List<Vector> sitesA = closestSites(ray.a, sites);
@@ -80,7 +80,7 @@ public class Validator
 		return sitesA.size() > 1;
 	}
 
-	static boolean validateEdge(Fortune.Edge edge, List<Vector> sites)
+	private static boolean validateEdge(Fortune.Edge edge, List<Vector> sites)
 	{
 		Vector half = edge.b.sub(edge.a).scale(0.5).add(edge.a);
 		List<Vector> sitesA = closestSites(edge.a, sites);

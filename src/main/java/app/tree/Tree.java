@@ -62,8 +62,8 @@ public class Tree<T>
 		}
 	}
 
-	Node root = null;
-	int count = 0;
+	private Node root = null;
+	private int count = 0;
 
 	/**
 	 * Constructs a new tree.
@@ -197,7 +197,7 @@ public class Tree<T>
 		return node.value();
 	}
 
-	void rebalance(Node n)
+	private void rebalance(Node n)
 	{
 		while (n != null)
 		{
@@ -228,7 +228,7 @@ public class Tree<T>
 		}
 	}
 
-	int depth(Node n)
+	private int depth(Node n)
 	{
 		if (n == null)
 			return 0;
@@ -236,12 +236,12 @@ public class Tree<T>
 		return n.depth;
 	}
 
-	void updateDepth(Node n)
+	private void updateDepth(Node n)
 	{
 		n.depth = Math.max(depth(n.left), depth(n.right)) + 1;
 	}
 
-	void cwRotate(Node node)
+	private void cwRotate(Node node)
 	{
 		Node child = node.left;
 		Node mover = child.right;
@@ -271,7 +271,7 @@ public class Tree<T>
 		updateDepth(child);
 	}
 
-	void ccwRotate(Node node)
+	private void ccwRotate(Node node)
 	{
 		Node child = node.right;
 		Node mover = child.left;
@@ -301,7 +301,7 @@ public class Tree<T>
 		updateDepth(child);
 	}
 
-	void setLinks(Node left, Node mid, Node right)
+	private void setLinks(Node left, Node mid, Node right)
 	{
 		if (left != null)
 			left.next = mid != null ? mid : right;
@@ -316,7 +316,7 @@ public class Tree<T>
 			right.previous = mid != null ? mid : left;
 	}
 
-	void swap(Node a, Node b)
+	private void swap(Node a, Node b)
 	{
 		int depth = a.depth;
 		a.depth = b.depth;
@@ -374,7 +374,7 @@ public class Tree<T>
 		b.ancestor = aAnc == b ? a : aAnc;
 	}
 
-	void forEachNode(Node n, ICallback<T> fn)
+	private void forEachNode(Node n, ICallback<T> fn)
 	{
 		if (n == null)
 			return;

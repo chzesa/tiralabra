@@ -23,20 +23,26 @@ public class Arc
 		this.site = site;
 	}
 
-	public Vector left(double y)
+	/**
+	 * Left endpoint of this arc on the beachline
+	 */
+	public Vector left(double sweepline)
 	{
 		if (left == null)
-			return new Vector(Double.NEGATIVE_INFINITY, y);
+			return new Vector(Double.NEGATIVE_INFINITY, sweepline);
 
-		return left.end(y);
+		return left.end(sweepline);
 	}
 
-	public Vector right(double y)
+	/**
+	 * Right endpoint of this arc on the beachline
+	 */
+	public Vector right(double sweepline)
 	{
 		if (right == null)
-			return new Vector(Double.POSITIVE_INFINITY, y);
+			return new Vector(Double.POSITIVE_INFINITY, sweepline);
 
-		return right.end(y);
+		return right.end(sweepline);
 	}
 
 	public Vector site()
