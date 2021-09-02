@@ -49,20 +49,14 @@ class Benchmark
 		f.processAll();
 
 		long stepTotal = 0;
-		long init = 0;
 		int count = 0;
 
 		int n = (int) Math.pow(10, pow);
-		long t0 = java.lang.System.nanoTime();
+		long t0, t1;
 		f = new Fortune(gen.next(n, 0, 1, 0, 1));
-		long t1 = java.lang.System.nanoTime();
-		init = t1 - t0;
 
-		while (true)
+		while (f.peek() != null)
 		{
-			if (f.peek() == null)
-				break;
-
 			t0 = java.lang.System.nanoTime();
 			f.process();
 			t1 = java.lang.System.nanoTime();
@@ -70,14 +64,13 @@ class Benchmark
 			count++;
 		}
 
-		return 1.0 / Math.log(n) * stepTotal / count;
+		return stepTotal / (Math.log(n) * count);
 	}
 
 	static void run(Config conf)
 	{
 		System.out.println("Running benchmarks...");
 		Generator gen = new Generator(conf.seed);
-		
 
 		double stepTime = stepTime(conf.pows - 3, gen);
 		double estimated = 0;
@@ -87,10 +80,12 @@ class Benchmark
 		for (int i = 1; i <= conf.pows; i++)
 		{
 			int n = (int) Math.pow(10, i);
-			estimated += Math.log(n) * stepTime * n * conf.reps;
+			estimated += Math.log(n) * n;
 		}
 
-		System.out.println("Estimated total time: " + (int) (estimated / Math.pow(10, 9)) + "s");
+		estimated *= stepTime * conf.pows;
+
+		System.out.println("Estimated total benchmark time: " + (int) (estimated / Math.pow(10, 9)) + "s");
 
 		col("input size");
 		col("iteration");
