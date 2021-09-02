@@ -22,34 +22,42 @@ import static org.lwjgl.opengl.GL45.*;
 
 public class App
 {
+	Generator gen;
+	Fortune fortune;
+	boolean debug = false;
+
+	List<Vector> sites;
+	int numSites = 8;
+
 	long window;
 	int windowX = 720;
 	int windowY = 720;
 	boolean viewportChanged = true;
 
+	float[] edges;
+	float[] rays;
+	float[] coords;
+	float[] rayOrigins;
+
+	Vector center = new Vector(0.5, 0.5);
+	Vector topLeft = screenPointToWorldPoint(new Vector(0, 0));
+	Vector bottomRight = screenPointToWorldPoint(new Vector(1, 1));
+
 	double cursorX = 0;
 	double cursorY = 0;
 	boolean cursorMoved = true;
-	boolean debug = false;
 
-	int numSites = 8;
-	List<Vector> sites;
-	Vector center = new Vector(0.5, 0.5);
-	Fortune fortune;
 	boolean regenerate = true;
 	boolean auto = true;
 	boolean next = false;
 	boolean pause = false;
 	boolean move = false;
-	Vector lastCursorPos = null;
+	double sweepline = 0;
+
+	Vector panOrigin = null;
+	Vector centerOrigin = null;
+
 	float zoomFactor = 1.0f;
-	Generator gen;
-	float[] edges;
-	float[] rays;
-	float[] coords;
-	float[] rayOrigins;
-	Vector topLeft = screenPointToWorldPoint(new Vector(0, 0));
-	Vector bottomRight = screenPointToWorldPoint(new Vector(1, 1));
 
 	App(Generator gen)
 	{
@@ -85,7 +93,6 @@ public class App
 		glfwSetScrollCallback(window, (window, xoffset, yoffset) ->
 		{
 			zoomFactor *= yoffset < 0 ? 0.8f : 1.2f;
-			cursorMoved = true;
 		});
 
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) ->
@@ -97,7 +104,6 @@ public class App
 				glfwSetWindowShouldClose(window, true);
 			if (key == GLFW_KEY_SPACE)
 			{
-				cursorMoved = true;
 				regenerate = true;
 			}
 			if (key == GLFW_KEY_A)
@@ -148,17 +154,14 @@ public class App
 				numSites = 9;
 			if (key == GLFW_KEY_0)
 				numSites = 10;
-
 			if (key == GLFW_KEY_EQUAL)
 				numSites *= 10;
-
 			if (key == GLFW_KEY_MINUS)
 				numSites /= 10;
 		});
 
 		glfwSetCursorPosCallback(window, (window, x, y) ->
 		{
-			if (auto) return;
 			cursorX = x;
 			cursorY = y;
 			cursorMoved = true;
@@ -168,8 +171,6 @@ public class App
 		{
 			if (button != GLFW_MOUSE_BUTTON_3)
 				return;
-			if (action == GLFW_PRESS)
-				lastCursorPos = null;
 			move = action != GLFW_RELEASE;
 		});
 
@@ -472,36 +473,41 @@ public class App
 
 	void loop()
 	{
-		double cursorPos = 0;
 		setCenter((float) center.x, (float) center.y);
 
 		while (!glfwWindowShouldClose(window))
 		{
-			Vector cPos = screenPointToWorldPoint(
-				new Vector(cursorX / windowX, 1.0 - cursorY / windowY)
-			);
-
-			topLeft = screenPointToWorldPoint(new Vector(0, 0));
-			bottomRight = screenPointToWorldPoint(new Vector(1, 1));
 			if (viewportChanged)
 			{
 				viewportChanged = false;
 				glViewport(0, 0, windowX, windowY);
 			}
 
-			if (move && cursorMoved)
+			Vector cPos = screenPointToWorldPoint(
+				new Vector(cursorX / windowX, 1.0 - cursorY / windowY)
+			);
+
+			topLeft = screenPointToWorldPoint(new Vector(0, 0));
+			bottomRight = screenPointToWorldPoint(new Vector(1, 1));
+
+			if (move)
 			{
-				if (lastCursorPos == null)
+				if (panOrigin == null)
 				{
-					lastCursorPos = cPos;
+					panOrigin = new Vector(cursorX, cursorY);
+					centerOrigin = center;
 				}
-				else
+				else if (cursorMoved)
 				{
-					center = center.add(cPos.sub(lastCursorPos));
-					lastCursorPos = cPos;
+					Vector delta = new Vector(cursorX, cursorY).sub(panOrigin).scale(0.005 * 1.0 / zoomFactor);
+					delta = new Vector(delta.x, -delta.y);
+					center = centerOrigin.add(delta);
 				}
 
 				setCenter((float) center.x, (float) center.y);
+			} else if (panOrigin != null)
+			{
+				panOrigin = null;
 			}
 
 			if (regenerate)
@@ -512,11 +518,15 @@ public class App
 					sites = gen.next(numSites, 0.05, 0.95, 0.05, 0.95);
 				extractSiteCoords();
 				fortune = new Fortune(sites);
+				sweepline = fortune.peek().y + 0.1;
 			}
 
 			if (next)
 			{
 				next = false;
+				if (fortune.peek() != null)
+					sweepline = fortune.peek().y;
+
 				try
 				{
 					fortune.process();
@@ -530,22 +540,14 @@ public class App
 				printInfo();
 			}
 
-			if (auto && !pause)
-			{
-				cursorY += 2.0f;
-			}
-
 			if ((cursorMoved || auto) && !pause)
 			{
-				cursorMoved = false;
-				if (cPos.y > cursorPos)
+				if (cPos.y > sweepline)
 					fortune = new Fortune(sites);
-
-				cursorPos = cPos.y;
 
 				try
 				{
-					fortune.processTo(cursorPos);
+					fortune.processTo(sweepline);
 				}
 				catch (Error e)
 				{
@@ -556,11 +558,20 @@ public class App
 				printInfo();
 			}
 
-			if (auto && fortune.peek() == null || cursorY >= 2 * windowY)
+			if (!pause)
 			{
-				regenerate = true;
-				cursorY = -2.0f;
+				if (auto)
+				{
+					sweepline -= 0.005;
+				}
+				else if (cursorMoved)
+				{
+					sweepline = cPos.y;
+				}
 			}
+
+			if (auto && fortune.peek() == null || sweepline >= 2 * windowY)
+				regenerate = true;
 
 			glClear(GL_COLOR_BUFFER_BIT);
 			setZoomFactor(zoomFactor);
@@ -569,7 +580,7 @@ public class App
 			drawPoints(coords);
 
 			setColor(0.0f, 0.0f, 0.0f, 1.0f);
-			drawLines(new float[] {(float) topLeft.x, (float) cursorPos, (float) bottomRight.x, (float) cursorPos});
+			drawLines(new float[] {(float) topLeft.x, (float) sweepline, (float) bottomRight.x, (float) sweepline});
 
 			if (fortune.beach != null)
 			{
@@ -583,8 +594,6 @@ public class App
 				// setColor(0.0f, 0.0f, 0.0f, 0.1f);
 				// drawBeachlineVerticals();
 
-				
-
 				setColor(0.0f, 0.0f, 1.0f, 1.0f);
 				drawQueuedCircleEvents();
 
@@ -593,7 +602,7 @@ public class App
 
 				setColor(0.0f, 0.0f, 0.0f, 0.3f);
 				drawLines(rays);
-				// drawPoints(rayOrigins);	
+				// drawPoints(rayOrigins);
 			}
 
 			glfwSwapBuffers(window);
