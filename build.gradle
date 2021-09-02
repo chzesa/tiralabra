@@ -32,7 +32,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'app.App'
+    mainClass = 'app.ui.App'
 }
 
 test {
@@ -50,7 +50,7 @@ jacocoTestReport {
 jar {
     manifest {
         attributes(
-            'Main-Class': 'app.App'
+            'Main-Class': 'app.ui.App'
         )
     }
 }

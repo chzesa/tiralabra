@@ -1,4 +1,4 @@
-package app;
+package app.ui;
 import app.fortune.Fortune;
 
 class Benchmark
