@@ -61,9 +61,10 @@ class Parabola
 <span class="fc" id="L61">		return (x - a) * (x - a) / (2.0 * (b - directrix)) + (b + directrix) / 2.0;</span>
 	}
 
+
 	public static Vector parabolaPt(Vector focus, double directrix, double x)
 	{
-<span class="fc" id="L66">		return new Vector(x, parabolaY(focus, directrix, x));</span>
+<span class="fc" id="L67">		return new Vector(x, parabolaY(focus, directrix, x));</span>
 	}
 
 	/**
@@ -73,47 +74,47 @@ class Parabola
 	 */
 	public static Vector[] parabolaIntersection(Vector focusA, Vector focusB, double directrix)
 	{
-<span class="fc" id="L76">		Parabola p1 = new Parabola(focusA, directrix);</span>
-<span class="fc" id="L77">		Parabola p2 = new Parabola(focusB, directrix);</span>
+<span class="fc" id="L77">		Parabola p1 = new Parabola(focusA, directrix);</span>
+<span class="fc" id="L78">		Parabola p2 = new Parabola(focusB, directrix);</span>
 
-<span class="fc bfc" id="L79" title="All 2 branches covered.">		if (Math.abs(focusA.y - focusB.y) &lt; Vector.PRECISION)</span>
-<span class="fc" id="L80">			return new Vector[] {</span>
-<span class="fc" id="L81">				parabolaPt(focusA, directrix, (focusA.x + focusB.x) / 2)</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">		if (Math.abs(focusA.y - focusB.y) &lt; Vector.PRECISION)</span>
+<span class="fc" id="L81">			return new Vector[] {</span>
+<span class="fc" id="L82">				parabolaPt(focusA, directrix, (focusA.x + focusB.x) / 2)</span>
 			};
 
-<span class="pc bpc" id="L84" title="1 of 4 branches missed.">		if (p1.degenerate &amp;&amp; p2.degenerate)</span>
+<span class="pc bpc" id="L85" title="1 of 4 branches missed.">		if (p1.degenerate &amp;&amp; p2.degenerate)</span>
 		{
-<span class="nc" id="L86">			return new Vector[] {};</span>
+<span class="nc" id="L87">			return new Vector[] {};</span>
 		}
-<span class="fc bfc" id="L88" title="All 2 branches covered.">		else if (p1.degenerate)</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">		else if (p1.degenerate)</span>
 		{
-<span class="fc" id="L90">			return new Vector[]</span>
+<span class="fc" id="L91">			return new Vector[]</span>
 			{
-<span class="fc" id="L92">				parabolaPt(focusB, directrix, focusA.x)</span>
+<span class="fc" id="L93">				parabolaPt(focusB, directrix, focusA.x)</span>
 			};
 		}
-<span class="fc bfc" id="L95" title="All 2 branches covered.">		else if (p2.degenerate)</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">		else if (p2.degenerate)</span>
 		{
-<span class="fc" id="L97">			return new Vector[]</span>
+<span class="fc" id="L98">			return new Vector[]</span>
 			{
-<span class="fc" id="L99">				parabolaPt(focusA, directrix, focusB.x)</span>
+<span class="fc" id="L100">				parabolaPt(focusA, directrix, focusB.x)</span>
 			};
 		}
 
-<span class="fc" id="L103">		double[] xCoords = solveQuadraticFn(p1.x2 - p2.x2, p1.x - p2.x, p1.c - p2.c);</span>
+<span class="fc" id="L104">		double[] xCoords = solveQuadraticFn(p1.x2 - p2.x2, p1.x - p2.x, p1.c - p2.c);</span>
 
-<span class="fc" id="L105">		return new Vector[]</span>
+<span class="fc" id="L106">		return new Vector[]</span>
 		{
-<span class="fc" id="L107">			parabolaPt(focusA, directrix, xCoords[0]),</span>
-<span class="fc" id="L108">			parabolaPt(focusB, directrix, xCoords[1])</span>
+<span class="fc" id="L108">			parabolaPt(focusA, directrix, xCoords[0]),</span>
+<span class="fc" id="L109">			parabolaPt(focusB, directrix, xCoords[1])</span>
 		};
 	}
 
 	public static double[] solveQuadraticFn(double a, double b, double c)
 	{
-<span class="fc" id="L114">		double sqrt = Math.sqrt(b * b - 4.0 * a * c);</span>
+<span class="fc" id="L115">		double sqrt = Math.sqrt(b * b - 4.0 * a * c);</span>
 
-<span class="fc" id="L116">		return new double[]</span>
+<span class="fc" id="L117">		return new double[]</span>
 		{
 			(-b + sqrt) / (2.0 * a),
 			(-b - sqrt) / (2.0 * a)

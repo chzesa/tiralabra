@@ -8,7 +8,7 @@ import app.pq.*;
  * If two adjacent arcs have the same primary sort value, at least one of them is vanishing
  * from the beachline, and multiple sites are on the voronoi circle around the event point.
  */
-public class Arc implements ISortable
+public class Arc
 {
 	public final Boundary left;
 	public final Boundary right;
@@ -33,15 +33,15 @@ public class Arc implements ISortable
 
 	public Vector right(double y)
 	{
-<span class="fc bfc" id="L36" title="All 2 branches covered.">		if (right == null)</span>
-<span class="fc" id="L37">			return new Vector(Double.POSITIVE_INFINITY, y);</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">		if (right == null)</span>
+<span class="nc" id="L37">			return new Vector(Double.POSITIVE_INFINITY, y);</span>
 
-<span class="fc" id="L39">		return right.end(y);</span>
+<span class="nc" id="L39">		return right.end(y);</span>
 	}
 
 	public Vector site()
 	{
-<span class="fc" id="L44">		return site;</span>
+<span class="nc" id="L44">		return site;</span>
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class Arc implements ISortable
 	@Override
 	public String toString()
 	{
-<span class="fc" id="L71">		return &quot;Arc of &quot; + site + &quot;{ &quot; + left + &quot; ; &quot; + right + &quot; }&quot;;</span>
+<span class="nc" id="L71">		return &quot;Arc of &quot; + site + &quot;{ &quot; + left + &quot; ; &quot; + right + &quot; }&quot;;</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

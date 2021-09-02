@@ -55,62 +55,67 @@ public class Vector
 <span class="fc bfc" id="L55" title="All 2 branches covered.">		return distance(this, other) &lt; PRECISION;</span>
 	}
 
+	public boolean exact(Vector other)
+	{
+<span class="nc bnc" id="L60" title="All 4 branches missed.">		return x == other.x &amp;&amp; y == other.y;</span>
+	}
+
 	@Override
 	public String toString()
 	{
-<span class="fc" id="L61">		return &quot;(&quot; + String.format(&quot;%.3f&quot;, x) + &quot;, &quot; + String.format(&quot;%.3f&quot;, y) + &quot;)&quot;;</span>
+<span class="nc" id="L66">		return &quot;(&quot; + String.format(&quot;%.5f&quot;, x) + &quot;, &quot; + String.format(&quot;%.5f&quot;, y) + &quot;)&quot;;</span>
 	}
 
 	public static double dot(Vector a, Vector b)
 	{
-<span class="fc" id="L66">		return a.x * b.x</span>
+<span class="fc" id="L71">		return a.x * b.x</span>
 			+ a.y * b.y;
 	}
 
 	public static double norm(Vector v)
 	{
-<span class="fc" id="L72">		return Math.sqrt(dot(v, v));</span>
+<span class="fc" id="L77">		return Math.sqrt(dot(v, v));</span>
 	}
 
 	public static Vector normalize(Vector v)
 	{
-<span class="fc" id="L77">		double n = v.norm();</span>
-<span class="fc bfc" id="L78" title="All 2 branches covered.">		if (n == 0)</span>
-<span class="fc" id="L79">			return new Vector(0, 0);</span>
+<span class="fc" id="L82">		double n = v.norm();</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">		if (n == 0)</span>
+<span class="nc" id="L84">			return new Vector(0, 0);</span>
 
-<span class="fc" id="L81">		double s = 1.0 / n;</span>
-<span class="fc" id="L82">		return scale(s, v);</span>
+<span class="fc" id="L86">		double s = 1.0 / n;</span>
+<span class="fc" id="L87">		return scale(s, v);</span>
 	}
 
 	public static Vector scale(double scalar, Vector v)
 	{
-<span class="fc" id="L87">		return new Vector(scalar * v.x, scalar * v.y);</span>
+<span class="fc" id="L92">		return new Vector(scalar * v.x, scalar * v.y);</span>
 	}
 
 	public static Vector neg(Vector v)
 	{
-<span class="fc" id="L92">		return scale(-1.0, v);</span>
+<span class="fc" id="L97">		return scale(-1.0, v);</span>
 	}
 
 	public static Vector add(Vector a, Vector b)
 	{
-<span class="fc" id="L97">		return new Vector(a.x + b.x, a.y + b.y);</span>
+<span class="fc" id="L102">		return new Vector(a.x + b.x, a.y + b.y);</span>
 	}
 
 	public static Vector sub(Vector a, Vector b)
 	{
-<span class="fc" id="L102">		return new Vector(a.x - b.x, a.y - b.y);</span>
+<span class="fc" id="L107">		return new Vector(a.x - b.x, a.y - b.y);</span>
 	}
 
 	public static double distance(Vector a, Vector b)
 	{
-<span class="fc" id="L107">		return norm(sub(a, b));</span>
+<span class="fc" id="L112">		return norm(sub(a, b));</span>
 	}
 
 	public static double angle(Vector a, Vector b)
 	{
-<span class="fc" id="L112">		double det = a.x * b.y - a.y * b.x;</span>
-<span class="fc" id="L113">		return Math.atan2(det, dot(a, b));</span>
+<span class="nc" id="L117">		double det = a.x * b.y - a.y * b.x;</span>
+<span class="nc" id="L118">		return Math.atan2(det, dot(a, b));</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
