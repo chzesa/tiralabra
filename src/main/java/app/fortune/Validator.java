@@ -115,14 +115,13 @@ public class Validator
 		 * The usual solution to handling rays and lines is to enclose the voronoi diagram
 		 * in a box, which is also a possibility.
 		 */
+		if (sitesA.size() < 2)
+			throw new Error("Origin of edge " + edge + " is not adjacent to its incident sites.");
 
-		if (sitesA.size() > 2 && sitesB.size() > 2)
-			return true;
+		if (sitesB.size() < 3)
+			throw new Error("Destination of edge " + edge + " is not adjacent to its incident sites.");
 
-		if (sitesA.size() == 2)
-			return true;
-
-		return false;
+		return true;
 	}
 
 	public boolean result()
