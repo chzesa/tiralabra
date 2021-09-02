@@ -71,6 +71,12 @@ public class Fortune
 			this.a = a;
 			this.b = b;
 		}
+
+		@Override
+		public String toString()
+		{
+			return "[ " + a + " -> " + b + " ]";
+		}
 	}
 
 	/**
