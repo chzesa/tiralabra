@@ -87,7 +87,7 @@ public class Validator
 		List<Vector> sitesB = closestSites(edge.b, sites);
 		List<Vector> sitesH = closestSites(half, sites);
 
-		if (Vector.distance(edge.a, edge.b) > Vector.PRECISION )
+		if (Vector.distance(edge.a, edge.b) > Vector.PRECISION)
 		{
 			if (sitesH.size() > 2)
 			{
