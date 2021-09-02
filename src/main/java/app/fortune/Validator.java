@@ -60,11 +60,22 @@ public class Validator
 		List<Vector> sitesA = closestSites(ray.a, sites);
 		List<Vector> sitesH = closestSites(half, sites);
 
-		if (sitesH.size() != 2)
-			return false;
+		if (sitesH.size() > 2)
+		{
+			System.out.println("Direction of ray " + new Ray(ray.a, ray.b) + " may be incorrect, adjacent sites:");
+			for (Vector v : sitesH)
+				System.out.println("\t" + v);
+		}
+
+		if (sitesH.size() < 2)
+		{
+			throw new Error("Direction of ray " + new Ray(ray.a, ray.b) + " is incorrect.");
+		}
 
 		if (!sitesA.containsAll(sitesH))
-			return false;
+		{
+			throw new Error("Origin of ray " + new Ray(ray.a, ray.b) + " doesn't contain all incident sites.");
+		}
 
 		return sitesA.size() > 1;
 	}
@@ -76,16 +87,24 @@ public class Validator
 		List<Vector> sitesB = closestSites(edge.b, sites);
 		List<Vector> sitesH = closestSites(half, sites);
 
-		if (!edge.a.equals(edge.b))
+		if (Vector.distance(edge.a, edge.b) > Vector.PRECISION )
 		{
-			if (sitesH.size() != 2)
-				return false;
+			if (sitesH.size() > 2)
+			{
+				System.out.println("Direction of edge " + edge + " may be incorrect, adjacent sites to halfway point " + half + ":");
+				System.out.println(edge.a.x + ", " + edge.a.y + "; " + edge.b.x + ", " + edge.b.y);
+				for (Vector v : sitesH)
+					System.out.println("\t" + v);
+			}
+
+			if (sitesH.size() < 2)
+				throw new Error("Direction of edge " + edge + " is incorrect.");
 
 			if (!sitesA.containsAll(sitesH))
-				return false;
+				throw new Error("Origin of edge " + edge + " is not adjacent to its incident sites.");
 
 			if (!sitesB.containsAll(sitesH))
-				return false;
+				throw new Error("Destination of edge " + edge + " is not adjacent to its incident sites.");
 		}
 
 		/**
