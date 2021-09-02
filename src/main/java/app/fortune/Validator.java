@@ -47,7 +47,7 @@ public class Validator
 			{
 				res.clear();
 				res.add(site);
-				dist = d;
+				dist = Math.min(d, dist);
 			}
 		}
 
