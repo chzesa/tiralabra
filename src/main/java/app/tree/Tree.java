@@ -95,24 +95,34 @@ public class Tree<T>
 		forEachNode(root, fn);
 	}
 
-	public Node replace(Node n, T item)
+	/**
+	 * Replace the item stored in a node with the new item.
+	 * @param node node whose position the item is inserted at.
+	 * @param item the replacing item
+	 */
+	public Node replace(Node node, T item)
 	{
 		Node replacement = new Node(item);
-		swap(n, replacement);
-		setLinks(n.previous(), replacement, n.next());
-		n.reset();
+		swap(node, replacement);
+		setLinks(node.previous(), replacement, node.next());
+		node.reset();
 		return replacement;
 	}
 
-	public Node addPrevious(Node n, T item)
+	/**
+	 * Creates a new node containing the item in the tree directly previous to an existing node.
+	 * @param node the node previous to which the new node is added
+	 * @param item value of the newly added node.
+	 */
+	public Node addPrevious(Node node, T item)
 	{
 		Node added = new Node(item);
-		setLinks(n.previous(), added, n);
+		setLinks(node.previous(), added, node);
 
-		Node parent = n.left;
+		Node parent = node.left;
 		if (parent == null)
 		{
-			parent = n;
+			parent = node;
 			parent.left = added;
 		}
 		else
@@ -130,15 +140,20 @@ public class Tree<T>
 		return added;
 	}
 
-	public Node addNext(Node n, T item)
+	/**
+	 * Creates a new node containing the item in the tree directly next to an existing node.
+	 * @param node the node next to which the new node is added
+	 * @param item value of the newly added node.
+	 */
+	public Node addNext(Node node, T item)
 	{
 		Node added = new Node(item);
-		setLinks(n, added, n.next());
+		setLinks(node, added, node.next());
 
-		Node parent = n.right;
+		Node parent = node.right;
 		if (parent == null)
 		{
-			parent = n;
+			parent = node;
 			parent.right = added;
 		}
 		else
