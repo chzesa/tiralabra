@@ -41,7 +41,7 @@ public class Fortune
 	public PriorityQueue<Event> queue = new PriorityQueue<>(new QueueCompare());
 	public Tree<Arc> beach = null;
 	ArrayList<Edge> edges = new ArrayList<>();
-	int limit;
+	ArrayList<Edge> rays = new ArrayList<>();
 
 	public class Result
 	{
@@ -80,15 +80,12 @@ public class Fortune
 	public Fortune(List<Vector> sites)
 	{
 		sites.forEach(site -> queue.push(new Event(site)));
-		limit = sites.size() * 1000;
 	}
 
 	public Fortune(Vector[] sites)
 	{
 		for (int i = 0; i < sites.length; i++)
 			queue.push(new Event(sites[i]));
-
-		limit = sites.length * 1000;
 	}
 
 	void detectEvent(Tree<Arc>.Node node)
@@ -279,7 +276,7 @@ public class Fortune
 	 */
 	public Result processAll()
 	{
-		while (process() && limit-- > 0);
+		while (process());
 		return result();
 	}
 
