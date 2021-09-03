@@ -255,54 +255,49 @@ public class FortuneTest
 		return Parse.fromStringll(s);
 	}
 
-	@Test
-	public void testOkDataset1()
-	{
-		List<List<Vector>> data = loadDataset("dataset/ok_data_1.txt");
-		for (List<Vector> sites : data)
-			assertTrue(new Validator(sites, new Fortune(sites).processAll()).result());
-	}
-
-	@Test
-	public void testOkDataset2()
-	{
-		for (List<Vector> sites : loadDataset("dataset/ok_data_2.txt"))
-			assertTrue(new Validator(sites, new Fortune(sites).processAll()).result());
-	}
-
-	@Test
-	public void testOkDataset3()
-	{
-		for (List<Vector> sites : loadDataset("dataset/ok_data_3.txt"))
-			assertTrue(new Validator(sites, new Fortune(sites).processAll()).result());
-	}
-
-	void testBadData(String file)
+	void testDataset(String file)
 	{
 		List<List<Vector>> ll = loadDataset("dataset/" + file);
 		for (List<Vector> sites : ll)
 			assertTrue(new Validator(sites, new Fortune(sites).processAll()).result());
 	}
 
+	// Regression testing with known correct output
+
 	@Test
-	public void testBadDataset1()
+	public void testDataset1()
 	{
-		String file = "bad_data_1.txt";
-		testBadData(file);
+		testDataset("dataset1.txt");
 	}
 
 	@Test
-	public void testBadDataset2()
+	public void testDataset2()
 	{
-		String file = "bad_data_2.txt";
-		testBadData(file);
+		testDataset("dataset2.txt");
 	}
 
 	@Test
-	public void testBadDataset3()
+	public void testDataset3()
 	{
-		String file = "bad_data_3.txt";
-		testBadData(file);
+		testDataset("dataset3.txt");
+	}
+
+	@Test
+	public void testDataset4()
+	{
+		testDataset("dataset4.txt");
+	}
+
+	@Test
+	public void testDataset5()
+	{
+		testDataset("dataset5.txt");
+	}
+
+	@Test
+	public void testDataset6()
+	{
+		testDataset("dataset6.txt");
 	}
 
 	/* False positive involving a nearly zero length edge */
