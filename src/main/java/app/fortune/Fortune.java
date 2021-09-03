@@ -196,17 +196,11 @@ public class Fortune
 			return;
 		}
 
-		// find arc above the event point
-
-		// Set the site x-coordinate at positive infinity in case the event point is at the
-		// exact point of the left edge of the arc it's on.
 		Tree<Arc>.Node node = findArc(site);
 		Arc arc = node.value();
 
-		// if the arc defines a circle event it's a false alarm. Remove event from qeueue
 		removeEvent(arc);
 
-		// split the arc into new sections
 		Boundary[] bounds = generateBoundaries(arc, site);
 		Boundary left = bounds[0];
 		Boundary right = bounds[1];
@@ -226,7 +220,6 @@ public class Fortune
 		Vector site = e.site();
 		Vector circlePoint = Utils.parabolaPt(site, sweepLine(), point.x);
 
-		// Find and remove the arc being removed and its adjacent arcs
 		Tree<Arc>.Node lNode, node, rNode;
 
 		node = e.arc;
@@ -238,11 +231,10 @@ public class Fortune
 		Arc rarc = rNode.value();
 
 		beach.delete(node);
-		// Remove all events involving the arc including any caused by its boundaries
+
 		removeEvent(larc);
 		removeEvent(rarc);
 
-		// rebuild the left and right arcs surrounding the removed arc
 		Boundary middle = generateMergedBoundary(larc, arc, rarc, circlePoint);
 		Arc left = new Arc(larc.left, larc.site, middle);
 		Arc right = new Arc(middle, rarc.site, rarc.right);
@@ -253,7 +245,6 @@ public class Fortune
 		detectEvent(lNode);
 		detectEvent(rNode);
 
-		// add edges of removed arc to result
 		edges.add(new Edge(arc.left.ray.origin, circlePoint));
 		edges.add(new Edge(arc.right.ray.origin, circlePoint));
 	}
@@ -304,7 +295,7 @@ public class Fortune
 	}
 
 	/**
-	 * Returns the next event in the queue if any.
+	 * Returns the next event point in the queue if any.
 	 */
 	public Vector peek()
 	{
