@@ -553,8 +553,7 @@ public class App
 				processResult();
 				printInfo();
 			}
-
-			if ((cursorMoved || auto) && !pause)
+			else if ((cursorMoved || auto) && !pause)
 			{
 				if (cPos.y > sweepline)
 					fortune = new Fortune(sites);
