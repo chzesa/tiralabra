@@ -30,7 +30,7 @@ class Benchmark
 	{
 		col("", count, "");
 		col("", iter, "");
-		col("", dur, "ms");
+		col("", dur, "us");
 		System.out.println("");
 	}
 
@@ -49,7 +49,6 @@ class Benchmark
 		f.processAll();
 
 		long stepTotal = 0;
-		int count = 0;
 
 		int n = (int) Math.pow(10, pow);
 		long t0, t1;
@@ -61,10 +60,9 @@ class Benchmark
 			f.process();
 			t1 = java.lang.System.nanoTime();
 			stepTotal += t1 - t0;
-			count++;
 		}
 
-		return stepTotal / (Math.log(n) * count);
+		return stepTotal / (Math.log(n) * n);
 	}
 
 	static void run(Config conf)
@@ -99,7 +97,7 @@ class Benchmark
 			{
 				long result = test(n, gen);
 				totals[i] += result;
-				printResult(n, j + 1, (int) (result / Math.pow(10, 6)));
+				printResult(n, j + 1, (int) (result / Math.pow(10, 3)));
 			}
 		}
 
@@ -110,7 +108,7 @@ class Benchmark
 		for (int i = 1; i <= conf.pows; i++)
 		{
 			col("", (int) Math.pow(10, i), "");
-			col("", (int) ((double) totals[i] / conf.reps / Math.pow(10, 6)), "ms");
+			col("", (int) ((double) totals[i] / conf.reps / Math.pow(10, 3)), "us");
 			System.out.println("");
 		}
 	}
