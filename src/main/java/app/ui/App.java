@@ -316,12 +316,6 @@ public class App
 		}
 	}
 
-	void print(String s)
-	{
-		if (debug)
-			System.out.println(s);
-	}
-
 	void drawQueuedCircleEvents()
 	{
 		fortune.queue.forEach(e ->
@@ -466,24 +460,6 @@ public class App
 			.add(center);
 	}
 
-	void printInfo()
-	{
-		processResult();
-		if (fortune.beach == null)
-			return;
-
-		fortune.beach.forEach(v ->
-		{
-			Arc arc = (Arc) v;
-			print("[" + arc.left(fortune.sweepLine()).x
-				+ ", "
-				+ arc.right(fortune.sweepLine()).x
-				+ "]: " + arc.site);
-		});
-		print("Queue size: " + fortune.queue.size());
-		print("Beachline size: " + fortune.beach.size());
-	}
-
 	void loop()
 	{
 		setCenter((float) center.x, (float) center.y);
@@ -541,46 +517,24 @@ public class App
 				if (fortune.peek() != null)
 					sweepline = fortune.peek().y;
 
-				try
-				{
-					fortune.process();
-				}
-				catch (Error e)
-				{
-					print(e.toString());
-					e.printStackTrace();
-				}
+				fortune.process();
 				processResult();
-				printInfo();
 			}
 			else if ((cursorMoved || auto) && !pause)
 			{
 				if (cPos.y > sweepline)
 					fortune = new Fortune(sites);
 
-				try
-				{
-					fortune.processTo(sweepline);
-				}
-				catch (Error e)
-				{
-					print(e.toString());
-					e.printStackTrace();
-				}
+				fortune.processTo(sweepline);
 				processResult();
-				printInfo();
 			}
 
 			if (!pause)
 			{
 				if (auto)
-				{
 					sweepline -= 0.005;
-				}
 				else if (cursorMoved)
-				{
 					sweepline = cPos.y;
-				}
 			}
 
 			if (auto && fortune.peek() == null || sweepline >= 2 * windowY)
@@ -601,12 +555,6 @@ public class App
 				setColor(1.0f, 0.0f, 0.0f, 1.0f);
 				drawBeachline();
 
-				// setColor(1.0f, 0.0f, 0.0f, 0.2f);
-				// drawAllParabolas();
-
-				// setColor(0.0f, 0.0f, 0.0f, 0.1f);
-				// drawBeachlineVerticals();
-
 				setColor(0.0f, 0.0f, 1.0f, 1.0f);
 				drawQueuedCircleEvents();
 
@@ -615,7 +563,6 @@ public class App
 
 				setColor(0.0f, 0.0f, 0.0f, 0.3f);
 				drawLines(rays);
-				// drawPoints(rayOrigins);
 			}
 
 			glfwSwapBuffers(window);
