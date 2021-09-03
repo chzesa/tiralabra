@@ -15,48 +15,55 @@ public class Boundary
 <span class="fc" id="L15">		this.siteB = siteB;</span>
 <span class="fc" id="L16">	}</span>
 
+	/**
+	 * Origin of the ray representing the edge.
+	 */
 	public Vector begin()
 	{
-<span class="nc" id="L20">		return ray.origin;</span>
+<span class="nc" id="L23">		return ray.origin;</span>
 	}
 
+	/**
+	 * Determines the endpoint of the edge ray.
+	 * @param sweepline Current height of the sweepline for calculating the parabola.
+	 */
 	public Vector end(double sweepline)
 	{
-<span class="fc" id="L25">		Vector[] intersections = Utils.parabolaIntersection(siteA, siteB, sweepline);</span>
+<span class="fc" id="L32">		Vector[] intersections = Utils.parabolaIntersection(siteA, siteB, sweepline);</span>
 
-<span class="pc bpc" id="L27" title="1 of 2 branches missed.">		if (intersections.length == 0)</span>
-<span class="nc" id="L28">			return ray.origin;</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">		if (intersections.length == 0)</span>
+<span class="nc" id="L35">			return ray.origin;</span>
 
-<span class="fc bfc" id="L30" title="All 2 branches covered.">		if (intersections.length == 1)</span>
-<span class="fc" id="L31">			return intersections[0];</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">		if (intersections.length == 1)</span>
+<span class="fc" id="L38">			return intersections[0];</span>
 
-<span class="fc" id="L33">		double do0 = Vector.distance(ray.origin, intersections[0]);</span>
-<span class="fc" id="L34">		double do1 = Vector.distance(ray.origin, intersections[1]);</span>
+<span class="fc" id="L40">		double do0 = Vector.distance(ray.origin, intersections[0]);</span>
+<span class="fc" id="L41">		double do1 = Vector.distance(ray.origin, intersections[1]);</span>
 
-<span class="fc bfc" id="L36" title="All 2 branches covered.">		Vector closest = do0 &lt; do1 ? intersections[0] : intersections[1];</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">		Vector closest = do0 &lt; do1 ? intersections[0] : intersections[1];</span>
 
 		// Determine which intersection the boundary ray intersects
-<span class="fc" id="L39">		double dd0 = Vector.distance(ray.direction, intersections[0].sub(ray.origin).normalize());</span>
-<span class="fc" id="L40">		double dd1 = Vector.distance(ray.direction, intersections[1].sub(ray.origin).normalize());</span>
+<span class="fc" id="L46">		double dd0 = Vector.distance(ray.direction, intersections[0].sub(ray.origin).normalize());</span>
+<span class="fc" id="L47">		double dd1 = Vector.distance(ray.direction, intersections[1].sub(ray.origin).normalize());</span>
 
-<span class="pc bpc" id="L42" title="1 of 2 branches missed.">		if (dd0 &lt; dd1)</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">		if (dd0 &lt; dd1)</span>
 		{
-<span class="pc bpc" id="L44" title="1 of 2 branches missed.">			if (dd0 &lt; Math.min(do0, do1))</span>
-<span class="fc" id="L45">				closest = intersections[0];</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">			if (dd0 &lt; Math.min(do0, do1))</span>
+<span class="fc" id="L52">				closest = intersections[0];</span>
 		}
 		else
 		{
-<span class="nc bnc" id="L49" title="All 2 branches missed.">			if (dd1 &lt; Math.min(do0, do1))</span>
-<span class="nc" id="L50">				closest = intersections[1];</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">			if (dd1 &lt; Math.min(do0, do1))</span>
+<span class="nc" id="L57">				closest = intersections[1];</span>
 		}
 
-<span class="fc" id="L53">		return closest;</span>
+<span class="fc" id="L60">		return closest;</span>
 	}
 
 	@Override
 	public String toString()
 	{
-<span class="nc" id="L59">		return &quot;(Boundary &quot; + ray + &quot; bounded by &quot; + siteA + &quot; &amp; &quot; + siteB + &quot;)&quot;;</span>
+<span class="nc" id="L66">		return &quot;(Boundary &quot; + ray + &quot; bounded by &quot; + siteA + &quot; &amp; &quot; + siteB + &quot;)&quot;;</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

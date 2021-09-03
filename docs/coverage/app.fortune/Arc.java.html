@@ -23,25 +23,31 @@ public class Arc
 <span class="fc" id="L23">		this.site = site;</span>
 <span class="fc" id="L24">	}</span>
 
-	public Vector left(double y)
+	/**
+	 * Left endpoint of this arc on the beachline
+	 */
+	public Vector left(double sweepline)
 	{
-<span class="fc bfc" id="L28" title="All 2 branches covered.">		if (left == null)</span>
-<span class="fc" id="L29">			return new Vector(Double.NEGATIVE_INFINITY, y);</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">		if (left == null)</span>
+<span class="fc" id="L32">			return new Vector(Double.NEGATIVE_INFINITY, sweepline);</span>
 
-<span class="fc" id="L31">		return left.end(y);</span>
+<span class="fc" id="L34">		return left.end(sweepline);</span>
 	}
 
-	public Vector right(double y)
+	/**
+	 * Right endpoint of this arc on the beachline
+	 */
+	public Vector right(double sweepline)
 	{
-<span class="nc bnc" id="L36" title="All 2 branches missed.">		if (right == null)</span>
-<span class="nc" id="L37">			return new Vector(Double.POSITIVE_INFINITY, y);</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">		if (right == null)</span>
+<span class="nc" id="L43">			return new Vector(Double.POSITIVE_INFINITY, sweepline);</span>
 
-<span class="nc" id="L39">		return right.end(y);</span>
+<span class="nc" id="L45">		return right.end(sweepline);</span>
 	}
 
 	public Vector site()
 	{
-<span class="nc" id="L44">		return site;</span>
+<span class="nc" id="L50">		return site;</span>
 	}
 
 	/**
@@ -49,26 +55,26 @@ public class Arc
 	 */
 	public Vector circleEvent()
 	{
-<span class="fc bfc" id="L52" title="All 4 branches covered.">		if (left == null || right == null)</span>
-<span class="fc" id="L53">			return null;</span>
+<span class="fc bfc" id="L58" title="All 4 branches covered.">		if (left == null || right == null)</span>
+<span class="fc" id="L59">			return null;</span>
 
-<span class="fc" id="L55">		Vector point = Ray.intersect(left.ray, right.ray);</span>
-<span class="fc bfc" id="L56" title="All 2 branches covered.">		if (point == null)</span>
-<span class="fc" id="L57">			return null;</span>
-
-<span class="fc" id="L59">		Vector offset = new Vector(0.0, -point.sub(site).norm());</span>
-<span class="fc" id="L60">		Vector ret = point.add(offset);</span>
-
-<span class="fc bfc" id="L62" title="All 2 branches covered.">		if (ret.equals(site))</span>
+<span class="fc" id="L61">		Vector point = Ray.intersect(left.ray, right.ray);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">		if (point == null)</span>
 <span class="fc" id="L63">			return null;</span>
 
-<span class="fc" id="L65">		return ret;</span>
+<span class="fc" id="L65">		Vector offset = new Vector(0.0, -point.sub(site).norm());</span>
+<span class="fc" id="L66">		Vector ret = point.add(offset);</span>
+
+<span class="fc bfc" id="L68" title="All 2 branches covered.">		if (ret.equals(site))</span>
+<span class="fc" id="L69">			return null;</span>
+
+<span class="fc" id="L71">		return ret;</span>
 	}
 
 	@Override
 	public String toString()
 	{
-<span class="nc" id="L71">		return &quot;Arc of &quot; + site + &quot;{ &quot; + left + &quot; ; &quot; + right + &quot; }&quot;;</span>
+<span class="nc" id="L77">		return &quot;Arc of &quot; + site + &quot;{ &quot; + left + &quot; ; &quot; + right + &quot; }&quot;;</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

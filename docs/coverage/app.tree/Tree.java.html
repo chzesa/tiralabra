@@ -62,8 +62,8 @@ public class Tree&lt;T&gt;
 <span class="fc" id="L62">		}</span>
 	}
 
-<span class="fc" id="L65">	Node root = null;</span>
-<span class="fc" id="L66">	int count = 0;</span>
+<span class="fc" id="L65">	private Node root = null;</span>
+<span class="fc" id="L66">	private int count = 0;</span>
 
 	/**
 	 * Constructs a new tree.
@@ -95,65 +95,80 @@ public class Tree&lt;T&gt;
 <span class="fc" id="L95">		forEachNode(root, fn);</span>
 <span class="fc" id="L96">	}</span>
 
-	public Node replace(Node n, T item)
+	/**
+	 * Replace the item stored in a node with the new item.
+	 * @param node node whose position the item is inserted at.
+	 * @param item the replacing item
+	 */
+	public Node replace(Node node, T item)
 	{
-<span class="fc" id="L100">		Node replacement = new Node(item);</span>
-<span class="fc" id="L101">		swap(n, replacement);</span>
-<span class="fc" id="L102">		setLinks(n.previous(), replacement, n.next());</span>
-<span class="fc" id="L103">		n.reset();</span>
-<span class="fc" id="L104">		return replacement;</span>
+<span class="fc" id="L105">		Node replacement = new Node(item);</span>
+<span class="fc" id="L106">		swap(node, replacement);</span>
+<span class="fc" id="L107">		setLinks(node.previous(), replacement, node.next());</span>
+<span class="fc" id="L108">		node.reset();</span>
+<span class="fc" id="L109">		return replacement;</span>
 	}
 
-	public Node addPrevious(Node n, T item)
+	/**
+	 * Creates a new node containing the item in the tree directly previous to an existing node.
+	 * @param node the node previous to which the new node is added
+	 * @param item value of the newly added node.
+	 */
+	public Node addPrevious(Node node, T item)
 	{
-<span class="fc" id="L109">		Node added = new Node(item);</span>
-<span class="fc" id="L110">		setLinks(n.previous(), added, n);</span>
+<span class="fc" id="L119">		Node added = new Node(item);</span>
+<span class="fc" id="L120">		setLinks(node.previous(), added, node);</span>
 
-<span class="fc" id="L112">		Node parent = n.left;</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">		if (parent == null)</span>
+<span class="fc" id="L122">		Node parent = node.left;</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">		if (parent == null)</span>
 		{
-<span class="fc" id="L115">			parent = n;</span>
-<span class="fc" id="L116">			parent.left = added;</span>
+<span class="fc" id="L125">			parent = node;</span>
+<span class="fc" id="L126">			parent.left = added;</span>
 		}
 		else
 		{
-<span class="fc bfc" id="L120" title="All 2 branches covered.">			while (parent.right != null)</span>
-<span class="fc" id="L121">				parent = parent.right;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">			while (parent.right != null)</span>
+<span class="fc" id="L131">				parent = parent.right;</span>
 
-<span class="fc" id="L123">			parent.right = added;</span>
+<span class="fc" id="L133">			parent.right = added;</span>
 		}
 
-<span class="fc" id="L126">		added.ancestor = parent;</span>
+<span class="fc" id="L136">		added.ancestor = parent;</span>
 
-<span class="fc" id="L128">		count++;</span>
-<span class="fc" id="L129">		rebalance(added);</span>
-<span class="fc" id="L130">		return added;</span>
+<span class="fc" id="L138">		count++;</span>
+<span class="fc" id="L139">		rebalance(added);</span>
+<span class="fc" id="L140">		return added;</span>
 	}
 
-	public Node addNext(Node n, T item)
+	/**
+	 * Creates a new node containing the item in the tree directly next to an existing node.
+	 * @param node the node next to which the new node is added
+	 * @param item value of the newly added node.
+	 */
+	public Node addNext(Node node, T item)
 	{
-<span class="fc" id="L135">		Node added = new Node(item);</span>
-<span class="fc" id="L136">		setLinks(n, added, n.next());</span>
+<span class="fc" id="L150">		Node added = new Node(item);</span>
+<span class="fc" id="L151">		setLinks(node, added, node.next());</span>
 
-<span class="fc" id="L138">		Node parent = n.right;</span>
-<span class="fc bfc" id="L139" title="All 2 branches covered.">		if (parent == null)</span>
+<span class="fc" id="L153">		Node parent = node.right;</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">		if (parent == null)</span>
 		{
-<span class="fc" id="L141">			parent = n;</span>
-<span class="fc" id="L142">			parent.right = added;</span>
+<span class="fc" id="L156">			parent = node;</span>
+<span class="fc" id="L157">			parent.right = added;</span>
 		}
 		else
 		{
-<span class="fc bfc" id="L146" title="All 2 branches covered.">			while (parent.left != null)</span>
-<span class="fc" id="L147">				parent = parent.left;</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">			while (parent.left != null)</span>
+<span class="fc" id="L162">				parent = parent.left;</span>
 
-<span class="fc" id="L149">			parent.left = added;</span>
+<span class="fc" id="L164">			parent.left = added;</span>
 		}
 
-<span class="fc" id="L152">		added.ancestor = parent;</span>
+<span class="fc" id="L167">		added.ancestor = parent;</span>
 
-<span class="fc" id="L154">		count++;</span>
-<span class="fc" id="L155">		rebalance(added);</span>
-<span class="fc" id="L156">		return added;</span>
+<span class="fc" id="L169">		count++;</span>
+<span class="fc" id="L170">		rebalance(added);</span>
+<span class="fc" id="L171">		return added;</span>
 	}
 
 	/**
@@ -161,227 +176,227 @@ public class Tree&lt;T&gt;
 	 */
 	public T delete(Node node)
 	{
-<span class="pc bpc" id="L164" title="1 of 2 branches missed.">		if (node == null)</span>
-<span class="nc" id="L165">			return null;</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">		if (node == null)</span>
+<span class="nc" id="L180">			return null;</span>
 
-<span class="fc" id="L167">		count--;</span>
+<span class="fc" id="L182">		count--;</span>
 
-<span class="fc bfc" id="L169" title="All 4 branches covered.">		if (node.left != null &amp;&amp; node.right != null)</span>
-<span class="fc" id="L170">			swap(node, node.next());</span>
+<span class="fc bfc" id="L184" title="All 4 branches covered.">		if (node.left != null &amp;&amp; node.right != null)</span>
+<span class="fc" id="L185">			swap(node, node.next());</span>
 
-<span class="fc bfc" id="L172" title="All 2 branches covered.">		Node child = node.left == null ? node.right : node.left;</span>
-<span class="pc bpc" id="L173" title="1 of 2 branches missed.">		if (root == node)</span>
-<span class="nc" id="L174">			root = child;</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">		Node child = node.left == null ? node.right : node.left;</span>
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">		if (root == node)</span>
+<span class="nc" id="L189">			root = child;</span>
 
-<span class="pc bpc" id="L176" title="1 of 2 branches missed.">		if (node.ancestor != null)</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">		if (node.ancestor != null)</span>
 		{
-<span class="fc bfc" id="L178" title="All 2 branches covered.">			if (node.ancestor.left == node)</span>
-<span class="fc" id="L179">				node.ancestor.left = child;</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">			if (node.ancestor.left == node)</span>
+<span class="fc" id="L194">				node.ancestor.left = child;</span>
 			else
-<span class="fc" id="L181">				node.ancestor.right = child;</span>
+<span class="fc" id="L196">				node.ancestor.right = child;</span>
 		}
 
-<span class="fc bfc" id="L184" title="All 2 branches covered.">		if (child != null)</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">		if (child != null)</span>
 		{
-<span class="fc" id="L186">			child.ancestor = node.ancestor;</span>
-<span class="fc" id="L187">			rebalance(child);</span>
+<span class="fc" id="L201">			child.ancestor = node.ancestor;</span>
+<span class="fc" id="L202">			rebalance(child);</span>
 		}
 		else
 		{
-<span class="fc" id="L191">			rebalance(node.ancestor);</span>
+<span class="fc" id="L206">			rebalance(node.ancestor);</span>
 		}
 
-<span class="fc" id="L194">		setLinks(node.previous, null, node.next);</span>
+<span class="fc" id="L209">		setLinks(node.previous, null, node.next);</span>
 
-<span class="fc" id="L196">		node.reset();</span>
-<span class="fc" id="L197">		return node.value();</span>
+<span class="fc" id="L211">		node.reset();</span>
+<span class="fc" id="L212">		return node.value();</span>
 	}
 
-	void rebalance(Node n)
+	private void rebalance(Node n)
 	{
-<span class="fc bfc" id="L202" title="All 2 branches covered.">		while (n != null)</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">		while (n != null)</span>
 		{
-<span class="fc" id="L204">			updateDepth(n);</span>
+<span class="fc" id="L219">			updateDepth(n);</span>
 
-<span class="fc bfc" id="L206" title="All 2 branches covered.">			if (Math.abs(depth(n.right) - depth(n.left)) &lt; 2)</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">			if (Math.abs(depth(n.right) - depth(n.left)) &lt; 2)</span>
 			{
-<span class="fc" id="L208">				n = n.ancestor;</span>
-<span class="fc" id="L209">				continue;</span>
+<span class="fc" id="L223">				n = n.ancestor;</span>
+<span class="fc" id="L224">				continue;</span>
 			}
 
-<span class="fc bfc" id="L212" title="All 2 branches covered.">			if (depth(n.right) &gt; depth(n.left))</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">			if (depth(n.right) &gt; depth(n.left))</span>
 			{
-<span class="fc bfc" id="L214" title="All 2 branches covered.">				if (depth(n.right.right) &lt; depth(n.right.left))</span>
-<span class="fc" id="L215">					cwRotate(n.right);</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">				if (depth(n.right.right) &lt; depth(n.right.left))</span>
+<span class="fc" id="L230">					cwRotate(n.right);</span>
 
-<span class="fc" id="L217">				ccwRotate(n);</span>
+<span class="fc" id="L232">				ccwRotate(n);</span>
 			}
 			else
 			{
-<span class="fc bfc" id="L221" title="All 2 branches covered.">				if (depth(n.left.right) &gt; depth(n.left.left))</span>
-<span class="fc" id="L222">					ccwRotate(n.left);</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">				if (depth(n.left.right) &gt; depth(n.left.left))</span>
+<span class="fc" id="L237">					ccwRotate(n.left);</span>
 
-<span class="fc" id="L224">				cwRotate(n);</span>
+<span class="fc" id="L239">				cwRotate(n);</span>
 			}
 
-<span class="fc" id="L227">			n = n.ancestor;</span>
+<span class="fc" id="L242">			n = n.ancestor;</span>
 		}
-<span class="fc" id="L229">	}</span>
+<span class="fc" id="L244">	}</span>
 
-	int depth(Node n)
+	private int depth(Node n)
 	{
-<span class="fc bfc" id="L233" title="All 2 branches covered.">		if (n == null)</span>
-<span class="fc" id="L234">			return 0;</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">		if (n == null)</span>
+<span class="fc" id="L249">			return 0;</span>
 
-<span class="fc" id="L236">		return n.depth;</span>
+<span class="fc" id="L251">		return n.depth;</span>
 	}
 
-	void updateDepth(Node n)
+	private void updateDepth(Node n)
 	{
-<span class="fc" id="L241">		n.depth = Math.max(depth(n.left), depth(n.right)) + 1;</span>
-<span class="fc" id="L242">	}</span>
+<span class="fc" id="L256">		n.depth = Math.max(depth(n.left), depth(n.right)) + 1;</span>
+<span class="fc" id="L257">	}</span>
 
-	void cwRotate(Node node)
+	private void cwRotate(Node node)
 	{
-<span class="fc" id="L246">		Node child = node.left;</span>
-<span class="fc" id="L247">		Node mover = child.right;</span>
-<span class="fc" id="L248">		Node parent = node.ancestor;</span>
+<span class="fc" id="L261">		Node child = node.left;</span>
+<span class="fc" id="L262">		Node mover = child.right;</span>
+<span class="fc" id="L263">		Node parent = node.ancestor;</span>
 
-<span class="fc" id="L250">		child.right = node;</span>
-<span class="fc" id="L251">		node.left = mover;</span>
+<span class="fc" id="L265">		child.right = node;</span>
+<span class="fc" id="L266">		node.left = mover;</span>
 
-<span class="fc bfc" id="L253" title="All 2 branches covered.">		if (root == node)</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">		if (root == node)</span>
 		{
-<span class="fc" id="L255">			root = child;</span>
+<span class="fc" id="L270">			root = child;</span>
 		}
 		else
 		{
-<span class="fc bfc" id="L259" title="All 2 branches covered.">			if (parent.left == node)</span>
-<span class="fc" id="L260">				parent.left = child;</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">			if (parent.left == node)</span>
+<span class="fc" id="L275">				parent.left = child;</span>
 			else
-<span class="fc" id="L262">				parent.right = child;</span>
+<span class="fc" id="L277">				parent.right = child;</span>
 		}
 
-<span class="fc" id="L265">		child.ancestor = parent;</span>
-<span class="fc" id="L266">		node.ancestor = child;</span>
-<span class="fc bfc" id="L267" title="All 2 branches covered.">		if (mover != null)</span>
-<span class="fc" id="L268">			mover.ancestor = node;</span>
+<span class="fc" id="L280">		child.ancestor = parent;</span>
+<span class="fc" id="L281">		node.ancestor = child;</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">		if (mover != null)</span>
+<span class="fc" id="L283">			mover.ancestor = node;</span>
 
-<span class="fc" id="L270">		updateDepth(node);</span>
-<span class="fc" id="L271">		updateDepth(child);</span>
-<span class="fc" id="L272">	}</span>
+<span class="fc" id="L285">		updateDepth(node);</span>
+<span class="fc" id="L286">		updateDepth(child);</span>
+<span class="fc" id="L287">	}</span>
 
-	void ccwRotate(Node node)
+	private void ccwRotate(Node node)
 	{
-<span class="fc" id="L276">		Node child = node.right;</span>
-<span class="fc" id="L277">		Node mover = child.left;</span>
-<span class="fc" id="L278">		Node parent = node.ancestor;</span>
+<span class="fc" id="L291">		Node child = node.right;</span>
+<span class="fc" id="L292">		Node mover = child.left;</span>
+<span class="fc" id="L293">		Node parent = node.ancestor;</span>
 
-<span class="fc" id="L280">		child.left = node;</span>
-<span class="fc" id="L281">		node.right = mover;</span>
+<span class="fc" id="L295">		child.left = node;</span>
+<span class="fc" id="L296">		node.right = mover;</span>
 
-<span class="fc bfc" id="L283" title="All 2 branches covered.">		if (root == node)</span>
+<span class="fc bfc" id="L298" title="All 2 branches covered.">		if (root == node)</span>
 		{
-<span class="fc" id="L285">			root = child;</span>
+<span class="fc" id="L300">			root = child;</span>
 		}
 		else
 		{
-<span class="fc bfc" id="L289" title="All 2 branches covered.">			if (parent.left == node)</span>
-<span class="fc" id="L290">				parent.left = child;</span>
+<span class="fc bfc" id="L304" title="All 2 branches covered.">			if (parent.left == node)</span>
+<span class="fc" id="L305">				parent.left = child;</span>
 			else
-<span class="fc" id="L292">				parent.right = child;</span>
+<span class="fc" id="L307">				parent.right = child;</span>
 		}
 
-<span class="fc" id="L295">		child.ancestor = parent;</span>
-<span class="fc" id="L296">		node.ancestor = child;</span>
-<span class="fc bfc" id="L297" title="All 2 branches covered.">		if (mover != null)</span>
-<span class="fc" id="L298">			mover.ancestor = node;</span>
+<span class="fc" id="L310">		child.ancestor = parent;</span>
+<span class="fc" id="L311">		node.ancestor = child;</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">		if (mover != null)</span>
+<span class="fc" id="L313">			mover.ancestor = node;</span>
 
-<span class="fc" id="L300">		updateDepth(node);</span>
-<span class="fc" id="L301">		updateDepth(child);</span>
-<span class="fc" id="L302">	}</span>
-
-	void setLinks(Node left, Node mid, Node right)
-	{
-<span class="fc bfc" id="L306" title="All 2 branches covered.">		if (left != null)</span>
-<span class="fc bfc" id="L307" title="All 2 branches covered.">			left.next = mid != null ? mid : right;</span>
-
-<span class="fc bfc" id="L309" title="All 2 branches covered.">		if (mid != null)</span>
-		{
-<span class="fc" id="L311">			mid.previous = left;</span>
-<span class="fc" id="L312">			mid.next = right;</span>
-		}
-
-<span class="fc bfc" id="L315" title="All 2 branches covered.">		if (right != null)</span>
-<span class="fc bfc" id="L316" title="All 2 branches covered.">			right.previous = mid != null ? mid : left;</span>
+<span class="fc" id="L315">		updateDepth(node);</span>
+<span class="fc" id="L316">		updateDepth(child);</span>
 <span class="fc" id="L317">	}</span>
 
-	void swap(Node a, Node b)
+	private void setLinks(Node left, Node mid, Node right)
 	{
-<span class="fc" id="L321">		int depth = a.depth;</span>
-<span class="fc" id="L322">		a.depth = b.depth;</span>
-<span class="fc" id="L323">		b.depth = depth;</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">		if (left != null)</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">			left.next = mid != null ? mid : right;</span>
 
-<span class="fc" id="L325">		Node aLeft = a.left;</span>
-<span class="fc" id="L326">		Node aRight = a.right;</span>
-<span class="fc" id="L327">		Node aAnc = a.ancestor;</span>
-
-<span class="fc" id="L329">		Node bLeft = b.left;</span>
-<span class="fc" id="L330">		Node bRight = b.right;</span>
-<span class="fc" id="L331">		Node bAnc = b.ancestor;</span>
-
-<span class="fc bfc" id="L333" title="All 2 branches covered.">		if (aAnc != null)</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">		if (mid != null)</span>
 		{
-<span class="fc bfc" id="L335" title="All 2 branches covered.">			if (aAnc.left == a)</span>
-<span class="fc" id="L336">				aAnc.left = b;</span>
-<span class="pc bpc" id="L337" title="1 of 2 branches missed.">			else if (aAnc.right == a)</span>
-<span class="fc" id="L338">				aAnc.right = b;</span>
+<span class="fc" id="L326">			mid.previous = left;</span>
+<span class="fc" id="L327">			mid.next = right;</span>
 		}
 
-<span class="fc bfc" id="L341" title="All 2 branches covered.">		if (bAnc != null)</span>
-		{
-<span class="fc bfc" id="L343" title="All 2 branches covered.">			if (bAnc.left == b)</span>
-<span class="fc" id="L344">				bAnc.left = a;</span>
-<span class="pc bpc" id="L345" title="1 of 2 branches missed.">			else if (bAnc.right == b)</span>
-<span class="fc" id="L346">				bAnc.right = a;</span>
-		}
+<span class="fc bfc" id="L330" title="All 2 branches covered.">		if (right != null)</span>
+<span class="fc bfc" id="L331" title="All 2 branches covered.">			right.previous = mid != null ? mid : left;</span>
+<span class="fc" id="L332">	}</span>
 
-<span class="fc bfc" id="L349" title="All 2 branches covered.">		if (aLeft != null)</span>
-<span class="fc" id="L350">			aLeft.ancestor = b;</span>
-<span class="fc bfc" id="L351" title="All 2 branches covered.">		if (aRight != null)</span>
-<span class="fc" id="L352">			aRight.ancestor = b;</span>
-
-<span class="pc bpc" id="L354" title="1 of 2 branches missed.">		if (bLeft != null)</span>
-<span class="nc" id="L355">			bLeft.ancestor = a;</span>
-<span class="fc bfc" id="L356" title="All 2 branches covered.">		if (bRight != null)</span>
-<span class="fc" id="L357">			bRight.ancestor = a;</span>
-
-<span class="fc bfc" id="L359" title="All 2 branches covered.">		if (root == a)</span>
-		{
-<span class="fc" id="L361">			root = b;</span>
-		}
-<span class="pc bpc" id="L363" title="1 of 2 branches missed.">		else if (root == b)</span>
-		{
-<span class="nc" id="L365">			root = a;</span>
-		}
-
-<span class="pc bpc" id="L368" title="1 of 2 branches missed.">		a.left = bLeft == a ? b : bLeft;</span>
-<span class="pc bpc" id="L369" title="1 of 2 branches missed.">		a.right = bRight == a ? b : bRight;</span>
-<span class="fc bfc" id="L370" title="All 2 branches covered.">		a.ancestor = bAnc == a ? b : bAnc;</span>
-
-<span class="pc bpc" id="L372" title="1 of 2 branches missed.">		b.left = aLeft == b ? a : aLeft;</span>
-<span class="fc bfc" id="L373" title="All 2 branches covered.">		b.right = aRight == b ? a : aRight;</span>
-<span class="pc bpc" id="L374" title="1 of 2 branches missed.">		b.ancestor = aAnc == b ? a : aAnc;</span>
-<span class="fc" id="L375">	}</span>
-
-	void forEachNode(Node n, ICallback&lt;T&gt; fn)
+	private void swap(Node a, Node b)
 	{
-<span class="fc bfc" id="L379" title="All 2 branches covered.">		if (n == null)</span>
-<span class="fc" id="L380">			return;</span>
+<span class="fc" id="L336">		int depth = a.depth;</span>
+<span class="fc" id="L337">		a.depth = b.depth;</span>
+<span class="fc" id="L338">		b.depth = depth;</span>
 
-<span class="fc" id="L382">		forEachNode(n.left, fn);</span>
-<span class="fc" id="L383">		fn.operation(n.value());</span>
-<span class="fc" id="L384">		forEachNode(n.right, fn);</span>
-<span class="fc" id="L385">	}</span>
+<span class="fc" id="L340">		Node aLeft = a.left;</span>
+<span class="fc" id="L341">		Node aRight = a.right;</span>
+<span class="fc" id="L342">		Node aAnc = a.ancestor;</span>
+
+<span class="fc" id="L344">		Node bLeft = b.left;</span>
+<span class="fc" id="L345">		Node bRight = b.right;</span>
+<span class="fc" id="L346">		Node bAnc = b.ancestor;</span>
+
+<span class="fc bfc" id="L348" title="All 2 branches covered.">		if (aAnc != null)</span>
+		{
+<span class="fc bfc" id="L350" title="All 2 branches covered.">			if (aAnc.left == a)</span>
+<span class="fc" id="L351">				aAnc.left = b;</span>
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">			else if (aAnc.right == a)</span>
+<span class="fc" id="L353">				aAnc.right = b;</span>
+		}
+
+<span class="fc bfc" id="L356" title="All 2 branches covered.">		if (bAnc != null)</span>
+		{
+<span class="fc bfc" id="L358" title="All 2 branches covered.">			if (bAnc.left == b)</span>
+<span class="fc" id="L359">				bAnc.left = a;</span>
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">			else if (bAnc.right == b)</span>
+<span class="fc" id="L361">				bAnc.right = a;</span>
+		}
+
+<span class="fc bfc" id="L364" title="All 2 branches covered.">		if (aLeft != null)</span>
+<span class="fc" id="L365">			aLeft.ancestor = b;</span>
+<span class="fc bfc" id="L366" title="All 2 branches covered.">		if (aRight != null)</span>
+<span class="fc" id="L367">			aRight.ancestor = b;</span>
+
+<span class="pc bpc" id="L369" title="1 of 2 branches missed.">		if (bLeft != null)</span>
+<span class="nc" id="L370">			bLeft.ancestor = a;</span>
+<span class="fc bfc" id="L371" title="All 2 branches covered.">		if (bRight != null)</span>
+<span class="fc" id="L372">			bRight.ancestor = a;</span>
+
+<span class="fc bfc" id="L374" title="All 2 branches covered.">		if (root == a)</span>
+		{
+<span class="fc" id="L376">			root = b;</span>
+		}
+<span class="pc bpc" id="L378" title="1 of 2 branches missed.">		else if (root == b)</span>
+		{
+<span class="nc" id="L380">			root = a;</span>
+		}
+
+<span class="pc bpc" id="L383" title="1 of 2 branches missed.">		a.left = bLeft == a ? b : bLeft;</span>
+<span class="pc bpc" id="L384" title="1 of 2 branches missed.">		a.right = bRight == a ? b : bRight;</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">		a.ancestor = bAnc == a ? b : bAnc;</span>
+
+<span class="pc bpc" id="L387" title="1 of 2 branches missed.">		b.left = aLeft == b ? a : aLeft;</span>
+<span class="fc bfc" id="L388" title="All 2 branches covered.">		b.right = aRight == b ? a : aRight;</span>
+<span class="pc bpc" id="L389" title="1 of 2 branches missed.">		b.ancestor = aAnc == b ? a : aAnc;</span>
+<span class="fc" id="L390">	}</span>
+
+	private void forEachNode(Node n, ICallback&lt;T&gt; fn)
+	{
+<span class="fc bfc" id="L394" title="All 2 branches covered.">		if (n == null)</span>
+<span class="fc" id="L395">			return;</span>
+
+<span class="fc" id="L397">		forEachNode(n.left, fn);</span>
+<span class="fc" id="L398">		fn.operation(n.value());</span>
+<span class="fc" id="L399">		forEachNode(n.right, fn);</span>
+<span class="fc" id="L400">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
