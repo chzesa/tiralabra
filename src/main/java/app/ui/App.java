@@ -24,7 +24,6 @@ public class App
 {
 	Generator gen;
 	Fortune fortune;
-	boolean debug = false;
 
 	List<Vector> sites;
 	int numSites = 8;
@@ -125,8 +124,6 @@ public class App
 				auto = !auto;
 			if (key == GLFW_KEY_S)
 				saveDataset();
-			if (key == GLFW_KEY_D)
-				debug = !debug;
 			if (key == GLFW_KEY_N)
 				next = true;
 			if (key == GLFW_KEY_P)
