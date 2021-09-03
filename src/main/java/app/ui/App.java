@@ -59,6 +59,21 @@ public class App
 
 	float zoomFactor = 1.0f;
 
+	static final String fragmentShaderCode = "#version 450 core\n"
+		+ "layout (location = 0) uniform vec4 color;"
+		+ "out vec4 fragColor;"
+		+ "void main() {fragColor = color; }";
+
+	static final String vertexShaderCode = "#version 450 core\n"
+		+ "layout (location = 0) in vec2 coords;"
+		+ "layout (location = 1) uniform float zoomFactor;"
+		+ "layout (location = 2) uniform vec2 center;"
+		+ "void main() {"
+		+ "gl_PointSize = 5.0;"
+		+ "vec2 scaled = (coords - center) * zoomFactor + vec2(0.5, 0.5);"
+		+ "gl_Position = vec4(scaled * 2 - vec2(1, 1), 0.0, 1.0);"
+		+ "}";
+
 	App(Generator gen)
 	{
 		this.gen = gen;
@@ -204,10 +219,8 @@ public class App
 
 	void initOpengl()
 	{
-		String str = FileHandler.readToString("src/shader/shader.vert");
-		int vertexShader = createShader(GL_VERTEX_SHADER, str);
-		str = FileHandler.readToString("src/shader/shader.frag");
-		int fragShader = createShader(GL_FRAGMENT_SHADER, str);
+		int vertexShader = createShader(GL_VERTEX_SHADER, vertexShaderCode);
+		int fragShader = createShader(GL_FRAGMENT_SHADER, fragmentShaderCode);
 
 		int prog = glCreateProgram();
 		glAttachShader(prog, vertexShader);
